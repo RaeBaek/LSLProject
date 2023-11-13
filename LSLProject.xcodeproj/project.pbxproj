@@ -13,6 +13,16 @@
 		149562032B0216ED006CED34 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149562012B0216ED006CED34 /* Main.storyboard */; };
 		149562052B0216EF006CED34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 149562042B0216EF006CED34 /* Assets.xcassets */; };
 		149562082B0216EF006CED34 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149562062B0216EF006CED34 /* LaunchScreen.storyboard */; };
+		149562102B02176D006CED34 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1495620F2B02176D006CED34 /* SignInViewController.swift */; };
+		149562132B0231E3006CED34 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 149562122B0231E3006CED34 /* SnapKit */; };
+		149562162B02320A006CED34 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 149562152B02320A006CED34 /* RxCocoa */; };
+		149562182B02320A006CED34 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 149562172B02320A006CED34 /* RxRelay */; };
+		1495621A2B02320A006CED34 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 149562192B02320A006CED34 /* RxSwift */; };
+		1495621D2B023218006CED34 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 1495621C2B023218006CED34 /* Kingfisher */; };
+		149562232B024DA6006CED34 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562222B024DA6006CED34 /* BaseViewController.swift */; };
+		149562252B0250B8006CED34 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562242B0250B8006CED34 /* APIKey.swift */; };
+		149562272B0250CF006CED34 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 149562262B0250CF006CED34 /* .gitignore */; };
+		149562292B0253B9006CED34 /* UserNameMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* UserNameMakeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +34,11 @@
 		149562042B0216EF006CED34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		149562072B0216EF006CED34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		149562092B0216EF006CED34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1495620F2B02176D006CED34 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		149562222B024DA6006CED34 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		149562242B0250B8006CED34 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		149562262B0250CF006CED34 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		149562282B0253B9006CED34 /* UserNameMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNameMakeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +46,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149562182B02320A006CED34 /* RxRelay in Frameworks */,
+				149562162B02320A006CED34 /* RxCocoa in Frameworks */,
+				1495621A2B02320A006CED34 /* RxSwift in Frameworks */,
+				149562132B0231E3006CED34 /* SnapKit in Frameworks */,
+				1495621D2B023218006CED34 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +60,7 @@
 		149561EF2B0216ED006CED34 = {
 			isa = PBXGroup;
 			children = (
+				149562262B0250CF006CED34 /* .gitignore */,
 				149561FA2B0216ED006CED34 /* LSLProject */,
 				149561F92B0216ED006CED34 /* Products */,
 			);
@@ -58,13 +79,33 @@
 			children = (
 				149561FB2B0216ED006CED34 /* AppDelegate.swift */,
 				149561FD2B0216ED006CED34 /* SceneDelegate.swift */,
+				149562242B0250B8006CED34 /* APIKey.swift */,
 				149561FF2B0216ED006CED34 /* ViewController.swift */,
+				1495620F2B02176D006CED34 /* SignInViewController.swift */,
+				149562212B024D9A006CED34 /* Base */,
+				1495621E2B024D1F006CED34 /* SignUp */,
 				149562012B0216ED006CED34 /* Main.storyboard */,
 				149562042B0216EF006CED34 /* Assets.xcassets */,
 				149562062B0216EF006CED34 /* LaunchScreen.storyboard */,
 				149562092B0216EF006CED34 /* Info.plist */,
 			);
 			path = LSLProject;
+			sourceTree = "<group>";
+		};
+		1495621E2B024D1F006CED34 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				149562282B0253B9006CED34 /* UserNameMakeViewController.swift */,
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		149562212B024D9A006CED34 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				149562222B024DA6006CED34 /* BaseViewController.swift */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +124,13 @@
 			dependencies = (
 			);
 			name = LSLProject;
+			packageProductDependencies = (
+				149562122B0231E3006CED34 /* SnapKit */,
+				149562152B02320A006CED34 /* RxCocoa */,
+				149562172B02320A006CED34 /* RxRelay */,
+				149562192B02320A006CED34 /* RxSwift */,
+				1495621C2B023218006CED34 /* Kingfisher */,
+			);
 			productName = LSLProject;
 			productReference = 149561F82B0216ED006CED34 /* LSLProject.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +159,11 @@
 				Base,
 			);
 			mainGroup = 149561EF2B0216ED006CED34;
+			packageReferences = (
+				149562112B0231E3006CED34 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				149562142B02320A006CED34 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				1495621B2B023218006CED34 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 149561F92B0216ED006CED34 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,6 +178,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149562272B0250CF006CED34 /* .gitignore in Resources */,
 				149562082B0216EF006CED34 /* LaunchScreen.storyboard in Resources */,
 				149562052B0216EF006CED34 /* Assets.xcassets in Resources */,
 				149562032B0216ED006CED34 /* Main.storyboard in Resources */,
@@ -138,9 +192,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
+				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
+				149562292B0253B9006CED34 /* UserNameMakeViewController.swift in Sources */,
 				149562002B0216ED006CED34 /* ViewController.swift in Sources */,
 				149561FC2B0216ED006CED34 /* AppDelegate.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
+				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +421,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		149562112B0231E3006CED34 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.0;
+			};
+		};
+		149562142B02320A006CED34 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.6.0;
+			};
+		};
+		1495621B2B023218006CED34 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		149562122B0231E3006CED34 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 149562112B0231E3006CED34 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		149562152B02320A006CED34 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 149562142B02320A006CED34 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		149562172B02320A006CED34 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 149562142B02320A006CED34 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		149562192B02320A006CED34 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 149562142B02320A006CED34 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		1495621C2B023218006CED34 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1495621B2B023218006CED34 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 149561F02B0216ED006CED34 /* Project object */;
 }
