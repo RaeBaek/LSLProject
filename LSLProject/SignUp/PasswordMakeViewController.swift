@@ -9,62 +9,30 @@ import UIKit
 
 class PasswordMakeViewController: MakeViewController {
     
-    let titleLabel = {
-        let view = UILabel()
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 20, weight: .semibold)
-        view.textAlignment = .left
-        return view
-    }()
-    
-    let descriptionLabel = {
-        let view = UILabel()
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 13, weight: .regular)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        return view
-    }()
-    
-    let customTextField = UITextField.customTextField()
-    
-    let nextButton = UIButton.capsuleButton(title: "다음")
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        titleLabel.text = "비밀번호 만들기"
+        descriptionLabel.text = "다른 사람이 추측할 수 없는 6자 이상의 문자 또는 숫자로 비밀번호를 만드세요."
+        customTextField.placeholder = "비밀번호 (필수)"
+        
+        nextButton.addTarget(self, action: #selector(pushNextVieController), for: .touchUpInside)
+    }
+    
+    @objc func pushNextVieController() {
+        view.endEditing(true)
+        let vc = NicknameMakeViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func configureView() {
-        view.backgroundColor = .systemBackground
+        super.configureView()
         
-        [titleLabel, descriptionLabel, customTextField, nextButton].forEach {
-            view.addSubview($0)
-        }
     }
     
     override func setConstraints() {
-        titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaInsets).inset(16)
-        }
+        super.setConstraints()
         
-        descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
-        }
-        
-        customTextField.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(20)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
-            $0.height.equalTo(60)
-        }
-        
-        nextButton.snp.makeConstraints {
-            $0.top.equalTo(customTextField.snp.bottom).offset(25)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
-            $0.height.equalTo(45)
-        }
     }
     
 }

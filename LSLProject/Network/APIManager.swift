@@ -1,5 +1,5 @@
 //
-//  APIService.swift
+//  APIManager.swift
 //  LSLProject
 //
 //  Created by 백래훈 on 11/14/23.
@@ -7,11 +7,15 @@
 
 import UIKit
 
-final class APIService {
+final class APIManager {
     
-    static let shared = APIService()
+    static let shared = APIManager()
     
+    private init() { }
     
+    func emailValidationAPI() {
+        
+    }
     
 }
 

@@ -19,75 +19,18 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
-    let emailTextField = {
-        let view = UITextField()
-        view.placeholder = "사용자 이름, 이메일 주소 또는 휴대폰 번호"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 15, weight: .regular)
-        view.backgroundColor = .white
-        view.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
-        view.leftViewMode = .always
-        view.layer.cornerRadius = 16.5
-        view.layer.borderColor = UIColor.systemGray4.cgColor
-        view.layer.borderWidth = 1
-        view.keyboardType = .emailAddress
+    let backBarbutton = {
+        let view = UIBarButtonItem()
+        view.title = nil
+        view.tintColor = .black
         return view
     }()
     
-    let passwordTextField = {
-        let view = UITextField()
-        view.placeholder = "비밀번호"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 15, weight: .regular)
-        view.backgroundColor = .white
-        view.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
-        view.leftViewMode = .always
-        view.layer.cornerRadius = 16.5
-        view.layer.borderColor = UIColor.systemGray4.cgColor
-        view.layer.borderWidth = 1
-        view.keyboardType = .alphabet
-        return view
-    }()
+    let emailTextField = UITextField.customTextField()
+    let passwordTextField = UITextField.customTextField()
     
-    let signInButton = {
-        let view = UIButton()
-        
-        var config = UIButton.Configuration.filled()
-        config.baseForegroundColor = .white
-        config.baseBackgroundColor = .systemBlue
-        config.cornerStyle = .capsule
-        
-        var titleAttr = AttributedString.init("로그인")
-        titleAttr.font = .systemFont(ofSize: 15, weight: .regular)
-        
-        config.attributedTitle = titleAttr
-        
-        view.configuration = config
-        
-        return view
-    }()
-    
-    let signUpButton = {
-        let view = UIButton()
-        
-        var config = UIButton.Configuration.filled()
-        config.baseForegroundColor = .systemBlue
-        config.baseBackgroundColor = .systemGray6
-        config.cornerStyle = .capsule
-        config.background.strokeColor = .systemBlue
-        config.background.strokeWidth = 1
-        
-        var titleAttr = AttributedString.init("새 계정 만들기")
-        titleAttr.font = .systemFont(ofSize: 15, weight: .regular)
-        
-        config.attributedTitle = titleAttr
-        
-        view.configuration = config
-        
-        view.addTarget(self, action: #selector(pushUserNameMakeViewController), for: .touchUpInside)
-        
-        return view
-    }()
+    let signInButton = UIButton.capsuleButton(title: "로그인")
+    let signUpButton = UIButton.signUpButton(title: "새 계정 만들기")
     
     let metaImage = {
         let view = UIImageView()
@@ -106,6 +49,12 @@ class SignInViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        emailTextField.placeholder = "사용자 이름, 이메일 주소 또는 휴대폰 번호"
+        passwordTextField.placeholder = "비밀번호"
+        signUpButton.addTarget(self, action: #selector(pushUserNameMakeViewController), for: .touchUpInside)
+        
+        self.navigationItem.backBarButtonItem = backBarbutton
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -113,12 +62,15 @@ class SignInViewController: BaseViewController {
     }
     
     @objc func pushUserNameMakeViewController() {
-        let vc = UserNameMakeViewController()
+        view.endEditing(true)
         
+        let vc = EmailAddressViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     
     override func configureView() {
+        super.configureView()
+        
         view.backgroundColor = .systemGray6
         
         [logoImage, emailTextField, passwordTextField, signInButton, signUpButton, metaImage, metaLabel].forEach {
@@ -128,14 +80,17 @@ class SignInViewController: BaseViewController {
     }
     
     override func setConstraints() {
+        super.setConstraints()
+        
         logoImage.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.size.equalTo(60)
         }
         
         emailTextField.snp.makeConstraints {
             $0.centerX.equalToSuperview()
+            $0.top.equalTo(logoImage.snp.bottom).offset(20)
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.height.equalTo(60)
         }
@@ -168,7 +123,6 @@ class SignInViewController: BaseViewController {
         
         metaLabel.snp.makeConstraints {
             $0.leading.equalTo(metaImage.snp.trailing).offset(3)
-//            $0.centerY.equalTo(metaImage.snp.centerY)
             $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top).offset(-10)
         }
     }

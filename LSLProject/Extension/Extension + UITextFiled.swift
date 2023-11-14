@@ -1,5 +1,5 @@
 //
-//  Extension + TextFiled.swift
+//  Extension + UITextFiled.swift
 //  LSLProject
 //
 //  Created by 백래훈 on 11/14/23.
@@ -8,9 +8,8 @@
 import UIKit
 
 extension UITextField {
-    static func customTextField(placeholder: String) -> UITextField {
+    static func customTextField() -> UITextField {
         let view = UITextField()
-        view.placeholder = placeholder
         view.textColor = .black
         view.font = .systemFont(ofSize: 15, weight: .regular)
         view.backgroundColor = .white

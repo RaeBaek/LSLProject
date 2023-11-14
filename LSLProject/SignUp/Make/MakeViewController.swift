@@ -43,9 +43,9 @@ class MakeViewController: BaseViewController {
     
     let statusLabel = {
         let view = UILabel()
-//        view.text = "ㅎㅇㅎㅇ"
         view.textAlignment = .left
         view.font = .systemFont(ofSize: 12, weight: .regular)
+        view.textColor = .systemRed
         view.isHidden = true
         return view
     }()
