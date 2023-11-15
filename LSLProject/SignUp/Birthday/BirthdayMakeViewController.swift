@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class BirthdayMakeViewController: MakeViewController {
     
@@ -21,8 +23,8 @@ class BirthdayMakeViewController: MakeViewController {
     }
     
     @objc func pushNextVieController() {
-        let vc = NicknameMakeViewController()
-        navigationController?.pushViewController(vc, animated: true)
+//        let vc = NicknameMakeViewController()
+//        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func configureView() {

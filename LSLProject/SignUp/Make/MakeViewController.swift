@@ -44,6 +44,7 @@ class MakeViewController: BaseViewController {
     let statusLabel = {
         let view = UILabel()
         view.textAlignment = .left
+        view.numberOfLines = 0
         view.font = .systemFont(ofSize: 12, weight: .regular)
         view.textColor = .systemRed
         view.isHidden = true
@@ -58,7 +59,6 @@ class MakeViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.backBarButtonItem = backBarbutton
-        nextButton.isEnabled = false
         
     }
     

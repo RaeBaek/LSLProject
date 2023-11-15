@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: scene)
         
-        let rootViewController = UINavigationController(rootViewController: SignInViewController())
+        let rootViewController = UINavigationController(rootViewController: EmailAddressViewController())
         
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()

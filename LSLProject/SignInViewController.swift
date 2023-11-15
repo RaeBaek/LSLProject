@@ -90,7 +90,6 @@ class SignInViewController: BaseViewController {
         
         emailTextField.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(logoImage.snp.bottom).offset(20)
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.height.equalTo(60)
         }

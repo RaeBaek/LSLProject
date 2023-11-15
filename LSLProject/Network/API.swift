@@ -9,5 +9,44 @@ import Foundation
 import Moya
 
 enum SeSACAPI {
-    case signUp
+    case signUp(model: SignUp)
+    case emailValidation(model: EmailValidation)
+    
+}
+
+extension SeSACAPI: TargetType {
+    var baseURL: URL {
+        URL(string: "http://lslp.sesac.kr:27811/")!
+    }
+    
+    var path: String {
+        switch self {
+        case .signUp:
+            return "join"
+        case .emailValidation:
+            return "validation/email"
+        }
+    }
+    
+    var method: Moya.Method {
+        switch self {
+        case .signUp, .emailValidation:
+            return .post
+        }
+    }
+    
+    var task: Moya.Task {
+        switch self {
+        case .signUp(let model):
+            return .requestJSONEncodable(model)
+        case .emailValidation(let model):
+            return .requestJSONEncodable(model)
+        }
+    }
+    
+    var headers: [String : String]? {
+        ["Content-Type": "application/json",
+         "SesacKey": "Ikwn9wgcfM"]
+    }
+    
 }

@@ -11,8 +11,6 @@ import RxCocoa
 
 class EmailAddressViewModel {
     
-    let disposeBag = DisposeBag()
-    
     struct Input {
         let inputText: ControlProperty<String>
         let nextButtonClicked: ControlEvent<Void>
@@ -20,27 +18,57 @@ class EmailAddressViewModel {
     
     struct Output {
         let textStatus: PublishRelay<Bool>
-        let outputText: BehaviorRelay<String>
-        let buttonStatus: PublishRelay<Bool>
+        let pushStatus: PublishRelay<Bool>
+        let outputText: PublishRelay<String>
+        let borderStatus: PublishRelay<Bool>
     }
+    
+    let disposeBag = DisposeBag()
     
     func transform(input: Input) -> Output {
         
         let textStatus = PublishRelay<Bool>()
-        let buttonStatus = PublishRelay<Bool>()
-        
-        let notValidation = BehaviorRelay(value: "유효한 이메일 주소를 입력하세요.")
+        let pushStatus = PublishRelay<Bool>()
+        let statusCode = PublishRelay<Int>()
+        let outputText = PublishRelay<String>()
+        let borderStatus = PublishRelay<Bool>()
         
         input.inputText
             .distinctUntilChanged()
-            .map { $0.contains("@") }
+            .map { _ in
+                return true
+            }
             .bind { value in
-                textStatus.accept(value)
-                buttonStatus.accept(value)
+                borderStatus.accept(value)
             }
             .disposed(by: disposeBag)
         
+        input.nextButtonClicked
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .withLatestFrom(input.inputText) { _, text in
+                print(text)
+                return text
+            }
+            .bind { value in
+                APIManager.shared.emailValidationAPI(email: value) { code, message in
+                    statusCode.accept(code)
+                    outputText.accept(message)
+                }
+            }
+            .disposed(by: disposeBag)
         
-        return Output(textStatus: textStatus, outputText: notValidation, buttonStatus: buttonStatus)
+        statusCode
+            .map { $0 == 200 }
+            .bind { value in
+                textStatus.accept(value)
+                if value == true {
+                    pushStatus.accept(value)
+                    print(value)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus)
     }
+    
 }

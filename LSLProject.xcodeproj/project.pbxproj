@@ -10,12 +10,15 @@
 		146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16CE2B0350C500073B91 /* MakeViewController.swift */; };
 		146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D12B03538000073B91 /* Extension + UIButton.swift */; };
 		146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */; };
-		146B16D72B0362C300073B91 /* PasswordMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D62B0362C300073B91 /* PasswordMakeViewController.swift */; };
-		146B16D92B03672500073B91 /* NicknameMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D82B03672400073B91 /* NicknameMakeViewController.swift */; };
-		146B16DB2B03689000073B91 /* PhoneNumberMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DA2B03688F00073B91 /* PhoneNumberMakeViewController.swift */; };
+		146B16D72B0362C300073B91 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D62B0362C300073B91 /* PasswordViewController.swift */; };
+		146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D82B03672400073B91 /* NicknameViewController.swift */; };
+		146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DA2B03688F00073B91 /* PhoneNumberViewController.swift */; };
 		146B16DD2B037D2800073B91 /* BirthdayMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */; };
 		146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DF2B0388EC00073B91 /* EmailAddressViewModel.swift */; };
 		146B16E22B03AE5000073B91 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16E12B03AE5000073B91 /* APIManager.swift */; };
+		146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */; };
+		146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */; };
+		146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */; };
 		147CC55D2B03C99B00D7DA7C /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 147CC55C2B03C99B00D7DA7C /* Moya */; };
 		147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147CC55E2B03CF4800D7DA7C /* APIModel.swift */; };
 		147CC5612B03D0B800D7DA7C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147CC5602B03D0B800D7DA7C /* API.swift */; };
@@ -35,18 +38,22 @@
 		149562252B0250B8006CED34 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562242B0250B8006CED34 /* APIKey.swift */; };
 		149562272B0250CF006CED34 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 149562262B0250CF006CED34 /* .gitignore */; };
 		149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* EmailAddressViewController.swift */; };
+		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		146B16CE2B0350C500073B91 /* MakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeViewController.swift; sourceTree = "<group>"; };
 		146B16D12B03538000073B91 /* Extension + UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIButton.swift"; sourceTree = "<group>"; };
 		146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITextFiled.swift"; sourceTree = "<group>"; };
-		146B16D62B0362C300073B91 /* PasswordMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordMakeViewController.swift; sourceTree = "<group>"; };
-		146B16D82B03672400073B91 /* NicknameMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameMakeViewController.swift; sourceTree = "<group>"; };
-		146B16DA2B03688F00073B91 /* PhoneNumberMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberMakeViewController.swift; sourceTree = "<group>"; };
+		146B16D62B0362C300073B91 /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		146B16D82B03672400073B91 /* NicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewController.swift; sourceTree = "<group>"; };
+		146B16DA2B03688F00073B91 /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayMakeViewController.swift; sourceTree = "<group>"; };
 		146B16DF2B0388EC00073B91 /* EmailAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewModel.swift; sourceTree = "<group>"; };
 		146B16E12B03AE5000073B91 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewModel.swift; sourceTree = "<group>"; };
+		146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewModel.swift; sourceTree = "<group>"; };
+		146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewModel.swift; sourceTree = "<group>"; };
 		147CC55E2B03CF4800D7DA7C /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
 		147CC5602B03D0B800D7DA7C /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		149561F82B0216ED006CED34 /* LSLProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LSLProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +69,7 @@
 		149562242B0250B8006CED34 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		149562262B0250CF006CED34 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		149562282B0253B9006CED34 /* EmailAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewController.swift; sourceTree = "<group>"; };
+		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,11 +118,38 @@
 		146B16E32B03AE5700073B91 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				146B16E12B03AE5000073B91 /* APIManager.swift */,
-				147CC55E2B03CF4800D7DA7C /* APIModel.swift */,
 				147CC5602B03D0B800D7DA7C /* API.swift */,
+				147CC55E2B03CF4800D7DA7C /* APIModel.swift */,
+				146B16E12B03AE5000073B91 /* APIManager.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		146B9F5B2B051D4C00FCB268 /* Nickname */ = {
+			isa = PBXGroup;
+			children = (
+				146B16D82B03672400073B91 /* NicknameViewController.swift */,
+				146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */,
+			);
+			path = Nickname;
+			sourceTree = "<group>";
+		};
+		146B9F5E2B051D9400FCB268 /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				146B16DA2B03688F00073B91 /* PhoneNumberViewController.swift */,
+				146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */,
+			);
+			path = PhoneNumber;
+			sourceTree = "<group>";
+		};
+		146B9F5F2B051DA200FCB268 /* Birthday */ = {
+			isa = PBXGroup;
+			children = (
+				146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */,
+				146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */,
+			);
+			path = Birthday;
 			sourceTree = "<group>";
 		};
 		149561EF2B0216ED006CED34 = {
@@ -158,10 +193,10 @@
 			isa = PBXGroup;
 			children = (
 				146B16DE2B0388D100073B91 /* EmailAddress */,
-				146B16D62B0362C300073B91 /* PasswordMakeViewController.swift */,
-				146B16D82B03672400073B91 /* NicknameMakeViewController.swift */,
-				146B16DA2B03688F00073B91 /* PhoneNumberMakeViewController.swift */,
-				146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */,
+				14D9F1822B04CECD00E4025F /* Password */,
+				146B9F5B2B051D4C00FCB268 /* Nickname */,
+				146B9F5E2B051D9400FCB268 /* PhoneNumber */,
+				146B9F5F2B051DA200FCB268 /* Birthday */,
 				146B16D02B03511600073B91 /* Make */,
 			);
 			path = SignUp;
@@ -173,6 +208,15 @@
 				149562222B024DA6006CED34 /* BaseViewController.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		14D9F1822B04CECD00E4025F /* Password */ = {
+			isa = PBXGroup;
+			children = (
+				146B16D62B0362C300073B91 /* PasswordViewController.swift */,
+				14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */,
+			);
+			path = Password;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,8 +307,9 @@
 			files = (
 				146B16E22B03AE5000073B91 /* APIManager.swift in Sources */,
 				146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */,
-				146B16D72B0362C300073B91 /* PasswordMakeViewController.swift in Sources */,
+				146B16D72B0362C300073B91 /* PasswordViewController.swift in Sources */,
 				146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */,
+				146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */,
 				146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */,
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
@@ -272,9 +317,12 @@
 				149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */,
 				147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */,
 				149562002B0216ED006CED34 /* ViewController.swift in Sources */,
-				146B16D92B03672500073B91 /* NicknameMakeViewController.swift in Sources */,
+				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
+				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
 				149561FC2B0216ED006CED34 /* AppDelegate.swift in Sources */,
-				146B16DB2B03689000073B91 /* PhoneNumberMakeViewController.swift in Sources */,
+				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
+				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
+				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 				147CC5612B03D0B800D7DA7C /* API.swift in Sources */,

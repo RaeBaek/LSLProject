@@ -1,35 +1,33 @@
 //
-//  EmailAddressViewController.swift
+//  PasswordViewController.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/13/23.
+//  Created by 백래훈 on 11/14/23.
 //
 
 import UIKit
 import RxSwift
 import RxCocoa
 
-class EmailAddressViewController: MakeViewController {
+class PasswordViewController: MakeViewController {
     
-    let viewModel = EmailAddressViewModel()
+    let viewModel = PasswordViewModel()
     
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = "이메일 주소 입력"
-        descriptionLabel.text = "회원님에게 연락할 수 있는 이메일 주소를 입력하세요. 이 이메일 주소는 프로필에서 다른 사람에게 공개되지 않습니다."
-        
-        customTextField.placeholder = "이메일 주소 (필수)"
+        titleLabel.text = "비밀번호 입력"
+        descriptionLabel.text = "다른 사람이 추측할 수 없는 6자 이상의 문자 또는 숫자로 비밀번호를 만드세요."
+        customTextField.placeholder = "비밀번호 (필수)"
         
         bind()
         
     }
     
     func bind() {
-        
-        let input = EmailAddressViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
+        let input = PasswordViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
@@ -48,26 +46,18 @@ class EmailAddressViewController: MakeViewController {
             }
             .disposed(by: disposeBag)
         
-        output.textStatus
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.statusLabel.isHidden = value
-                owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
-            }
-            .disposed(by: disposeBag)
-        
         output.pushStatus
             .withUnretained(self)
             .bind { owner, value in
                 owner.pushNextVieController()
             }
             .disposed(by: disposeBag)
-
+        
     }
     
     @objc func pushNextVieController() {
         view.endEditing(true)
-        let vc = PasswordViewController()
+        let vc = NicknameViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -1,13 +1,15 @@
 //
-//  PhoneNumberMakeViewController.swift
+//  PhoneNumberViewController.swift
 //  LSLProject
 //
 //  Created by 백래훈 on 11/14/23.
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class PhoneNumberMakeViewController: MakeViewController {
+class PhoneNumberViewController: MakeViewController {
     
     let skipButton = UIButton.signUpButton(title: "건너뛰기")
     

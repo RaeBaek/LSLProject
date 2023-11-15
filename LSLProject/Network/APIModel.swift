@@ -8,7 +8,7 @@
 import Foundation
 
 //MARK: - Encodable
-struct Join: Encodable {
+struct SignUp: Encodable {
     let email: String
     let password: String
     let nick: String
@@ -18,4 +18,9 @@ struct Join: Encodable {
 
 struct EmailValidation: Encodable {
     let email: String
+}
+
+//MARK: - Decodable {
+struct EmailValidationResponse: Decodable {
+    let message: String
 }
