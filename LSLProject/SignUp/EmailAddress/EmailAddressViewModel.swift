@@ -49,12 +49,37 @@ class EmailAddressViewModel {
                 print(text)
                 return text
             }
-            .bind { value in
-                APIManager.shared.emailValidationAPI(email: value) { code, message in
-                    statusCode.accept(code)
-                    outputText.accept(message)
-                }
+            .flatMap {
+                APIManager.shared.emailValidationAPI2(email: $0)
             }
+            .subscribe(with: self, onNext: { owner, value in
+                switch value {
+                case .success():
+                    statusCode.accept(200)
+                    outputText.accept("사용 가능한 이메일입니다.")
+                case .failure(let error):
+                    statusCode.accept(error.rawValue)
+                    outputText.accept(error.desciption)
+                }
+            })
+//            .subscribe(with: self, onNext: { owner, value in
+//                owner.requestEmailValidationAPI(email: value) { response, code in
+//                    print(code, "===")
+//                    print(response.message, "!===!")
+//                    statusCode.accept(code)
+//                    outputText.accept(response.message)
+//                }
+//            }, onCompleted: { owner in
+//                print("컴플리트~~")
+//            })
+//            .subscribe(with: self, onNext: { owner, value in
+//                owner.requestEmailValidationAPI(email: value) { response, code in
+//                    print(code, "===")
+//                    print(response.message, "!===!")
+//                    statusCode.accept(code)
+//                    outputText.accept(response.message)
+//                }
+//            })
             .disposed(by: disposeBag)
         
         statusCode
@@ -69,6 +94,19 @@ class EmailAddressViewModel {
             .disposed(by: disposeBag)
         
         return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus)
+    }
+    
+    func requestEmailValidationAPI(email: String, completionHandler: @escaping (EmailValidationResponse, Int) -> Void) {
+        APIManager.shared.emailValidationAPI(email: email) { response, statusCode  in
+            switch response {
+            case .success(let success):
+                dump(success)
+                completionHandler(success, statusCode)
+            case .failure(let failure):
+                print("에러코드: \(failure.rawValue)")
+                print("에러메시지: \(failure.desciption)")
+            }
+        }
     }
     
 }

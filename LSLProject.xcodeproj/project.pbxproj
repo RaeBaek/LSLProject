@@ -39,6 +39,7 @@
 		149562272B0250CF006CED34 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 149562262B0250CF006CED34 /* .gitignore */; };
 		149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* EmailAddressViewController.swift */; };
 		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
+		14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		149562262B0250CF006CED34 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		149562282B0253B9006CED34 /* EmailAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewController.swift; sourceTree = "<group>"; };
 		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
+		14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAndFlatMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,9 +178,10 @@
 				149561FD2B0216ED006CED34 /* SceneDelegate.swift */,
 				149562242B0250B8006CED34 /* APIKey.swift */,
 				149561FF2B0216ED006CED34 /* ViewController.swift */,
-				1495620F2B02176D006CED34 /* SignInViewController.swift */,
+				14F5FC552B066DF200A0C6E5 /* Maps */,
 				146B16E32B03AE5700073B91 /* Network */,
 				149562212B024D9A006CED34 /* Base */,
+				14F5E6242B05A359001B7801 /* SignIn */,
 				1495621E2B024D1F006CED34 /* SignUp */,
 				146B16D32B03538500073B91 /* Extension */,
 				149562012B0216ED006CED34 /* Main.storyboard */,
@@ -217,6 +220,22 @@
 				14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */,
 			);
 			path = Password;
+			sourceTree = "<group>";
+		};
+		14F5E6242B05A359001B7801 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				1495620F2B02176D006CED34 /* SignInViewController.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		14F5FC552B066DF200A0C6E5 /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */,
+			);
+			path = Maps;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +333,7 @@
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
+				14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */,
 				149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */,
 				147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */,
 				149562002B0216ED006CED34 /* ViewController.swift in Sources */,
