@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		144B80AB2B09173600993347 /* CheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B80AA2B09173600993347 /* CheckViewController.swift */; };
 		146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16CE2B0350C500073B91 /* MakeViewController.swift */; };
 		146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D12B03538000073B91 /* Extension + UIButton.swift */; };
 		146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		144B80AA2B09173600993347 /* CheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckViewController.swift; sourceTree = "<group>"; };
 		146B16CE2B0350C500073B91 /* MakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeViewController.swift; sourceTree = "<group>"; };
 		146B16D12B03538000073B91 /* Extension + UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIButton.swift"; sourceTree = "<group>"; };
 		146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITextFiled.swift"; sourceTree = "<group>"; };
@@ -91,6 +93,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		144B80AC2B09173D00993347 /* Check */ = {
+			isa = PBXGroup;
+			children = (
+				144B80AA2B09173600993347 /* CheckViewController.swift */,
+			);
+			path = Check;
+			sourceTree = "<group>";
+		};
 		146B16D02B03511600073B91 /* Make */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +210,7 @@
 				146B9F5B2B051D4C00FCB268 /* Nickname */,
 				146B9F5E2B051D9400FCB268 /* PhoneNumber */,
 				146B9F5F2B051DA200FCB268 /* Birthday */,
+				144B80AC2B09173D00993347 /* Check */,
 				146B16D02B03511600073B91 /* Make */,
 			);
 			path = SignUp;
@@ -333,6 +344,7 @@
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
+				144B80AB2B09173600993347 /* CheckViewController.swift in Sources */,
 				14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */,
 				149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */,
 				147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */,

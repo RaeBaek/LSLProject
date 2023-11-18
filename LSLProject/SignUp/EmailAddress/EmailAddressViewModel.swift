@@ -21,6 +21,7 @@ class EmailAddressViewModel {
         let pushStatus: PublishRelay<Bool>
         let outputText: PublishRelay<String>
         let borderStatus: PublishRelay<Bool>
+        let sendText: PublishRelay<String>
     }
     
     let disposeBag = DisposeBag()
@@ -32,15 +33,19 @@ class EmailAddressViewModel {
         let statusCode = PublishRelay<Int>()
         let outputText = PublishRelay<String>()
         let borderStatus = PublishRelay<Bool>()
+        let sendText = PublishRelay<String>()
         
         input.inputText
             .distinctUntilChanged()
             .map { _ in
                 return true
             }
-            .bind { value in
-                borderStatus.accept(value)
-            }
+            .bind(to: borderStatus)
+            .disposed(by: disposeBag)
+        
+        input.inputText
+            .distinctUntilChanged()
+            .bind(to: sendText)
             .disposed(by: disposeBag)
         
         input.nextButtonClicked
@@ -52,7 +57,7 @@ class EmailAddressViewModel {
             .flatMap {
                 APIManager.shared.emailValidationAPI3(email: $0)
             }
-            .subscribe(with: self, onNext: { owner, value in
+            .subscribe(onNext: { value in
                 switch value {
                 case .success():
                     statusCode.accept(200)
@@ -75,7 +80,7 @@ class EmailAddressViewModel {
             }
             .disposed(by: disposeBag)
         
-        return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus)
+        return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus, sendText: sendText)
     }
     
     func requestEmailValidationAPI(email: String, completionHandler: @escaping (EmailValidationResponse, Int) -> Void) {

@@ -20,27 +20,27 @@ class BirthdayViewModel {
     }
     
     struct Output {
-        let outputText: PublishRelay<String?>
+        let sendText: PublishRelay<String?>
     }
     
     func transform(input: Input) -> Output {
         
-        let outputText = PublishRelay<String?>()
+        let sendText = PublishRelay<String?>()
         
         input.nextButtonClicked
             .withLatestFrom(input.inputText) { _, text in
                 return text
             }
-            .bind(to: outputText)
+            .bind(to: sendText)
             .disposed(by: disposeBag)
         
         input.skipButtonClicked
             .bind { _ in
-                outputText.accept(nil)
+                sendText.accept(nil)
             }
             .disposed(by: disposeBag)
         
-        return Output(outputText: outputText)
+        return Output(sendText: sendText)
     }
     
 }

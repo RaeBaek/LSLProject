@@ -17,23 +17,23 @@ class NicknameViewModel {
     }
     
     struct Output {
-        let outputText: PublishRelay<String>
+        let sendText: PublishRelay<String>
     }
     
     let disposeBag = DisposeBag()
     
     func transform(input: Input) -> Output {
         
-        let outputText = PublishRelay<String>()
+        let sendText = PublishRelay<String>()
         
         input.nextButtonClicked
             .withLatestFrom(input.inputText) { _, text in
                 return text
             }
-            .bind(to: outputText)
+            .bind(to: sendText)
             .disposed(by: disposeBag)
         
-        return Output(outputText: outputText)
+        return Output(sendText: sendText)
     }
     
 }

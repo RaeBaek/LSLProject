@@ -15,8 +15,6 @@ class EmailAddressViewController: MakeViewController {
     
     let disposeBag = DisposeBag()
     
-    var signUpValues: [String?]?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +32,7 @@ class EmailAddressViewController: MakeViewController {
         let input = EmailAddressViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
+        var signUpValues = [String?]()
         
         output.borderStatus
             .withUnretained(self)
@@ -47,7 +46,6 @@ class EmailAddressViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.text = value
-                owner.signUpValues?.append(value)
             }
             .disposed(by: disposeBag)
         
@@ -60,18 +58,23 @@ class EmailAddressViewController: MakeViewController {
             .disposed(by: disposeBag)
         
         output.pushStatus
+            .withLatestFrom(output.sendText, resultSelector: { _, text in
+                return text
+            })
             .withUnretained(self)
             .bind { owner, value in
-                owner.pushNextVieController()
+                signUpValues.append(value)
+                print("=====", signUpValues)
+                owner.pushNextVieController(value: signUpValues)
             }
             .disposed(by: disposeBag)
 
     }
     
-    @objc func pushNextVieController() {
-        print(signUpValues)
+    func pushNextVieController(value: [String?]) {
         view.endEditing(true)
         let vc = PasswordViewController()
+        vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)
     }
     

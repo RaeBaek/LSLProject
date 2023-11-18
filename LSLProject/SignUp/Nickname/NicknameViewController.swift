@@ -24,31 +24,38 @@ class NicknameViewController: MakeViewController {
         descriptionLabel.text = "회원님만의 닉네임을 만드세요. 중복도 가능합니다!"
         customTextField.placeholder = "닉네임 (필수)"
         
-        nextButton.addTarget(self, action: #selector(pushNextVieController), for: .touchUpInside)
+        guard let signUpValues else { return }
+        
+        bind(value: signUpValues)
         
     }
     
-    func bind() {
-        
-        guard let signUpValues else { return }
+    func bind(value: [String?]) {
         
         let input = NicknameViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
-        output.outputText
+        var signUpValues = value
+        
+        output.sendText
             .withUnretained(self)
             .bind { owner, value in
-                owner.signUpValues?.append(value)
+                signUpValues.append(value)
+                owner.pushNextVieController(value: signUpValues)
             }
             .disposed(by: disposeBag)
+        
     }
     
-    @objc func pushNextVieController() {
-        print(signUpValues)
+    func pushNextVieController(value: [String?]) {
+        print(value)
         view.endEditing(true)
+        print("------", value)
         let vc = PhoneNumberViewController()
+        vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)
+        
     }
     
     override func configureView() {

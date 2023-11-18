@@ -24,14 +24,18 @@ class PasswordViewController: MakeViewController {
         descriptionLabel.text = "다른 사람이 추측할 수 없는 6자 이상의 문자 또는 숫자로 비밀번호를 만드세요."
         customTextField.placeholder = "비밀번호 (필수)"
         
-        bind()
+        guard let signUpValues else { return }
+        
+        bind(value: signUpValues)
         
     }
     
-    func bind() {
+    func bind(value: [String?]) {
         let input = PasswordViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
+        
+        var signUpValues = value
         
         output.borderStatus
             .withUnretained(self)
@@ -45,23 +49,27 @@ class PasswordViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.text = value
-                owner.signUpValues?.append(value)
             }
             .disposed(by: disposeBag)
         
         output.pushStatus
+            .withLatestFrom(output.sendText, resultSelector: { _, text in
+                return text
+            })
             .withUnretained(self)
             .bind { owner, value in
-                owner.pushNextVieController()
+                signUpValues.append(value)
+                owner.pushNextVieController(value: signUpValues)
             }
             .disposed(by: disposeBag)
         
     }
     
-    @objc func pushNextVieController() {
-        print(signUpValues)
+    func pushNextVieController(value: [String?]) {
         view.endEditing(true)
+        print("------", value)
         let vc = NicknameViewController()
+        vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)
     }
     

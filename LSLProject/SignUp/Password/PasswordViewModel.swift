@@ -21,6 +21,7 @@ class PasswordViewModel {
         let pushStatus: PublishRelay<Bool>
         let outputText: BehaviorRelay<String>
         let borderStatus: PublishRelay<Bool>
+        let sendText: PublishRelay<String>
     }
     
     let disposeBag = DisposeBag()
@@ -29,6 +30,7 @@ class PasswordViewModel {
         let textStatus = BehaviorRelay(value: false)//PublishRelay<Bool>()
         let pushStatus = PublishRelay<Bool>()
         let borderStatus = PublishRelay<Bool>()
+        let sendText = PublishRelay<String>()
         
         let empty = ""
         let emptyMessage = "비밀번호는 비워둘 수 없습니다."
@@ -42,6 +44,11 @@ class PasswordViewModel {
                 return true
             }
             .bind(to: borderStatus)
+            .disposed(by: disposeBag)
+        
+        input.inputText
+            .distinctUntilChanged()
+            .bind(to: sendText)
             .disposed(by: disposeBag)
         
         input.inputText
@@ -90,8 +97,7 @@ class PasswordViewModel {
             }
             .disposed(by: disposeBag)
         
-        
-        return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus)
+        return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus, sendText: sendText)
     }
     
 }
