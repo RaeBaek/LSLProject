@@ -16,7 +16,7 @@ enum SeSACAPI {
 
 extension SeSACAPI: TargetType {
     var baseURL: URL {
-        URL(string: "http://lslp.sesac.kr:27811/")!
+        URL(string: "http://lslp.sesac.kr:27820/")!
     }
     
     var path: String {

@@ -8,6 +8,7 @@
 import UIKit
 import Moya
 import RxSwift
+import RxCocoa
 
 enum EmailValidationError: Int, Error, LocalizedError {
     case noValue = 400
@@ -37,6 +38,36 @@ final class APIManager {
     
     private let provider = MoyaProvider<SeSACAPI>()
     
+    func emailValidationAPI3(email: String) -> Single<Result<Void, EmailValidationError>> {
+        return Single<Result<Void, EmailValidationError>>.create { [weak self] single in
+            
+            guard let self else { return Disposables.create() }
+            
+            provider.request(.emailValidation(model: EmailValidation(email: email))) { result in
+                switch result {
+                case .success(let value):
+                    switch value.statusCode {
+                    case 200...299:
+                        single(.success(.success(())))
+                    case 400:
+                        single(.success(.failure(.noValue)))
+                    case 409:
+                        single(.success(.failure(.usingValue)))
+                    case 500:
+                        single(.success(.failure(.severError)))
+                    default:
+                        single(.success(.failure(.unknowned)))
+                    }
+                case .failure(let error):
+                    single(.failure(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+        .debug()
+    }
+    
     func emailValidationAPI2(email: String) -> Observable<Result<Void, EmailValidationError>> {
         return Observable<Result<Void, EmailValidationError>>.create { [weak self] observer in
             
@@ -48,7 +79,7 @@ final class APIManager {
                     switch value.statusCode {
                     case 200...299:
                         observer.onNext(.success(()))
-//                        observer.onCompleted()
+                        observer.onCompleted()
                     case 400:
                         observer.onNext(.failure(.noValue))
                         observer.onCompleted()
@@ -60,10 +91,10 @@ final class APIManager {
                         return observer.onCompleted()
                     default:
                         observer.onNext(.failure(.unknowned))
-                        return observer.onCompleted()
+                        observer.onCompleted()
                     }
                 case .failure(let error):
-                    return observer.onError(error)
+                    observer.onError(error)
                 }
             }
             

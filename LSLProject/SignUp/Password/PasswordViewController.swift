@@ -15,6 +15,8 @@ class PasswordViewController: MakeViewController {
     
     let disposeBag = DisposeBag()
     
+    var signUpValues: [String?]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,6 +45,7 @@ class PasswordViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.text = value
+                owner.signUpValues?.append(value)
             }
             .disposed(by: disposeBag)
         
@@ -56,6 +59,7 @@ class PasswordViewController: MakeViewController {
     }
     
     @objc func pushNextVieController() {
+        print(signUpValues)
         view.endEditing(true)
         let vc = NicknameViewController()
         navigationController?.pushViewController(vc, animated: true)

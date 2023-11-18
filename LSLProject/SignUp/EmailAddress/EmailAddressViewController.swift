@@ -15,6 +15,8 @@ class EmailAddressViewController: MakeViewController {
     
     let disposeBag = DisposeBag()
     
+    var signUpValues: [String?]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,6 +47,7 @@ class EmailAddressViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.text = value
+                owner.signUpValues?.append(value)
             }
             .disposed(by: disposeBag)
         
@@ -66,6 +69,7 @@ class EmailAddressViewController: MakeViewController {
     }
     
     @objc func pushNextVieController() {
+        print(signUpValues)
         view.endEditing(true)
         let vc = PasswordViewController()
         navigationController?.pushViewController(vc, animated: true)

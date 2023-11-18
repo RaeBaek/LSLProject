@@ -16,43 +16,49 @@ class MapAndFlatMap: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        goMap()
         goFlatMap()
+        
+    }
+
+    func goFlatMap() {
+        let upper = Observable.of("1", "2", "3")
+        let lower = Observable.of("a", "b", "c")
+        
+        upper
+            .flatMap { value in
+                return lower.map { value + $0 }
+            }
+            .subscribe(onNext: {                    value in
+                print(value)
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     func goMap() {
-        let value = Observable.of(1, 2, 3)
         
-        value
-            .map { $0 * 2 }
-            .bind { value in
-                print(value)
-            }
-            .disposed(by: disposeBag)
-        
-    }
-    
-    func goFlatMap() {
-        let upper = Observable.of("1", "rb2@sesac.com", "C", "rb2@sesac.com", "rb2@sesac.com", "rb2@sesac.com", "C", "C")
-        let lower = Observable.of("a", "b", "c")
+//        let upper = Observable.of("1", "rb2@sesac.com", "C", "rb2@sesac.com", "rb2@sesac.com", "rb2@sesac.com", "C", "C")
         
 //        upper
-//            .flatMap { value in
-//                return lower.map { value + $0 }
+//            .flatMap {
+//                APIManager.shared.emailValidationAPI2(email: $0)
 //            }
 //            .bind { value in
-//                print(value)
+//                print()
 //            }
 //            .disposed(by: disposeBag)
         
-        upper
-            .flatMap {
-                APIManager.shared.emailValidationAPI2(email: $0)
+        let value = Observable.of(1, 2, 3)
+        
+        value
+            .map { value in
+                return value * 2
             }
-            .bind { value in
-                print()
-            }
+            .subscribe(onNext: { value in
+                print(value)
+            })
             .disposed(by: disposeBag)
+        
     }
     
 }

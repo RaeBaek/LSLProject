@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: scene)
         
-        let rootViewController = UINavigationController(rootViewController: MapAndFlatMap())
+        let rootViewController = UINavigationController(rootViewController: SignInViewController())
         
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()

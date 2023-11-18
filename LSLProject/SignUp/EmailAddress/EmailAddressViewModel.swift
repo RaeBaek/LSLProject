@@ -50,7 +50,7 @@ class EmailAddressViewModel {
                 return text
             }
             .flatMap {
-                APIManager.shared.emailValidationAPI2(email: $0)
+                APIManager.shared.emailValidationAPI3(email: $0)
             }
             .subscribe(with: self, onNext: { owner, value in
                 switch value {
@@ -62,24 +62,6 @@ class EmailAddressViewModel {
                     outputText.accept(error.desciption)
                 }
             })
-//            .subscribe(with: self, onNext: { owner, value in
-//                owner.requestEmailValidationAPI(email: value) { response, code in
-//                    print(code, "===")
-//                    print(response.message, "!===!")
-//                    statusCode.accept(code)
-//                    outputText.accept(response.message)
-//                }
-//            }, onCompleted: { owner in
-//                print("컴플리트~~")
-//            })
-//            .subscribe(with: self, onNext: { owner, value in
-//                owner.requestEmailValidationAPI(email: value) { response, code in
-//                    print(code, "===")
-//                    print(response.message, "!===!")
-//                    statusCode.accept(code)
-//                    outputText.accept(response.message)
-//                }
-//            })
             .disposed(by: disposeBag)
         
         statusCode
