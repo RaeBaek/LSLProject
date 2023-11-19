@@ -21,11 +21,23 @@ class PhoneNumberViewModel {
     
     struct Output {
         let sendText: PublishRelay<String?>
+        let maxText: PublishRelay<String?>
     }
     
     func transform(input: Input) -> Output {
         
+        let maxText = PublishRelay<String?>()
         let sendText = PublishRelay<String?>()
+        
+        input.inputText
+            .bind { value in
+                if value.count > 11 {
+                    let index = value.index(value.startIndex, offsetBy: 11)
+                    maxText.accept(String(value[..<index]))
+                    
+                }
+            }
+            .disposed(by: disposeBag)
         
         input.nextButtonClicked
             .withLatestFrom(input.inputText) { _, text in
@@ -40,7 +52,7 @@ class PhoneNumberViewModel {
             }
             .disposed(by: disposeBag)
         
-        return Output(sendText: sendText)
+        return Output(sendText: sendText, maxText: maxText)
     }
     
 }

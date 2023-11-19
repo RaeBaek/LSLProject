@@ -23,11 +23,21 @@ class PasswordViewController: MakeViewController {
         titleLabel.text = "비밀번호 입력"
         descriptionLabel.text = "다른 사람이 추측할 수 없는 6자 이상의 문자 또는 숫자로 비밀번호를 만드세요."
         customTextField.placeholder = "비밀번호 (필수)"
+        customTextField.keyboardType = .alphabet
+        customTextField.isSecureTextEntry = true
         
         guard let signUpValues else { return }
         
         bind(value: signUpValues)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let signUpValues else { return }
+        
+        print(#function, signUpValues)
     }
     
     func bind(value: [String?]) {
@@ -59,7 +69,9 @@ class PasswordViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 signUpValues.append(value)
+                print("PasswordViewController -> \(signUpValues)")
                 owner.pushNextVieController(value: signUpValues)
+                signUpValues.removeLast()
             }
             .disposed(by: disposeBag)
         
@@ -67,7 +79,6 @@ class PasswordViewController: MakeViewController {
     
     func pushNextVieController(value: [String?]) {
         view.endEditing(true)
-        print("------", value)
         let vc = NicknameViewController()
         vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)

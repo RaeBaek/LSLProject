@@ -15,6 +15,8 @@ class EmailAddressViewController: MakeViewController {
     
     let disposeBag = DisposeBag()
     
+    var signUpValues: [String?] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,16 +25,24 @@ class EmailAddressViewController: MakeViewController {
         
         customTextField.placeholder = "이메일 주소 (필수)"
         
-        bind()
+        bind(value: signUpValues)
         
     }
     
-    func bind() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print(#function, signUpValues)
+        
+    }
+    
+    func bind(value: [String?]) {
         
         let input = EmailAddressViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
-        var signUpValues = [String?]()
+        
+        var signUpValues = value
         
         output.borderStatus
             .withUnretained(self)
@@ -64,8 +74,10 @@ class EmailAddressViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 signUpValues.append(value)
-                print("=====", signUpValues)
+                print("EmailAddressViewController -> \(signUpValues)")
                 owner.pushNextVieController(value: signUpValues)
+                signUpValues = []
+                print("EmailAddressViewController -> \(signUpValues)")
             }
             .disposed(by: disposeBag)
 
@@ -73,8 +85,11 @@ class EmailAddressViewController: MakeViewController {
     
     func pushNextVieController(value: [String?]) {
         view.endEditing(true)
+        
         let vc = PasswordViewController()
+        
         vc.signUpValues = value
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     

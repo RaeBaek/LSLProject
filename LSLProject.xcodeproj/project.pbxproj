@@ -14,7 +14,7 @@
 		146B16D72B0362C300073B91 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D62B0362C300073B91 /* PasswordViewController.swift */; };
 		146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D82B03672400073B91 /* NicknameViewController.swift */; };
 		146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DA2B03688F00073B91 /* PhoneNumberViewController.swift */; };
-		146B16DD2B037D2800073B91 /* BirthdayMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */; };
+		146B16DD2B037D2800073B91 /* BirthdayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DC2B037D2800073B91 /* BirthdayViewController.swift */; };
 		146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16DF2B0388EC00073B91 /* EmailAddressViewModel.swift */; };
 		146B16E22B03AE5000073B91 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16E12B03AE5000073B91 /* APIManager.swift */; };
 		146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */; };
@@ -51,7 +51,7 @@
 		146B16D62B0362C300073B91 /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		146B16D82B03672400073B91 /* NicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewController.swift; sourceTree = "<group>"; };
 		146B16DA2B03688F00073B91 /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
-		146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayMakeViewController.swift; sourceTree = "<group>"; };
+		146B16DC2B037D2800073B91 /* BirthdayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewController.swift; sourceTree = "<group>"; };
 		146B16DF2B0388EC00073B91 /* EmailAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewModel.swift; sourceTree = "<group>"; };
 		146B16E12B03AE5000073B91 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewModel.swift; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 		146B9F5F2B051DA200FCB268 /* Birthday */ = {
 			isa = PBXGroup;
 			children = (
-				146B16DC2B037D2800073B91 /* BirthdayMakeViewController.swift */,
+				146B16DC2B037D2800073B91 /* BirthdayViewController.swift */,
 				146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */,
 			);
 			path = Birthday;
@@ -205,13 +205,13 @@
 		1495621E2B024D1F006CED34 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				146B16D02B03511600073B91 /* Make */,
 				146B16DE2B0388D100073B91 /* EmailAddress */,
 				14D9F1822B04CECD00E4025F /* Password */,
 				146B9F5B2B051D4C00FCB268 /* Nickname */,
 				146B9F5E2B051D9400FCB268 /* PhoneNumber */,
 				146B9F5F2B051DA200FCB268 /* Birthday */,
 				144B80AC2B09173D00993347 /* Check */,
-				146B16D02B03511600073B91 /* Make */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -358,7 +358,7 @@
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 				147CC5612B03D0B800D7DA7C /* API.swift in Sources */,
-				146B16DD2B037D2800073B91 /* BirthdayMakeViewController.swift in Sources */,
+				146B16DD2B037D2800073B91 /* BirthdayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

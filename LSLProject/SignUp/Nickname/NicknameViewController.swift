@@ -23,10 +23,20 @@ class NicknameViewController: MakeViewController {
         titleLabel.text = "닉네임 만들기"
         descriptionLabel.text = "회원님만의 닉네임을 만드세요. 중복도 가능합니다!"
         customTextField.placeholder = "닉네임 (필수)"
+        customTextField.keyboardType = .default
         
         guard let signUpValues else { return }
         
         bind(value: signUpValues)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let signUpValues else { return }
+        
+        print(#function, signUpValues)
         
     }
     
@@ -42,7 +52,9 @@ class NicknameViewController: MakeViewController {
             .withUnretained(self)
             .bind { owner, value in
                 signUpValues.append(value)
+                print("PasswordViewController -> \(signUpValues)")
                 owner.pushNextVieController(value: signUpValues)
+                signUpValues.removeLast()
             }
             .disposed(by: disposeBag)
         
@@ -51,7 +63,6 @@ class NicknameViewController: MakeViewController {
     func pushNextVieController(value: [String?]) {
         print(value)
         view.endEditing(true)
-        print("------", value)
         let vc = PhoneNumberViewController()
         vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)
