@@ -9,6 +9,21 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+enum EmailValidationError: Int, LoggableError {
+    
+    case noValue = 400
+    case usingValue = 409
+    
+    var message: String {
+        switch self {
+        case .usingValue:
+            return "사용이 불가한 이메일입니다."
+        case .noValue:
+            return "필수 값을 채워주세요."
+        }
+    }
+}
+
 class EmailAddressViewModel {
     
     struct Input {
@@ -24,7 +39,12 @@ class EmailAddressViewModel {
         let sendText: PublishRelay<String>
     }
     
-    let disposeBag = DisposeBag()
+    private let repository: LoginRepository
+    private let disposeBag = DisposeBag()
+    
+    init(repository: LoginRepository) {
+        self.repository = repository
+    }
     
     func transform(input: Input) -> Output {
         
@@ -50,21 +70,29 @@ class EmailAddressViewModel {
         
         input.nextButtonClicked
             .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .withUnretained(self)
             .withLatestFrom(input.inputText) { _, text in
                 print(text)
                 return text
             }
-            .flatMap {
-                APIManager.shared.emailValidationAPI3(email: $0)
+            .flatMap { value in
+                self.repository.requestEmailValidation(email: value)
             }
             .subscribe(onNext: { value in
                 switch value {
-                case .success():
+                case .success:
                     statusCode.accept(200)
                     outputText.accept("사용 가능한 이메일입니다.")
                 case .failure(let error):
-                    statusCode.accept(error.rawValue)
-                    outputText.accept(error.desciption)
+                    guard let emailValidationError = EmailValidationError(rawValue: error.rawValue) else {
+                        print("=====", error.message)
+                        print("-----", error.rawValue)
+                        outputText.accept(error.message)
+                        statusCode.accept(error.rawValue)
+                        return
+                    }
+                    statusCode.accept(emailValidationError.rawValue)
+                    outputText.accept(emailValidationError.message)
                 }
             })
             .disposed(by: disposeBag)
@@ -83,17 +111,17 @@ class EmailAddressViewModel {
         return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus, sendText: sendText)
     }
     
-    func requestEmailValidationAPI(email: String, completionHandler: @escaping (EmailValidationResponse, Int) -> Void) {
-        APIManager.shared.emailValidationAPI(email: email) { response, statusCode  in
-            switch response {
-            case .success(let success):
-                dump(success)
-                completionHandler(success, statusCode)
-            case .failure(let failure):
-                print("에러코드: \(failure.rawValue)")
-                print("에러메시지: \(failure.desciption)")
-            }
-        }
-    }
+//    private func requestEmailValidationAPI(email: String, completionHandler: @escaping (EmailValidationResponse, Int) -> Void) {
+//        APIManager.shared.emailValidationAPI(email: email) { response, statusCode  in
+//            switch response {
+//            case .success(let success):
+//                dump(success)
+//                completionHandler(success, statusCode)
+//            case .failure(let failure):
+//                print("에러코드: \(failure.rawValue)")
+//                print("에러메시지: \(failure.desciption)")
+//            }
+//        }
+//    }
     
 }

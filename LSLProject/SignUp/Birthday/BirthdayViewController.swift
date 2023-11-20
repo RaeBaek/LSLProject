@@ -11,6 +11,16 @@ import RxCocoa
 
 class BirthdayViewController: MakeViewController {
     
+    lazy var datePicker = {
+        let view = UIDatePicker()
+        view.datePickerMode = .date
+        view.preferredDatePickerStyle = .wheels
+        view.locale = Locale(identifier: "ko-KR")
+        customTextField.inputView = view
+        
+        return view
+    }()
+    
     let skipButton = UIButton.signUpButton(title: "건너뛰기")
     
     let viewModel = BirthdayViewModel()
@@ -29,8 +39,6 @@ class BirthdayViewController: MakeViewController {
         
         guard let signUpValues else { return }
         
-        setUpDatePicker()
-        
         bind(value: signUpValues)
         
     }
@@ -46,14 +54,56 @@ class BirthdayViewController: MakeViewController {
     
     func bind(value: [String?]) {
         
-        let input = BirthdayViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap, skipButtonClicked: skipButton.rx.tap)
+        let input = BirthdayViewModel.Input(inputText: datePicker.rx.value, nextButtonClicked: nextButton.rx.tap, skipButtonClicked: skipButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
         var signUpValues = value
         
-        output.sendText
+        output.textStatus
             .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.isHidden = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.borderStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+            }
+            .disposed(by: disposeBag)
+        
+        output.outputText
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.customTextField.text = value
+            }
+            .disposed(by: disposeBag)
+        
+//        output.sendText
+//            .withUnretained(self)
+//            .bind { owner, value in
+//                signUpValues.append(value)
+//                print("BirthdayMakeViewController -> \(signUpValues)")
+//                owner.pushNextVieController(value: signUpValues)
+//                signUpValues.removeLast()
+//            }
+//            .disposed(by: disposeBag)
+        
+        output.statusText
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.text = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.pushStatus
+            .withLatestFrom(output.sendText, resultSelector: { _, value in
+                return value
+            })
+            .withUnretained(self)
+            .debug()
             .bind { owner, value in
                 signUpValues.append(value)
                 print("BirthdayMakeViewController -> \(signUpValues)")
@@ -69,29 +119,6 @@ class BirthdayViewController: MakeViewController {
         let vc = CheckViewController()
         vc.signUpValues = value
         navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func setUpDatePicker() {
-        let datePicker = UIDatePicker()
-        
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.locale = Locale(identifier: "ko-KR")
-        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
-        customTextField.inputView = datePicker
-        customTextField.text = dateFormat(date: Date())
-        
-    }
-    
-    @objc func dateChange(_ sender: UIDatePicker) {
-        customTextField.text = dateFormat(date: sender.date)
-    }
-    
-    private func dateFormat(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy년 MM월 dd일"
-        
-        return formatter.string(from: date)
     }
     
     override func configureView() {

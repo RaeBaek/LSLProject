@@ -27,6 +27,7 @@ class PasswordViewModel {
     let disposeBag = DisposeBag()
     
     func transform(input: Input) -> Output {
+        
         let textStatus = BehaviorRelay(value: false)//PublishRelay<Bool>()
         let pushStatus = PublishRelay<Bool>()
         let borderStatus = PublishRelay<Bool>()

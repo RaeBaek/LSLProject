@@ -49,4 +49,8 @@ extension SeSACAPI: TargetType {
          "SesacKey": "Ikwn9wgcfM"]
     }
     
+    var validationType: ValidationType {
+        return .successAndRedirectCodes
+    }
+    
 }

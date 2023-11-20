@@ -48,11 +48,37 @@ class NicknameViewController: MakeViewController {
         
         var signUpValues = value
         
-        output.sendText
+        output.outputText
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.text = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.textStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.isHidden = value
+                owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+            }
+            .disposed(by: disposeBag)
+        
+        output.borderStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.isHidden = value
+                owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+            }
+            .disposed(by: disposeBag)
+        
+        output.pushStatus
+            .withLatestFrom(output.sendText, resultSelector: { _, value in
+                return value
+            })
             .withUnretained(self)
             .bind { owner, value in
                 signUpValues.append(value)
-                print("PasswordViewController -> \(signUpValues)")
+                print("PhoneNumberViewController -> \(signUpValues)")
                 owner.pushNextVieController(value: signUpValues)
                 signUpValues.removeLast()
             }

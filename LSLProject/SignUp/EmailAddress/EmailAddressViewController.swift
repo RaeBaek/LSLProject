@@ -11,7 +11,7 @@ import RxCocoa
 
 class EmailAddressViewController: MakeViewController {
     
-    let viewModel = EmailAddressViewModel()
+    let viewModel = EmailAddressViewModel(repository: LoginRepository())
     
     let disposeBag = DisposeBag()
     
@@ -31,7 +31,6 @@ class EmailAddressViewController: MakeViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         print(#function, signUpValues)
         
     }
