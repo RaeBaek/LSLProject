@@ -23,7 +23,7 @@ class BirthdayViewController: MakeViewController {
     
     let skipButton = UIButton.signUpButton(title: "건너뛰기")
     
-    let viewModel = BirthdayViewModel()
+    let viewModel = BirthdayViewModel(repository: NetworkRepository())
     
     let disposeBag = DisposeBag()
     
@@ -54,11 +54,11 @@ class BirthdayViewController: MakeViewController {
     
     func bind(value: [String?]) {
         
-        let input = BirthdayViewModel.Input(inputText: datePicker.rx.value, nextButtonClicked: nextButton.rx.tap, skipButtonClicked: skipButton.rx.tap)
+        var signUpValues = value
+        
+        let input = BirthdayViewModel.Input(signUpValues: Observable.of(signUpValues), inputText: datePicker.rx.value, nextButtonClicked: nextButton.rx.tap, skipButtonClicked: skipButton.rx.tap)
         
         let output = viewModel.transform(input: input)
-        
-        var signUpValues = value
         
         output.textStatus
             .withUnretained(self)
@@ -81,16 +81,6 @@ class BirthdayViewController: MakeViewController {
             }
             .disposed(by: disposeBag)
         
-//        output.sendText
-//            .withUnretained(self)
-//            .bind { owner, value in
-//                signUpValues.append(value)
-//                print("BirthdayMakeViewController -> \(signUpValues)")
-//                owner.pushNextVieController(value: signUpValues)
-//                signUpValues.removeLast()
-//            }
-//            .disposed(by: disposeBag)
-        
         output.statusText
             .withUnretained(self)
             .bind { owner, value in
@@ -98,7 +88,7 @@ class BirthdayViewController: MakeViewController {
             }
             .disposed(by: disposeBag)
         
-        output.pushStatus
+        output.signUpStatus
             .withLatestFrom(output.sendText, resultSelector: { _, value in
                 return value
             })

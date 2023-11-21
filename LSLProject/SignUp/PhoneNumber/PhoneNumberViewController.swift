@@ -50,14 +50,38 @@ class PhoneNumberViewController: MakeViewController {
         
         let output = viewModel.transform(input: input)
         
-        output.maxText
+        output.textStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.isHidden = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.borderStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+            }
+            .disposed(by: disposeBag)
+        
+        output.sendText
             .withUnretained(self)
             .bind { owner, value in
                 owner.customTextField.text = value
             }
             .disposed(by: disposeBag)
         
-        output.sendText
+        output.outputText
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.text = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.pushStatus
+            .withLatestFrom(output.sendText, resultSelector: { _, text in
+                return text
+            })
             .withUnretained(self)
             .bind { owner, value in
                 signUpValues.append(value)

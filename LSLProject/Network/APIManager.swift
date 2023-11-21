@@ -15,44 +15,6 @@ import RxCocoa
     case failure(LoggableError)
 }
 
-protocol LoggableError: Error {
-    var rawValue: Int { get }
-    var message: String { get }
-}
-
-enum NetworkError: Int, LoggableError {
-    case invalidData = 0
-    case noValue = 400
-    case checkAccount = 401
-    case noAccessAuthority = 403
-    case usingValue = 409
-    case dbServerFailure = 410
-    case expireAccessToken = 419
-    case noSeSACKey = 420
-    case overRequest = 429
-    case abnomalURL = 444
-    case noEditAuthority = 445
-    case serverError = 500
-    case unknowned = 999
-    
-    var message: String {
-        switch self {
-        case .noSeSACKey:
-            return "This service sesac_memolease only"
-        case .overRequest:
-            return "과호출입니다."
-        case .abnomalURL:
-            return "돌아가 여긴 자네가 올 곳이 아니야."
-        case .serverError:
-            return "서버 에러입니다."
-        case .unknowned:
-            return "알 수 없는 에러입니다."
-        default:
-            return ""
-        }
-    }
-}
-
 protocol NetworkService {
     func request<T: Decodable>(target: SeSACAPI) -> Single<NetworkResult<T>>
 }

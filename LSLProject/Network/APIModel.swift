@@ -9,11 +9,11 @@ import Foundation
 
 //MARK: - Encodable
 struct SignUp: Encodable {
-    let email: String
-    let password: String
-    let nick: String
+    let email: String?
+    let password: String?
+    let nick: String?
     let phoneNum: String?
-    let bitthDay: String?
+    let birthDay: String?
 }
 
 struct EmailValidation: Encodable {
@@ -23,4 +23,15 @@ struct EmailValidation: Encodable {
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String
+}
+
+struct SignUpResponse: Decodable {
+    let id: String
+    let email: String
+    let nick: String
+    
+    enum CodingKeys: String, CodingKey {
+        case email, nick
+        case id = "_id"
+    }
 }

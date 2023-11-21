@@ -11,7 +11,7 @@ import RxCocoa
 
 class EmailAddressViewController: MakeViewController {
     
-    let viewModel = EmailAddressViewModel(repository: LoginRepository())
+    let viewModel = EmailAddressViewModel(repository: NetworkRepository())
     
     let disposeBag = DisposeBag()
     

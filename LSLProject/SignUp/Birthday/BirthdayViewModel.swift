@@ -12,6 +12,7 @@ import RxCocoa
 class BirthdayViewModel {
     
     struct Input {
+        let signUpValues: Observable<[String?]>
         let inputText: ControlProperty<Date>
         let nextButtonClicked: ControlEvent<Void>
         let skipButtonClicked: ControlEvent<Void>
@@ -23,10 +24,16 @@ class BirthdayViewModel {
         let statusText: BehaviorRelay<String>
         let textStatus: PublishRelay<Bool>
         let borderStatus: PublishRelay<Bool>
-        let pushStatus: PublishRelay<Bool>
+        let statusCode : PublishRelay<Int>
+        let signUpStatus: PublishRelay<Bool>
     }
     
+    private var repository: NetworkRepository
     private let disposeBag = DisposeBag()
+    
+    init(repository: NetworkRepository) {
+        self.repository = repository
+    }
     
     func transform(input: Input) -> Output {
         
@@ -35,7 +42,8 @@ class BirthdayViewModel {
         let outputText = BehaviorRelay(value: dateFormat(date: Date()))
         let statusText = BehaviorRelay(value: "만 17세 미만은 가입할 수 업습니다.")
         let borderStatus = PublishRelay<Bool>()
-        let pushStatus = PublishRelay<Bool>()
+        let statusCode = PublishRelay<Int>()
+        let signUpStatus = PublishRelay<Bool>()
         
         input.inputText
             .map { _ in
@@ -58,7 +66,9 @@ class BirthdayViewModel {
             }
             .disposed(by: disposeBag)
         
-        input.nextButtonClicked
+        let readyForSignUp = input.nextButtonClicked
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .withUnretained(self)
             .withLatestFrom(input.inputText) { _, text in
                 return text
             }
@@ -66,24 +76,73 @@ class BirthdayViewModel {
                 return self?.calculateBirthDay(date: value)
             }
             .compactMap { $0 }
+            .share()
+        
+        readyForSignUp
+            .filter { $0 == false }
             .bind { bool in
                 textStatus.accept(bool)
                 borderStatus.accept(bool)
-                if bool {
-                    pushStatus.accept(bool)
-                }
+//                if bool {
+//                    signUpStatus.accept(bool)
+//                }
             }
             .disposed(by: disposeBag)
+        
+        readyForSignUp
+            .filter { $0 }
+            .withLatestFrom(input.signUpValues)
+            .flatMap { value in
+                self.repository.requestSignUp(email: value[0],
+                                              password: value[1],
+                                              nick: value[2],
+                                              phoneNum: value[3],
+                                              birthDay: outputText.value)
+            }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success:
+                    print("회원가입 성공~~~")
+                    statusCode.accept(200)
+                case .failure(let error):
+                    guard let signUpError = SignUpError(rawValue: error.rawValue) else {
+                        print("=====", error.message)
+                        print("-----", error.rawValue)
+                        outputText.accept(error.message)
+                        statusCode.accept(error.rawValue)
+                        return
+                    }
+                    statusCode.accept(signUpError.rawValue)
+                    outputText.accept(signUpError.message)
+                }
+            })
+            .disposed(by: disposeBag)
+
         
         input.skipButtonClicked
             .bind { _ in
                 sendText.accept(nil)
-                pushStatus.accept(true)
+                signUpStatus.accept(true)
             }
             .disposed(by: disposeBag)
         
-        return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus, pushStatus: pushStatus)
+        statusCode
+            .map { $0 == 200 }
+            .bind { value in
+                textStatus.accept(value)
+                if value == true {
+                    signUpStatus.accept(value)
+                    print(value)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus, statusCode: statusCode, signUpStatus: signUpStatus)
     }
+    
+//    private func signUp(data: [String?]) -> {
+//        self.repository.requestSignUp(email: data[0], password: data[1], nick: data[2], phoneNum: data[3], birthDay: data[4])
+//    }
     
     private func dateFormat(date: Date) -> String {
         let formatter = DateFormatter()

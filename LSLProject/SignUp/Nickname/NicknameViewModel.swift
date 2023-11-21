@@ -68,12 +68,13 @@ class NicknameViewModel {
             .bind { value in
                 textStatus.accept(!value)
                 borderStatus.accept(!value)
-                outputText.accept("필수 값을 채워주세요.")
+                outputText.accept("닉네임은 비워둘 수 없습니다.")
                 if value == false {
                     pushStatus.accept(value)
                 }
             }
             .disposed(by: disposeBag)
+        
         return Output(sendText: sendText, textStatus: textStatus, borderStatus: borderStatus, pushStatus: pushStatus, outputText: outputText)
     }
     

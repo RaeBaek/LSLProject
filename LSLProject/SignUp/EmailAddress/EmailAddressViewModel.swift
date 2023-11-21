@@ -9,21 +9,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum EmailValidationError: Int, LoggableError {
-    
-    case noValue = 400
-    case usingValue = 409
-    
-    var message: String {
-        switch self {
-        case .usingValue:
-            return "사용이 불가한 이메일입니다."
-        case .noValue:
-            return "필수 값을 채워주세요."
-        }
-    }
-}
-
 class EmailAddressViewModel {
     
     struct Input {
@@ -39,10 +24,10 @@ class EmailAddressViewModel {
         let sendText: PublishRelay<String>
     }
     
-    private let repository: LoginRepository
+    private let repository: NetworkRepository
     private let disposeBag = DisposeBag()
     
-    init(repository: LoginRepository) {
+    init(repository: NetworkRepository) {
         self.repository = repository
     }
     
