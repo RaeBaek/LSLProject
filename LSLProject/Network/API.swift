@@ -11,6 +11,7 @@ import Moya
 enum SeSACAPI {
     case signUp(model: SignUp)
     case emailValidation(model: EmailValidation)
+    case login(model: Login)
     
 }
 
@@ -25,12 +26,14 @@ extension SeSACAPI: TargetType {
             return "join"
         case .emailValidation:
             return "validation/email"
+        case .login:
+            return "login"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .signUp, .emailValidation:
+        case .signUp, .emailValidation, .login:
             return .post
         }
     }
@@ -40,6 +43,8 @@ extension SeSACAPI: TargetType {
         case .signUp(let model):
             return .requestJSONEncodable(model)
         case .emailValidation(let model):
+            return .requestJSONEncodable(model)
+        case .login(let model):
             return .requestJSONEncodable(model)
         }
     }

@@ -20,6 +20,11 @@ struct EmailValidation: Encodable {
     let email: String
 }
 
+struct Login: Encodable {
+    let email: String?
+    let password: String?
+}
+
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String
@@ -34,4 +39,9 @@ struct SignUpResponse: Decodable {
         case email, nick
         case id = "_id"
     }
+}
+
+struct LoginResponse: Decodable {
+    let token: String
+    let refreshToken: String
 }

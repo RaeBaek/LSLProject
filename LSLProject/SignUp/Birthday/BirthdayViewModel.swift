@@ -79,13 +79,10 @@ class BirthdayViewModel {
             .share()
         
         readyForSignUp
-            .filter { $0 == false }
+            .filter { !$0 }
             .bind { bool in
                 textStatus.accept(bool)
                 borderStatus.accept(bool)
-//                if bool {
-//                    signUpStatus.accept(bool)
-//                }
             }
             .disposed(by: disposeBag)
         
@@ -97,8 +94,7 @@ class BirthdayViewModel {
                                               password: value[1],
                                               nick: value[2],
                                               phoneNum: value[3],
-                                              birthDay: outputText.value)
-            }
+                                              birthDay: outputText.value)}
             .subscribe(onNext: { value in
                 switch value {
                 case .success:
@@ -117,32 +113,68 @@ class BirthdayViewModel {
                 }
             })
             .disposed(by: disposeBag)
-
         
         input.skipButtonClicked
-            .bind { _ in
-                sendText.accept(nil)
-                signUpStatus.accept(true)
-            }
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .withLatestFrom(input.signUpValues)
+            .flatMap { value in
+                self.repository.requestSignUp(email: value[0],
+                                              password: value[1],
+                                              nick: value[2],
+                                              phoneNum: value[3],
+                                              birthDay: nil)}
+            .subscribe(onNext: { value in
+                switch value {
+                case .success:
+                    print("회원가입 성공~~~22")
+                    statusCode.accept(200)
+                case .failure(let error):
+                    guard let signUpError = SignUpError(rawValue: error.rawValue) else {
+                        print("=====", error.message)
+                        print("-----", error.rawValue)
+                        outputText.accept(error.message)
+                        statusCode.accept(error.rawValue)
+                        return
+                    }
+                    statusCode.accept(signUpError.rawValue)
+                    outputText.accept(signUpError.message)
+                }
+            })
             .disposed(by: disposeBag)
         
         statusCode
             .map { $0 == 200 }
-            .bind { value in
-                textStatus.accept(value)
-                if value == true {
-                    signUpStatus.accept(value)
-                    print(value)
-                }
+            .filter { $0 }
+            .withLatestFrom(input.signUpValues, resultSelector: { bool, value in
+                textStatus.accept(bool)
+                return value
+            })
+            .flatMap { value in
+                self.repository.requestLogin(email: value[0], password: value[1])
             }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success:
+                    print("열심히 로그인 하셨으니까...")
+//                    statusCode.accept(200)
+                    outputText.accept("정상적으로 로그인 처리되었습니다!")
+                    signUpStatus.accept(true)
+                case .failure(let error):
+                    guard let loginError = LoginError(rawValue: error.rawValue) else {
+                        print("=====", error.message)
+                        print("-----", error.rawValue)
+                        outputText.accept(error.message)
+                        statusCode.accept(error.rawValue)
+                        return
+                    }
+//                    statusCode.accept(loginError.rawValue)
+                    outputText.accept(loginError.message)
+                }
+            })
             .disposed(by: disposeBag)
         
         return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus, statusCode: statusCode, signUpStatus: signUpStatus)
     }
-    
-//    private func signUp(data: [String?]) -> {
-//        self.repository.requestSignUp(email: data[0], password: data[1], nick: data[2], phoneNum: data[3], birthDay: data[4])
-//    }
     
     private func dateFormat(date: Date) -> String {
         let formatter = DateFormatter()

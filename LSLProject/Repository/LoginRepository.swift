@@ -28,5 +28,9 @@ class NetworkRepository: NetworkRepositoryType {
         
     }
     
+    func requestLogin(email: String?, password: String?) -> Single<NetworkResult<LoginResponse>> {
+        APIManager.shared.request(target: .login(model: Login(email: email,
+                                                              password: password)))
+    }
     
 }

@@ -89,16 +89,13 @@ class BirthdayViewController: MakeViewController {
             .disposed(by: disposeBag)
         
         output.signUpStatus
-            .withLatestFrom(output.sendText, resultSelector: { _, value in
-                return value
-            })
             .withUnretained(self)
             .debug()
             .bind { owner, value in
-                signUpValues.append(value)
-                print("BirthdayMakeViewController -> \(signUpValues)")
+//                signUpValues.append(value)
+//                print("BirthdayMakeViewController -> \(signUpValues)")
                 owner.pushNextVieController(value: signUpValues)
-                signUpValues.removeLast()
+//                signUpValues.removeLast()
             }
             .disposed(by: disposeBag)
         

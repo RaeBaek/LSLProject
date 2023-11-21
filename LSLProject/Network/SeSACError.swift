@@ -73,3 +73,17 @@ enum SignUpError: Int, LoggableError {
         }
     }
 }
+
+enum LoginError: Int, LoggableError {
+    case noValue = 400
+    case checkAccount = 401
+    
+    var message: String {
+        switch self {
+        case .noValue:
+            return "필수 값을 채워주세요."
+        case .checkAccount:
+            return "계정을 확인해주세요."
+        }
+    }
+}
