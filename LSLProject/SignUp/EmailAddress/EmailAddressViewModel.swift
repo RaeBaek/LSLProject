@@ -40,16 +40,17 @@ class EmailAddressViewModel {
         let borderStatus = PublishRelay<Bool>()
         let sendText = PublishRelay<String>()
         
-        input.inputText
+        let inputText = input.inputText
             .distinctUntilChanged()
+        
+        inputText
             .map { _ in
                 return true
             }
             .bind(to: borderStatus)
             .disposed(by: disposeBag)
         
-        input.inputText
-            .distinctUntilChanged()
+        inputText
             .bind(to: sendText)
             .disposed(by: disposeBag)
         
@@ -95,18 +96,4 @@ class EmailAddressViewModel {
         
         return Output(textStatus: textStatus, pushStatus: pushStatus, outputText: outputText, borderStatus: borderStatus, sendText: sendText)
     }
-    
-//    private func requestEmailValidationAPI(email: String, completionHandler: @escaping (EmailValidationResponse, Int) -> Void) {
-//        APIManager.shared.emailValidationAPI(email: email) { response, statusCode  in
-//            switch response {
-//            case .success(let success):
-//                dump(success)
-//                completionHandler(success, statusCode)
-//            case .failure(let failure):
-//                print("에러코드: \(failure.rawValue)")
-//                print("에러메시지: \(failure.desciption)")
-//            }
-//        }
-//    }
-    
 }

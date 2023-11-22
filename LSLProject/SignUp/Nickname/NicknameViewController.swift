@@ -23,7 +23,6 @@ class NicknameViewController: MakeViewController {
         titleLabel.text = "닉네임 만들기"
         descriptionLabel.text = "회원님만의 닉네임을 만드세요. 중복도 가능합니다!"
         customTextField.placeholder = "닉네임 (필수)"
-        customTextField.keyboardType = .default
         
         guard let signUpValues else { return }
         

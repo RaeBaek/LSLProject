@@ -26,8 +26,26 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
+    let stackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 10
+        view.distribution = .fill
+        return view
+    }()
+    
     let emailTextField = UITextField.customTextField()
     let passwordTextField = UITextField.customTextField()
+    
+    let statusLabel = {
+        let view = UILabel()
+        view.textAlignment = .left
+        view.numberOfLines = 0
+        view.font = .systemFont(ofSize: 12, weight: .regular)
+        view.textColor = .systemRed
+        view.isHidden = true
+        return view
+    }()
     
     let signInButton = UIButton.capsuleButton(title: "로그인")
     let signUpButton = UIButton.signUpButton(title: "새 계정 만들기")
@@ -46,14 +64,65 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
+    let viewModel = SignInViewModel(repository: NetworkRepository())
+    
+    let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         emailTextField.placeholder = "사용자 이름, 이메일 주소 또는 휴대폰 번호"
+        emailTextField.keyboardType = .default
         passwordTextField.placeholder = "비밀번호"
-        signUpButton.addTarget(self, action: #selector(pushUserNameMakeViewController), for: .touchUpInside)
+        passwordTextField.keyboardType = .alphabet
+        passwordTextField.isSecureTextEntry = true
         
         self.navigationItem.backBarButtonItem = backBarbutton
+        
+        bind()
+        
+    }
+    
+    func bind() {
+        let input = SignInViewModel.Input(emailText: emailTextField.rx.text.orEmpty, passwordText: passwordTextField.rx.text.orEmpty, signInButtonClicked: signInButton.rx.tap, signUpButtonClicked: signUpButton.rx.tap)
+        
+        let output = viewModel.transform(input: input)
+        
+        output.textStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.isHidden = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.borderStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.emailTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+                owner.passwordTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
+            }
+            .disposed(by: disposeBag)
+        
+        output.outputText
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.statusLabel.text = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.loginStatus
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.changeRootViewController()
+            }
+            .disposed(by: disposeBag)
+        
+        output.signUpStatus
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.pushEmailAddressViewController()
+            }
+            .disposed(by: disposeBag)
         
     }
     
@@ -66,11 +135,17 @@ class SignInViewController: BaseViewController {
         view.endEditing(true)
     }
     
-    @objc func pushUserNameMakeViewController() {
+    func pushEmailAddressViewController() {
         view.endEditing(true)
         
         let vc = EmailAddressViewController()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func changeRootViewController() {
+        let vc = MainHomeViewController()
+        
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
     }
     
     override func configureView() {
@@ -78,8 +153,12 @@ class SignInViewController: BaseViewController {
         
         view.backgroundColor = .systemGray6
         
-        [logoImage, emailTextField, passwordTextField, signInButton, signUpButton, metaImage, metaLabel].forEach {
+        [logoImage, emailTextField, passwordTextField, stackView, signInButton, signUpButton, metaImage, metaLabel].forEach {
             view.addSubview($0)
+        }
+        
+        [emailTextField, passwordTextField, statusLabel].forEach {
+            stackView.addArrangedSubview($0)
         }
         
     }
@@ -94,19 +173,19 @@ class SignInViewController: BaseViewController {
         }
         
         emailTextField.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview().inset(16)
             $0.height.equalTo(60)
         }
         
         passwordTextField.snp.makeConstraints {
-            $0.top.equalTo(emailTextField.snp.bottom).offset(10)
-            $0.horizontalEdges.equalToSuperview().inset(16)
             $0.height.equalTo(60)
         }
         
+        stackView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(16)
+        }
+        
         signInButton.snp.makeConstraints {
-            $0.top.equalTo(passwordTextField.snp.bottom).offset(10)
+            $0.top.equalTo(stackView.snp.bottom).offset(25)
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.height.equalTo(45)
         }

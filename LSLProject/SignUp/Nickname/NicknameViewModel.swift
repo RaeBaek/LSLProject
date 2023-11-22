@@ -34,29 +34,19 @@ class NicknameViewModel {
         let pushStatus = PublishRelay<Bool>()
         let outputText = PublishRelay<String>()
         
-        input.inputText
-            .distinctUntilChanged()
+        let inputText = input.inputText
+                             .distinctUntilChanged()
+        
+        inputText
             .map { _ in
                 return true
             }
             .bind(to: borderStatus)
             .disposed(by: disposeBag)
         
-        input.inputText
-            .distinctUntilChanged()
+        inputText
             .bind(to: sendText)
             .disposed(by: disposeBag)
-        
-//        input.inputText
-//            .map { $0 == "" }
-//            .bind { value in
-//                print("빈 값인가 \(value)")
-//                if value == true {
-//                    textStatus.accept(!value)
-//                    outputText.accept("필수 값을 채워주세요.")
-//                }
-//            }
-//            .disposed(by: disposeBag)
         
         input.nextButtonClicked
             .throttle(.seconds(1), scheduler: MainScheduler.instance)

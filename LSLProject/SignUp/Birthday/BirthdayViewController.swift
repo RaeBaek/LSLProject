@@ -92,19 +92,21 @@ class BirthdayViewController: MakeViewController {
             .withUnretained(self)
             .debug()
             .bind { owner, value in
-//                signUpValues.append(value)
-//                print("BirthdayMakeViewController -> \(signUpValues)")
-                owner.pushNextVieController(value: signUpValues)
-//                signUpValues.removeLast()
+                owner.changeRootViewController()
             }
             .disposed(by: disposeBag)
         
     }
     
+    func changeRootViewController() {
+        let vc = MainHomeViewController()
+        
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
+    }
+    
     func pushNextVieController(value: [String?]) {
         view.endEditing(true)
-        let vc = CheckViewController()
-        vc.signUpValues = value
+        let vc = MainHomeViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     

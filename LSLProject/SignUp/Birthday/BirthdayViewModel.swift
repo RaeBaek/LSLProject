@@ -24,7 +24,6 @@ class BirthdayViewModel {
         let statusText: BehaviorRelay<String>
         let textStatus: PublishRelay<Bool>
         let borderStatus: PublishRelay<Bool>
-        let statusCode : PublishRelay<Int>
         let signUpStatus: PublishRelay<Bool>
     }
     
@@ -45,7 +44,9 @@ class BirthdayViewModel {
         let statusCode = PublishRelay<Int>()
         let signUpStatus = PublishRelay<Bool>()
         
-        input.inputText
+        let inputText = input.inputText
+        
+        inputText
             .map { _ in
                 return true
             }
@@ -55,7 +56,7 @@ class BirthdayViewModel {
             }
             .disposed(by: disposeBag)
         
-        input.inputText
+        inputText
             .map { [weak self] value in
                 return self?.dateFormat(date: value)
             }
@@ -154,11 +155,19 @@ class BirthdayViewModel {
             }
             .subscribe(onNext: { value in
                 switch value {
-                case .success:
-                    print("열심히 로그인 하셨으니까...")
-//                    statusCode.accept(200)
+                case .success(let data):
+                    
                     outputText.accept("정상적으로 로그인 처리되었습니다!")
+                    
+                    UserDefaultsManager.token = data.token
+                    UserDefaultsManager.refreshToken = data.refreshToken
+                    
+                    print("로그인 성공!")
+                    print("Token: \(UserDefaultsManager.token)")
+                    print("Refresh Token: \(UserDefaultsManager.refreshToken)")
+                    
                     signUpStatus.accept(true)
+                    
                 case .failure(let error):
                     guard let loginError = LoginError(rawValue: error.rawValue) else {
                         print("=====", error.message)
@@ -168,12 +177,13 @@ class BirthdayViewModel {
                         return
                     }
 //                    statusCode.accept(loginError.rawValue)
-                    outputText.accept(loginError.message)
+                    print("다음 오류가 발생할 확률은 거의 없지만...")
+                    print(loginError.message)
                 }
             })
             .disposed(by: disposeBag)
         
-        return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus, statusCode: statusCode, signUpStatus: signUpStatus)
+        return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus,  signUpStatus: signUpStatus)
     }
     
     private func dateFormat(date: Date) -> String {

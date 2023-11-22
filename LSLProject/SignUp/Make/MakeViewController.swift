@@ -58,6 +58,8 @@ class MakeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        customTextField.keyboardType = .default
+        
         self.navigationItem.backBarButtonItem = backBarbutton
         
     }

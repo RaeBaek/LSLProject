@@ -28,31 +28,31 @@ class PasswordViewModel {
     
     func transform(input: Input) -> Output {
         
-        let textStatus = BehaviorRelay(value: false)//PublishRelay<Bool>()
-        let pushStatus = PublishRelay<Bool>()
-        let borderStatus = PublishRelay<Bool>()
-        let sendText = PublishRelay<String>()
-        
         let empty = ""
         let emptyMessage = "비밀번호는 비워둘 수 없습니다."
         let modifyMessage = "비밀번호의 보안수준이 낮습니다. 비밀번호는 숫자로만 구성할 수 없으며 6자리 이상의 문자와 숫자 조합으로 더 긴 비밀번호를 만드세요."
         
+        let textStatus = BehaviorRelay(value: false)//PublishRelay<Bool>()
+        let pushStatus = PublishRelay<Bool>()
+        let borderStatus = PublishRelay<Bool>()
+        let sendText = PublishRelay<String>()
         let outputText = BehaviorRelay(value: empty)
         
-        input.inputText
-            .distinctUntilChanged()
+        let inputText = input.inputText
+                             .distinctUntilChanged()
+        
+        inputText
             .map { _ in
                 return true
             }
             .bind(to: borderStatus)
             .disposed(by: disposeBag)
         
-        input.inputText
-            .distinctUntilChanged()
+        inputText
             .bind(to: sendText)
             .disposed(by: disposeBag)
         
-        input.inputText
+        inputText
             .map { value -> Bool in
                 print(value)
                 if let value = Int(value) {
@@ -68,7 +68,7 @@ class PasswordViewModel {
             .bind(to: textStatus)
             .disposed(by: disposeBag)
         
-        input.inputText
+        inputText
             .map { $0 == "" }
             .bind { value in
                 print("빈 값인가 \(value)")

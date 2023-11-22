@@ -1,5 +1,5 @@
 //
-//  CheckViewController.swift
+//  MainHomeViewController.swift
 //  LSLProject
 //
 //  Created by 백래훈 on 11/19/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CheckViewController: BaseViewController {
+class MainHomeViewController: BaseViewController {
     
     let checkLabel = {
         let view = UILabel()
@@ -15,15 +15,11 @@ class CheckViewController: BaseViewController {
         return view
     }()
     
-    var signUpValues: [String?]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        guard let signUpValues else { return }
-        print(signUpValues)
-        checkLabel.text = "홈~~"
-        
+
+        checkLabel.text = "메인 홈~~"
         
     }
     

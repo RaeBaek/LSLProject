@@ -36,7 +36,7 @@ class PhoneNumberViewModel {
         let sendText = PublishRelay<String?>()
         
         input.inputText
-//            .distinctUntilChanged()
+            .distinctUntilChanged()
             .map { _ in
                 return true
             }
