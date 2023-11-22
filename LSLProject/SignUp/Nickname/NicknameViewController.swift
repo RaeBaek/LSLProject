@@ -9,11 +9,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class NicknameViewController: MakeViewController {
+final class NicknameViewController: MakeViewController {
     
-    let viewModel = NicknameViewModel()
+    private let viewModel = NicknameViewModel()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     var signUpValues: [String?]?
     
@@ -39,7 +39,7 @@ class NicknameViewController: MakeViewController {
         
     }
     
-    func bind(value: [String?]) {
+    private func bind(value: [String?]) {
         
         let input = NicknameViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
@@ -85,7 +85,7 @@ class NicknameViewController: MakeViewController {
         
     }
     
-    func pushNextVieController(value: [String?]) {
+    private func pushNextVieController(value: [String?]) {
         print(value)
         view.endEditing(true)
         let vc = PhoneNumberViewController()

@@ -9,9 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class BirthdayViewController: MakeViewController {
+final class BirthdayViewController: MakeViewController {
     
-    lazy var datePicker = {
+    private lazy var datePicker = {
         let view = UIDatePicker()
         view.datePickerMode = .date
         view.preferredDatePickerStyle = .wheels
@@ -21,11 +21,11 @@ class BirthdayViewController: MakeViewController {
         return view
     }()
     
-    let skipButton = UIButton.signUpButton(title: "건너뛰기")
+    private let skipButton = UIButton.signUpButton(title: "건너뛰기")
     
-    let viewModel = BirthdayViewModel(repository: NetworkRepository())
+    private let viewModel = BirthdayViewModel(repository: NetworkRepository())
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     var signUpValues: [String?]?
     
@@ -52,7 +52,7 @@ class BirthdayViewController: MakeViewController {
         
     }
     
-    func bind(value: [String?]) {
+    private func bind(value: [String?]) {
         
         var signUpValues = value
         
@@ -98,16 +98,10 @@ class BirthdayViewController: MakeViewController {
         
     }
     
-    func changeRootViewController() {
+    private func changeRootViewController() {
         let vc = MainHomeViewController()
         
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
-    }
-    
-    func pushNextVieController(value: [String?]) {
-        view.endEditing(true)
-        let vc = MainHomeViewController()
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func configureView() {

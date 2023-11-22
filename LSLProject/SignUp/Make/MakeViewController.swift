@@ -102,8 +102,6 @@ class MakeViewController: BaseViewController {
         }
         
         customTextField.snp.makeConstraints {
-//            $0.top.equalTo(descriptionLabel.snp.bottom).offset(20)
-//            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
             $0.height.equalTo(60)
         }
         
@@ -111,11 +109,6 @@ class MakeViewController: BaseViewController {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(20)
             $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
-        
-//        statusLabel.snp.makeConstraints {
-//            $0.top.equalTo(customTextField.snp.bottom).offset(10)
-//            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(16)
-//        }
         
         nextButton.snp.makeConstraints {
             $0.top.equalTo(statusLabel.snp.bottom).offset(25)

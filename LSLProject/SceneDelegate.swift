@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -34,7 +36,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = rootViewController // 전환
         
         UIView.transition(with: window, duration: 0.2, options: [.transitionCrossDissolve], animations: nil, completion: nil)
-      }
+    }
+    
+//    func checkUserToken() {
+//        
+//        let token = UserDefaultsManager.token
+//        let refreshToken = UserDefaultsManager.refreshToken
+//
+//        
+//    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

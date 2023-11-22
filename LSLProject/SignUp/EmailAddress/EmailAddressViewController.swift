@@ -9,13 +9,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class EmailAddressViewController: MakeViewController {
+final class EmailAddressViewController: MakeViewController {
     
-    let viewModel = EmailAddressViewModel(repository: NetworkRepository())
+    private let viewModel = EmailAddressViewModel(repository: NetworkRepository())
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
-    var signUpValues: [String?] = []
+    private var signUpValues: [String?] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +35,7 @@ class EmailAddressViewController: MakeViewController {
         
     }
     
-    func bind(value: [String?]) {
+    private func bind(value: [String?]) {
         
         let input = EmailAddressViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         

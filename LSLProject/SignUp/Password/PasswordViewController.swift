@@ -9,11 +9,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class PasswordViewController: MakeViewController {
+final class PasswordViewController: MakeViewController {
     
-    let viewModel = PasswordViewModel()
+    private let viewModel = PasswordViewModel()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     var signUpValues: [String?]?
     
@@ -40,7 +40,7 @@ class PasswordViewController: MakeViewController {
         print(#function, signUpValues)
     }
     
-    func bind(value: [String?]) {
+    private func bind(value: [String?]) {
         let input = PasswordViewModel.Input(inputText: customTextField.rx.text.orEmpty, nextButtonClicked: nextButton.rx.tap)
         
         let output = viewModel.transform(input: input)
@@ -77,7 +77,7 @@ class PasswordViewController: MakeViewController {
         
     }
     
-    func pushNextVieController(value: [String?]) {
+    private func pushNextVieController(value: [String?]) {
         view.endEditing(true)
         let vc = NicknameViewController()
         vc.signUpValues = value

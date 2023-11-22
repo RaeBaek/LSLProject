@@ -9,13 +9,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class PhoneNumberViewController: MakeViewController {
+final class PhoneNumberViewController: MakeViewController {
     
-    let skipButton = UIButton.signUpButton(title: "건너뛰기")
+    private let skipButton = UIButton.signUpButton(title: "건너뛰기")
     
-    let viewModel = PhoneNumberViewModel()
+    private let viewModel = PhoneNumberViewModel()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     var signUpValues: [String?]?
     
@@ -42,7 +42,7 @@ class PhoneNumberViewController: MakeViewController {
         
     }
     
-    func bind(value: [String?]) {
+    private func bind(value: [String?]) {
         
         var signUpValues = value
         
@@ -93,7 +93,7 @@ class PhoneNumberViewController: MakeViewController {
         
     }
     
-    func pushNextVieController(value: [String?]) {
+    private func pushNextVieController(value: [String?]) {
         view.endEditing(true)
         let vc = BirthdayViewController()
         vc.signUpValues = value

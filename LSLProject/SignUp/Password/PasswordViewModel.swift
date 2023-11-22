@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class PasswordViewModel {
+final class PasswordViewModel {
     
     struct Input {
         let inputText: ControlProperty<String>
@@ -24,7 +24,7 @@ class PasswordViewModel {
         let sendText: PublishRelay<String>
     }
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     func transform(input: Input) -> Output {
         

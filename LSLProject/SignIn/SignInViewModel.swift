@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class SignInViewModel {
+final class SignInViewModel {
     
     struct Input {
         let emailText: ControlProperty<String>

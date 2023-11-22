@@ -10,23 +10,23 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class SignInViewController: BaseViewController {
+final class SignInViewController: BaseViewController {
     
-    let logoImage = {
+    private let logoImage = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.image = UIImage(named: "instagramSVG")
         return view
     }()
     
-    let backBarbutton = {
+    private let backBarbutton = {
         let view = UIBarButtonItem()
         view.title = nil
         view.tintColor = .black
         return view
     }()
     
-    let stackView = {
+    private let stackView = {
         let view = UIStackView()
         view.axis = .vertical
         view.spacing = 10
@@ -34,10 +34,10 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
-    let emailTextField = UITextField.customTextField()
-    let passwordTextField = UITextField.customTextField()
+    private let emailTextField = UITextField.customTextField()
+    private let passwordTextField = UITextField.customTextField()
     
-    let statusLabel = {
+    private let statusLabel = {
         let view = UILabel()
         view.textAlignment = .left
         view.numberOfLines = 0
@@ -47,16 +47,16 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
-    let signInButton = UIButton.capsuleButton(title: "로그인")
-    let signUpButton = UIButton.signUpButton(title: "새 계정 만들기")
+    private let signInButton = UIButton.capsuleButton(title: "로그인")
+    private let signUpButton = UIButton.signUpButton(title: "새 계정 만들기")
     
-    let metaImage = {
+    private let metaImage = {
         let view = UIImageView()
         view.image = UIImage(named: "meta")
         return view
     }()
     
-    let metaLabel = {
+    private let metaLabel = {
         let view = UILabel()
         view.text = "Meta"
         view.textColor = UIColor(red: 92/255, green: 92/255, blue: 92/255, alpha: 1)
@@ -64,9 +64,9 @@ class SignInViewController: BaseViewController {
         return view
     }()
     
-    let viewModel = SignInViewModel(repository: NetworkRepository())
+    private let viewModel = SignInViewModel(repository: NetworkRepository())
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +83,7 @@ class SignInViewController: BaseViewController {
         
     }
     
-    func bind() {
+    private func bind() {
         let input = SignInViewModel.Input(emailText: emailTextField.rx.text.orEmpty, passwordText: passwordTextField.rx.text.orEmpty, signInButtonClicked: signInButton.rx.tap, signUpButtonClicked: signUpButton.rx.tap)
         
         let output = viewModel.transform(input: input)
@@ -135,14 +135,14 @@ class SignInViewController: BaseViewController {
         view.endEditing(true)
     }
     
-    func pushEmailAddressViewController() {
+    private func pushEmailAddressViewController() {
         view.endEditing(true)
         
         let vc = EmailAddressViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func changeRootViewController() {
+    private func changeRootViewController() {
         let vc = MainHomeViewController()
         
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)

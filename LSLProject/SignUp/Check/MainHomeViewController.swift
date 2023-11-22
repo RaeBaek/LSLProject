@@ -7,9 +7,9 @@
 
 import UIKit
 
-class MainHomeViewController: BaseViewController {
+final class MainHomeViewController: BaseViewController {
     
-    let checkLabel = {
+    private let checkLabel = {
         let view = UILabel()
         view.font = .systemFont(ofSize: 30, weight: .regular)
         return view
