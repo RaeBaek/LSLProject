@@ -46,6 +46,8 @@ final class APIManager: NetworkService {
                         single(.success(.failure(NetworkError.serverError)))
                         return
                     }
+                    print(statusCode)
+                    dump(error)
                     single(.success(.failure(networkError)))
                 }
             }

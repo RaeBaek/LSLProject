@@ -87,3 +87,23 @@ enum LoginError: Int, LoggableError {
         }
     }
 }
+
+enum AccessTokenError: Int, LoggableError {
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case expireAccessToken = 409
+    case exporeRefreshToken = 418
+    
+    var message: String {
+        switch self {
+        case .inValidAccessToken:
+            return "인증할 수 없는 액세스 토큰입니다."
+        case .noAuthority:
+            return "Forbidden"
+        case .expireAccessToken:
+            return "Access이 만료되지 않았습니다."
+        case .exporeRefreshToken:
+            return "리프레시 "
+        }
+    }
+}

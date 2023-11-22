@@ -12,6 +12,7 @@ enum SeSACAPI {
     case signUp(model: SignUp)
     case emailValidation(model: EmailValidation)
     case login(model: Login)
+    case AccessToken
     
 }
 
@@ -28,6 +29,8 @@ extension SeSACAPI: TargetType {
             return "validation/email"
         case .login:
             return "login"
+        case .AccessToken:
+            return "refresh"
         }
     }
     
@@ -35,6 +38,8 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login:
             return .post
+        case .AccessToken:
+            return .get
         }
     }
     
@@ -46,12 +51,24 @@ extension SeSACAPI: TargetType {
             return .requestJSONEncodable(model)
         case .login(let model):
             return .requestJSONEncodable(model)
+        case .AccessToken:
+            return .requestPlain
         }
     }
     
     var headers: [String : String]? {
-        ["Content-Type": "application/json",
-         "SesacKey": "Ikwn9wgcfM"]
+        
+        let key = APIKey.sesacKey
+        let token = APIKey.accessToken
+        let refreshToken = APIKey.refreshToken
+        
+        switch self {
+        case .signUp, .emailValidation, .login:
+            return ["Content-Type": "application/json", "SesacKey": key]
+        case .AccessToken:
+            return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
+        }
+        
     }
     
     var validationType: ValidationType {

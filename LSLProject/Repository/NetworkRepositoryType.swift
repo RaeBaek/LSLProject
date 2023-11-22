@@ -18,5 +18,6 @@ protocol NetworkRepositoryType: AnyObject {
                        birthDay: String?) -> Single<NetworkResult<SignUpResponse>>
     func requestLogin(email: String?,
                       password: String?) -> Single<NetworkResult<LoginResponse>>
+    func requestAccessToken() -> Single<NetworkResult<AccessTokenResponse>>
     
 }

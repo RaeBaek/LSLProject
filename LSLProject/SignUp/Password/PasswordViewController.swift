@@ -23,7 +23,6 @@ final class PasswordViewController: MakeViewController {
         titleLabel.text = "비밀번호 입력"
         descriptionLabel.text = "다른 사람이 추측할 수 없는 6자 이상의 문자 또는 숫자로 비밀번호를 만드세요."
         customTextField.placeholder = "비밀번호 (필수)"
-        customTextField.keyboardType = .alphabet
         customTextField.isSecureTextEntry = true
         
         guard let signUpValues else { return }

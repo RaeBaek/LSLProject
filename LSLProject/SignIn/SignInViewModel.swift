@@ -71,9 +71,12 @@ final class SignInViewModel {
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):
+                    print("로그인 성공!")
+                    print(data.token)
+                    print(data.refreshToken)
                     UserDefaultsManager.token = data.token
                     UserDefaultsManager.refreshToken = data.refreshToken
-                    print("로그인 성공!")
+                    
                     print("Token: \(UserDefaultsManager.token)")
                     print("Refresh Token: \(UserDefaultsManager.refreshToken)")
                     

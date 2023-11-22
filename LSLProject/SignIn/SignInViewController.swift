@@ -72,10 +72,14 @@ final class SignInViewController: BaseViewController {
         super.viewDidLoad()
         
         emailTextField.placeholder = "사용자 이름, 이메일 주소 또는 휴대폰 번호"
-        emailTextField.keyboardType = .default
+        emailTextField.keyboardType = .alphabet
+        emailTextField.isSecureTextEntry = false
+        emailTextField.textContentType = .oneTimeCode
+        
         passwordTextField.placeholder = "비밀번호"
         passwordTextField.keyboardType = .alphabet
         passwordTextField.isSecureTextEntry = true
+        passwordTextField.textContentType = .oneTimeCode
         
         self.navigationItem.backBarButtonItem = backBarbutton
         

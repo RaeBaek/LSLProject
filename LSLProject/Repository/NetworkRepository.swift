@@ -33,4 +33,8 @@ class NetworkRepository: NetworkRepositoryType {
                                                               password: password)))
     }
     
+    func requestAccessToken() -> Single<NetworkResult<AccessTokenResponse>> {
+        APIManager.shared.request(target: .AccessToken)
+    }
+    
 }

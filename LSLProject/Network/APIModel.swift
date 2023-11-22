@@ -45,3 +45,8 @@ struct LoginResponse: Decodable {
     let token: String
     let refreshToken: String
 }
+
+struct AccessTokenResponse: Decodable {
+    let token: String
+    let refreshToken: String
+}
