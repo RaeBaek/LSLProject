@@ -41,7 +41,8 @@ final class EmailAddressViewModel {
         let sendText = PublishRelay<String>()
         
         let inputText = input.inputText
-            .distinctUntilChanged()
+                                .distinctUntilChanged()
+                                .share()
         
         inputText
             .map { _ in

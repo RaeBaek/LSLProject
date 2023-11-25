@@ -45,6 +45,19 @@ class BirthdayViewModel {
         let signUpStatus = PublishRelay<Bool>()
         
         let inputText = input.inputText
+                                   .share()
+        
+        let readyForSignUp = input.nextButtonClicked
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .withUnretained(self)
+            .withLatestFrom(input.inputText) { _, text in
+                return text
+            }
+            .map { [weak self] value in
+                return self?.calculateBirthDay(date: value)
+            }
+            .compactMap { $0 }
+            .share()
         
         inputText
             .map { _ in
@@ -66,18 +79,6 @@ class BirthdayViewModel {
                 sendText.accept(value)
             }
             .disposed(by: disposeBag)
-        
-        let readyForSignUp = input.nextButtonClicked
-            .throttle(.seconds(1), scheduler: MainScheduler.instance)
-            .withUnretained(self)
-            .withLatestFrom(input.inputText) { _, text in
-                return text
-            }
-            .map { [weak self] value in
-                return self?.calculateBirthDay(date: value)
-            }
-            .compactMap { $0 }
-            .share()
         
         readyForSignUp
             .filter { !$0 }

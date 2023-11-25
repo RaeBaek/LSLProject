@@ -48,5 +48,15 @@ struct LoginResponse: Decodable {
 
 struct AccessTokenResponse: Decodable {
     let token: String
-    let refreshToken: String
+}
+
+struct WithdrawResponse: Decodable {
+    let id: String
+    let email: String
+    let nick: String
+    
+    enum CodingKeys: String, CodingKey {
+        case email, nick
+        case id = "_id"
+    }
 }

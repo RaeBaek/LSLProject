@@ -40,6 +40,7 @@ final class PasswordViewModel {
         
         let inputText = input.inputText
                              .distinctUntilChanged()
+                             .share()
         
         inputText
             .map { _ in

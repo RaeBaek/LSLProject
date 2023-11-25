@@ -12,13 +12,14 @@ enum SeSACAPI {
     case signUp(model: SignUp)
     case emailValidation(model: EmailValidation)
     case login(model: Login)
-    case AccessToken
+    case accessToken
+    case withdraw
     
 }
 
 extension SeSACAPI: TargetType {
     var baseURL: URL {
-        URL(string: "http://lslp.sesac.kr:27820/")!
+        URL(string: "http://lslp.sesac.kr:27812/")! //27812: 테스트 서버, 27820: 본 서버
     }
     
     var path: String {
@@ -29,8 +30,10 @@ extension SeSACAPI: TargetType {
             return "validation/email"
         case .login:
             return "login"
-        case .AccessToken:
+        case .accessToken:
             return "refresh"
+        case .withdraw:
+            return "withdraw"
         }
     }
     
@@ -38,7 +41,7 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login:
             return .post
-        case .AccessToken:
+        case .accessToken, .withdraw:
             return .get
         }
     }
@@ -51,7 +54,7 @@ extension SeSACAPI: TargetType {
             return .requestJSONEncodable(model)
         case .login(let model):
             return .requestJSONEncodable(model)
-        case .AccessToken:
+        case .accessToken, .withdraw:
             return .requestPlain
         }
     }
@@ -59,14 +62,16 @@ extension SeSACAPI: TargetType {
     var headers: [String : String]? {
         
         let key = APIKey.sesacKey
-        let token = APIKey.accessToken
-        let refreshToken = APIKey.refreshToken
+        let token = UserDefaultsManager.token
+        let refreshToken = UserDefaultsManager.refreshToken
         
         switch self {
         case .signUp, .emailValidation, .login:
             return ["Content-Type": "application/json", "SesacKey": key]
-        case .AccessToken:
+        case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
+        case .withdraw:
+            return ["Authorization": token, "SesacKey": key]
         }
         
     }

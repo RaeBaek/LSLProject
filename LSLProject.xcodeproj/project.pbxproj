@@ -47,6 +47,8 @@
 		14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */; };
 		14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB182B0B479000493AE1 /* SeSACError.swift */; };
 		14F8AB1C2B0B553500493AE1 /* NetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB1B2B0B553500493AE1 /* NetworkRepository.swift */; };
+		14FCF9162B0F28D1002AE655 /* TokenCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FCF9152B0F28D1002AE655 /* TokenCheckViewController.swift */; };
+		14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FCF9182B0F28F4002AE655 /* TokenCheckViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +88,8 @@
 		14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAndFlatMap.swift; sourceTree = "<group>"; };
 		14F8AB182B0B479000493AE1 /* SeSACError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACError.swift; sourceTree = "<group>"; };
 		14F8AB1B2B0B553500493AE1 /* NetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRepository.swift; sourceTree = "<group>"; };
+		14FCF9152B0F28D1002AE655 /* TokenCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenCheckViewController.swift; sourceTree = "<group>"; };
+		14FCF9182B0F28F4002AE655 /* TokenCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenCheckViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +211,7 @@
 				146B16E32B03AE5700073B91 /* Network */,
 				14F8AB1A2B0B551B00493AE1 /* Repository */,
 				149562212B024D9A006CED34 /* Base */,
+				14FCF9172B0F28DB002AE655 /* Token */,
 				14F5E6242B05A359001B7801 /* SignIn */,
 				1495621E2B024D1F006CED34 /* SignUp */,
 				146B16D32B03538500073B91 /* Extension */,
@@ -281,6 +286,15 @@
 				14F8AB1B2B0B553500493AE1 /* NetworkRepository.swift */,
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		14FCF9172B0F28DB002AE655 /* Token */ = {
+			isa = PBXGroup;
+			children = (
+				14FCF9152B0F28D1002AE655 /* TokenCheckViewController.swift */,
+				14FCF9182B0F28F4002AE655 /* TokenCheckViewModel.swift */,
+			);
+			path = Token;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,12 +404,14 @@
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
 				14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */,
+				14FCF9162B0F28D1002AE655 /* TokenCheckViewController.swift in Sources */,
 				149561FC2B0216ED006CED34 /* AppDelegate.swift in Sources */,
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
 				14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */,
 				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
+				14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */,
 				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 				147CC5612B03D0B800D7DA7C /* API.swift in Sources */,
 				146B16DD2B037D2800073B91 /* BirthdayViewController.swift in Sources */,

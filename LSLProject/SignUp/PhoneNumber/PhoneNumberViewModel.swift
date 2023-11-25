@@ -35,7 +35,9 @@ class PhoneNumberViewModel {
         let outputText = PublishRelay<String>()
         let sendText = PublishRelay<String?>()
         
-        input.inputText
+        let inputText = input.inputText
+                                   .share()
+        inputText
             .distinctUntilChanged()
             .map { _ in
                 return true
@@ -43,7 +45,7 @@ class PhoneNumberViewModel {
             .bind(to: borderStatus, textStatus)
             .disposed(by: disposeBag)
         
-        input.inputText
+        inputText
 //            .distinctUntilChanged()
             .bind { value in
                 if value.count > 11 { // 번호가 11자리보다 길어지면 안되므로 if 문 처리

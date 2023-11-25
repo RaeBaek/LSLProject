@@ -19,6 +19,7 @@ enum NetworkError: Int, LoggableError {
     case noAccessAuthority = 403
     case usingValue = 409
     case dbServerFailure = 410
+    case exporeRefreshToken = 418
     case expireAccessToken = 419
     case noSeSACKey = 420
     case overRequest = 429
@@ -97,13 +98,30 @@ enum AccessTokenError: Int, LoggableError {
     var message: String {
         switch self {
         case .inValidAccessToken:
-            return "인증할 수 없는 액세스 토큰입니다."
+            return "인증할 수 없는 Access Token입니다."
         case .noAuthority:
             return "Forbidden"
         case .expireAccessToken:
-            return "Access이 만료되지 않았습니다."
+            return "Access Token이 만료되지 않았습니다."
         case .exporeRefreshToken:
-            return "리프레시 "
+            return "Refresh Token이 만료되었습니다."
+        }
+    }
+}
+
+enum WithdrawError: Int, LoggableError {
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case expireAccessToken = 418
+    
+    var message: String {
+        switch self {
+        case .inValidAccessToken:
+            return "인증할 수 없는 Access Token입니다."
+        case .noAuthority:
+            return "Forbidden"
+        case .expireAccessToken:
+            return "Access Token이 만료되었습니다."
         }
     }
 }

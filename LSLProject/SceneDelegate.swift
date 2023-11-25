@@ -13,9 +13,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
-    let disposeBag = DisposeBag()
-    
-    let repository = NetworkRepository()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -23,91 +20,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
         guard let scene = (scene as? UIWindowScene) else { return }
-        
         window = UIWindow(windowScene: scene)
         
-        print(UserDefaultsManager.token)
-        
-        if UserDefaultsManager.token == "토큰 없음" {
-            rootViewController(vc: SignInViewController())
-        } else {
-            checkUserToken()
-                .bind { value in
-                    self.rootViewController(vc: value)
-                }
-                .disposed(by: disposeBag)
-        }
-    }
-    
-    func rootViewController(vc: UIViewController) {
+        let vc = TokenCheckViewController()
         
         let rootViewController = UINavigationController(rootViewController: vc)
         
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-    }
-    
-    func checkUserToken() -> PublishRelay<UIViewController> {
-        
-        let tokenCheck = BehaviorRelay<Void>(value: ())
-        let statusCode = PublishRelay<Int>()
-        let statusMessage = PublishRelay<String>()
-        let viewController = PublishRelay<UIViewController>()//PublishRelay<UIViewController>()
-        
-        tokenCheck
-            .flatMap { _ in
-                self.repository.requestAccessToken()
-            }
-            .subscribe(onNext: { value in
-                switch value {
-                case .success(let data):
-                    print("토큰 갱신완료!!")
-                    UserDefaultsManager.token = data.token
-                    UserDefaultsManager.refreshToken = data.refreshToken
-                    statusCode.accept(200)
-                    
-                case .failure(let error):
-                    guard let accessTokenError = AccessTokenError(rawValue: error.rawValue) else {
-                        // 공통 에러일 때 420, 429, 444, 500
-                        statusCode.accept(error.rawValue)
-                        viewController.accept(SignInViewController())
-                        print("심각한 공통에러입니다. 확인해주세요!")
-                        return
-                    }
-                    // 커스텀한 에러일 때 401, 403, 409, 418
-                    print("커스텀 에러입니다.")
-                    print("에러 코드 \(accessTokenError.rawValue)")
-                    print("에러 메시지 \(accessTokenError.message)")
-                    statusCode.accept(accessTokenError.rawValue)
-                    statusMessage.accept(accessTokenError.message)
-//                    viewController.accept(SignInViewController())
-                }
-            })
-            .disposed(by: disposeBag)
-
-        statusCode
-            .map { $0 == 200 }
-            .filter { $0 }
-            .bind { _ in
-                print("토큰이 만료되어 갱신하였고 정상적으로 자동 로그인을 수행하였습니다.")
-                viewController.accept(MainHomeViewController())
-            }
-            .disposed(by: disposeBag)
-        
-        statusCode
-            .map { $0 == 409 }
-            .filter { $0 }
-            .bind { _ in
-                viewController.accept(MainHomeViewController())
-                print("액세스 토큰이 만료되지 않았습니다. 기존의 토큰을 유지합니다.")
-            }
-            .disposed(by: disposeBag)
-        
-        return viewController
         
     }
     
-    func changeRootVC(_ vc: UIViewController, animated: Bool) {
+    func changeRootVC(_ vc: UIViewController) {
         guard let window = self.window else { return }
         
         let rootViewController = UINavigationController(rootViewController: vc)

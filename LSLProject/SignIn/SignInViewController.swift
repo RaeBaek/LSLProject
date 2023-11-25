@@ -85,6 +85,9 @@ final class SignInViewController: BaseViewController {
         
         bind()
         
+        print("토큰: \(UserDefaultsManager.token)")
+        print("리프레시 토큰 : \(UserDefaultsManager.refreshToken)")
+        
     }
     
     private func bind() {
@@ -93,6 +96,7 @@ final class SignInViewController: BaseViewController {
         let output = viewModel.transform(input: input)
         
         output.textStatus
+            .debug("textStatus")
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.isHidden = value
@@ -100,6 +104,7 @@ final class SignInViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.borderStatus
+            .debug("borderStatus")
             .withUnretained(self)
             .bind { owner, value in
                 owner.emailTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
@@ -108,6 +113,7 @@ final class SignInViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.outputText
+            .debug("outputText")
             .withUnretained(self)
             .bind { owner, value in
                 owner.statusLabel.text = value
@@ -115,6 +121,7 @@ final class SignInViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.loginStatus
+            .debug("loginStatus")
             .withUnretained(self)
             .bind { owner, _ in
                 owner.changeRootViewController()
@@ -122,6 +129,7 @@ final class SignInViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.signUpStatus
+            .debug("signUpStatus")
             .withUnretained(self)
             .bind { owner, _ in
                 owner.pushEmailAddressViewController()
@@ -149,7 +157,7 @@ final class SignInViewController: BaseViewController {
     private func changeRootViewController() {
         let vc = MainHomeViewController()
         
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
     }
     
     override func configureView() {

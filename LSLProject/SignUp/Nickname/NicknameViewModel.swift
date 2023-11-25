@@ -36,6 +36,7 @@ final class NicknameViewModel {
         
         let inputText = input.inputText
                              .distinctUntilChanged()
+                             .share()
         
         inputText
             .map { _ in

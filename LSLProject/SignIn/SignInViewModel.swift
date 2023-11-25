@@ -58,6 +58,12 @@ final class SignInViewModel {
             .bind(to: textStatus, borderStatus)
             .disposed(by: disposeBag)
         
+        statusCode
+            .map { $0 == 200 }
+            .filter { $0 }
+            .bind(to: loginStatus)
+            .disposed(by: disposeBag)
+        
         input.signInButtonClicked
             .withLatestFrom(input.emailText) { _, email in
                 return email
@@ -102,12 +108,6 @@ final class SignInViewModel {
         
         input.signUpButtonClicked
             .bind(to: signUpStatus)
-            .disposed(by: disposeBag)
-        
-        statusCode
-            .map { $0 == 200 }
-            .filter { $0 }
-            .bind(to: loginStatus)
             .disposed(by: disposeBag)
             
         return Output(textStatus: textStatus, borderStatus: borderStatus, outputText: outputText, loginStatus: loginStatus, signUpStatus: signUpStatus)

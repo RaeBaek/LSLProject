@@ -101,7 +101,8 @@ final class BirthdayViewController: MakeViewController {
     private func changeRootViewController() {
         let vc = MainHomeViewController()
         
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
+        
     }
     
     override func configureView() {
