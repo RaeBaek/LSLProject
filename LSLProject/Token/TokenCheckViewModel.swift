@@ -50,9 +50,13 @@ class TokenCheckViewModel {
                 } else if value == 418 {
                     print("Refresh Token이 만료 되었습니다.(418)")
                     outputCheck.accept(true)
+                    UserDefaultsManager.token = "토큰 없음"
+                    UserDefaultsManager.refreshToken = "리프레시 토큰 없음"
                 } else if error.contains(value) {
-                    outputCheck.accept(true)
                     print("심각한 공통에러입니다. 확인해주세요! 401, 403 420, 429, 444, 500")
+                    outputCheck.accept(true)
+                    UserDefaultsManager.token = "토큰 없음"
+                    UserDefaultsManager.refreshToken = "리프레시 토큰 없음"
                 }
                 
             }
@@ -134,7 +138,6 @@ class TokenCheckViewModel {
                 case .success(let data):
                     print("토큰 갱신완료!!")
                     UserDefaultsManager.token = data.token
-//                    UserDefaultsManager.refreshToken = data.refreshToken
                     statusCode.accept(200)
                     
                 case .failure(let error):
@@ -157,9 +160,6 @@ class TokenCheckViewModel {
             })
             .disposed(by: disposeBag)
 
-        
-        
-        
         return Output(check: outputCheck)
     }
     

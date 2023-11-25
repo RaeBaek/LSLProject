@@ -53,9 +53,15 @@ final class MainHomeViewModel {
             }
             .disposed(by: disposeBag)
         
-        input.withdraw
-            .flatMap { _ in
+        let withdraw = input.withdraw
+    
+        withdraw
+            .flatMap {
                 self.repository.requestWithdraw()
+                    .catch { error in
+                        print("=========!!!!!= \(error)")
+                        return Single.never()
+                    }
             }
             .subscribe(onNext: { value in
                 switch value {
@@ -68,6 +74,7 @@ final class MainHomeViewModel {
                 case .failure(let error):
                     print("회원 탈퇴 실패... \(error.message)")
                     statusCode.accept(error.rawValue)
+                    
                 }
             })
             .disposed(by: disposeBag)

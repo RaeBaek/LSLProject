@@ -7,6 +7,7 @@
 
 import UIKit
 import Moya
+import Alamofire
 import RxSwift
 import RxCocoa
 
@@ -25,12 +26,13 @@ final class APIManager: NetworkService {
     
     private init() { }
     
-    private let provider = MoyaProvider<SeSACAPI>()
+    private let provider = MoyaProvider<SeSACAPI>(session: Moya.Session(interceptor: SeSACRequestInterceptor.shared))
+//    private let provider = MoyaProvider<SeSACAPI>()
     
     func request<T: Decodable>(target: SeSACAPI) -> Single<NetworkResult<T>> {
         return Single<NetworkResult<T>>.create { [weak self] (single) -> Disposable in
             guard let self else { return Disposables.create() }
-            
+
             self.provider.request(target) { result in
                 switch result {
                 case .success(let response):
@@ -53,7 +55,36 @@ final class APIManager: NetworkService {
             }
             return Disposables.create()
         }
-        .debug()
+        .debug("request")
+    }
+    
+    func requestAccessToken(target: SeSACAPI) -> Single<NetworkResult<AccessTokenResponse>> {
+        return Single<NetworkResult<AccessTokenResponse>>.create { [weak self] (single) -> Disposable in
+            guard let self else { return Disposables.create() }
+
+            self.provider.request(target) { result in
+                switch result {
+                case .success(let response):
+                    dump(response)
+                    guard let data = try? response.map(AccessTokenResponse.self) else {
+                        single(.success(.failure(NetworkError.invalidData)))
+                        return
+                    }
+                    single(.success(.success(data)))
+                case .failure(let error):
+                    guard let statusCode = error.response?.statusCode,
+                          let networkError = NetworkError(rawValue: statusCode) else {
+                        single(.success(.failure(NetworkError.serverError)))
+                        return
+                    }
+                    print(statusCode)
+                    dump(error)
+                    single(.success(.failure(networkError)))
+                }
+            }
+            return Disposables.create()
+        }
+        .debug("requestAccessToken")
     }
     
 //    func emailValidationAPI(email: String) -> Single<Result<Void, EmailValidationError>> {

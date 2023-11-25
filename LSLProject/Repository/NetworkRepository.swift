@@ -37,7 +37,11 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .accessToken)
     }
     
-    func requestWithdraw() -> RxSwift.Single<NetworkResult<WithdrawResponse>> {
+    func requestRetryAccessToken() -> Single<NetworkResult<AccessTokenResponse>> {
+        APIManager.shared.requestAccessToken(target: .accessToken)
+    }
+    
+    func requestWithdraw() -> Single<NetworkResult<WithdrawResponse>> {
         APIManager.shared.request(target: .withdraw)
     }
     

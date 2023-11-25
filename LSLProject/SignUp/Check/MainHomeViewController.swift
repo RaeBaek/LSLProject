@@ -11,6 +11,13 @@ import RxCocoa
 
 final class MainHomeViewController: BaseViewController {
     
+    private let homeTableView = {
+        let view = UITableView()
+        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
+        view.rowHeight = UITableView.automaticDimension
+        return view
+    }()
+    
     private let checkLabel = {
         let view = UILabel()
         view.font = .systemFont(ofSize: 30, weight: .regular)
@@ -31,8 +38,6 @@ final class MainHomeViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        checkLabel.text = "메인 홈~~"
         
         bind()
         
@@ -41,6 +46,16 @@ final class MainHomeViewController: BaseViewController {
     func bind() {
         let input = MainHomeViewModel.Input(withdraw: withdrawButton.rx.tap)
         let output = viewModel.transform(input: input)
+        
+        let data = Observable.of([1, 2, 3, 4, 5])
+        
+        data
+            .observe(on: MainScheduler.instance)
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { (row, element, cell) in
+                cell.selectionStyle = .none
+                cell.separatorInset = .zero
+            }
+            .disposed(by: disposeBag)
         
         output.check
             .withUnretained(self)
@@ -62,7 +77,7 @@ final class MainHomeViewController: BaseViewController {
         
         view.backgroundColor = .systemBackground
         
-        [checkLabel, withdrawButton].forEach {
+        [homeTableView].forEach {
             view.addSubview($0)
         }
         
@@ -71,15 +86,19 @@ final class MainHomeViewController: BaseViewController {
     override func setConstraints() {
         super.setConstraints()
         
-        checkLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
+        homeTableView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
         
-        withdrawButton.snp.makeConstraints {
-            $0.top.equalTo(checkLabel.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.size.equalTo(100)
-        }
+//        checkLabel.snp.makeConstraints {
+//            $0.center.equalToSuperview()
+//        }
+//        
+//        withdrawButton.snp.makeConstraints {
+//            $0.top.equalTo(checkLabel.snp.bottom).offset(10)
+//            $0.centerX.equalToSuperview()
+//            $0.size.equalTo(100)
+//        }
         
     }
     

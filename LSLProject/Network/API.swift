@@ -19,7 +19,7 @@ enum SeSACAPI {
 
 extension SeSACAPI: TargetType {
     var baseURL: URL {
-        URL(string: "http://lslp.sesac.kr:27812/")! //27812: 테스트 서버, 27820: 본 서버
+        URL(string: APIKey.sesacURL)! //27812: 테스트 서버, 27820: 본 서버
     }
     
     var path: String {
@@ -77,7 +77,7 @@ extension SeSACAPI: TargetType {
     }
     
     var validationType: ValidationType {
-        return .successAndRedirectCodes
+        return .successCodes
     }
     
 }
