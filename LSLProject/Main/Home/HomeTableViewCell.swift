@@ -18,34 +18,46 @@ class HomeTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let profileImage = {
-        let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
-        view.backgroundColor = .systemRed
+    let stackView = {
+        let view = UIStackView()
+        view.axis = .vertical
         return view
     }()
     
-    let userNickname = {
+    let logoImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "threads")
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    lazy var profileImage = {
+        let view = ProfileImageView(frame: .zero)
+        view.contentMode = .scaleToFill
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 1
+        return view
+    }()
+    
+    var userNickname = {
         let view = UILabel()
         view.text = "100_r_h"
         view.textColor = .black
-        view.font = .systemFont(ofSize: 15, weight: .regular)
+        view.font = .systemFont(ofSize: 14, weight: .semibold)
         return view
     }()
     
-    let uploadTime = {
+    var uploadTime = {
         let view = UILabel()
         view.text = "3시간"
-        view.textColor = .systemGray4
+        view.textColor = .lightGray
         view.font = .systemFont(ofSize: 13, weight: .regular)
         return view
     }()
     
-    let moreButton = {
+    private let moreButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
         let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -53,15 +65,15 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let mainTitle = {
+    var mainText = {
         let view = UILabel()
         view.text = "업로드 완료!"
         view.textColor = .black
-        view.font = .systemFont(ofSize: 15, weight: .regular)
+        view.font = .systemFont(ofSize: 14, weight: .regular)
         return view
     }()
     
-    let mainImage = {
+    var mainImage = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
@@ -70,15 +82,17 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let lineBar = {
+    private let lineBar = {
         let view = UIView()
+        view.layer.cornerRadius = 1
+        view.clipsToBounds = true
         view.backgroundColor = .systemGray4
         return view
     }()
     
-    let heartButton = {
+    private let heartButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
         let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -86,9 +100,9 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let commentButton = {
+    private let commentButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
         let image = UIImage(systemName: "message", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -96,9 +110,9 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let repostButton = {
+    private let repostButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
         let image = UIImage(systemName: "repeat", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -106,9 +120,9 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let dmButton = {
+    private let dmButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
         let image = UIImage(systemName: "paperplane", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -116,94 +130,119 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    let statusLabel = {
+    var statusLabel = {
         let view = UILabel()
         view.text = "35 답글 250 좋아요"
-        view.textColor = .systemGray4
+        view.textColor = .lightGray
         view.font = .systemFont(ofSize: 13, weight: .regular)
+        return view
+    }()
+    
+    private let bottomLine = {
+        let view = UIView()
+        view.backgroundColor = .systemGray4
         return view
     }()
     
     override func configureCell() {
         super.configureCell()
         
-        [profileImage, userNickname, lineBar, uploadTime, moreButton, mainTitle, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
+        [stackView, profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
             contentView.addSubview($0)
         }
+        
+        stackView.addArrangedSubview(logoImageView)
         
     }
     
     override func setConstraints() {
         super.setConstraints()
         
+        stackView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            
+        }
+        
+        logoImageView.snp.makeConstraints {
+            $0.width.equalTo(25)
+            $0.height.equalTo(35)
+        }
+        
         profileImage.snp.makeConstraints {
-            $0.top.leading.equalToSuperview().offset(16)
-            $0.size.equalTo(34)
+            $0.top.equalTo(stackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(38)
         }
         
         userNickname.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalTo(profileImage.snp.trailing).offset(16)
+            $0.top.equalTo(profileImage.snp.top)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
         }
         
         moreButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().inset(16)
-            $0.size.equalTo(25)
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.size.equalTo(22)
         }
         
         uploadTime.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalTo(moreButton.snp.leading).offset(-16)
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
         }
         
-        mainTitle.snp.makeConstraints {
+        mainText.snp.makeConstraints {
             $0.bottom.equalTo(profileImage.snp.bottom)
-            $0.leading.equalTo(profileImage.snp.trailing).offset(16)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
         }
-//        
+        
         mainImage.snp.makeConstraints {
-            $0.top.equalTo(mainTitle.snp.bottom).offset(16)
-            $0.leading.equalTo(lineBar.snp.trailing).offset(32)
-            $0.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
+            $0.leading.equalTo(lineBar.snp.trailing).offset(30)
+            $0.trailing.equalToSuperview().inset(12)
             $0.height.equalTo(500)
         }
         
         lineBar.snp.makeConstraints {
             $0.top.equalTo(profileImage.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(32)
+            $0.leading.equalToSuperview().offset(30)
             $0.bottom.equalToSuperview().inset(16)
             $0.width.equalTo(2)
         }
-//        
+        
         heartButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(16)
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
             $0.leading.equalTo(mainImage.snp.leading)
-            $0.size.equalTo(25)
+            $0.size.equalTo(22)
         }
         
         commentButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(16)
-            $0.leading.equalTo(heartButton.snp.trailing).offset(16)
-            $0.size.equalTo(25)
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
         }
         
         repostButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(16)
-            $0.leading.equalTo(commentButton.snp.trailing).offset(16)
-            $0.size.equalTo(25)
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
         }
         
         dmButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(16)
-            $0.leading.equalTo(repostButton.snp.trailing).offset(16)
-            $0.size.equalTo(25)
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
         }
-//        
+        
         statusLabel.snp.makeConstraints {
             $0.top.equalTo(heartButton.snp.bottom).offset(25)
             $0.leading.equalTo(heartButton.snp.leading)
-            $0.bottom.equalToSuperview().inset(25)
+        }
+        
+        bottomLine.snp.makeConstraints {
+            $0.top.equalTo(statusLabel.snp.bottom).offset(25)
+            $0.horizontalEdges.bottom.equalToSuperview()
+            $0.height.equalTo(0.5)
         }
         
         

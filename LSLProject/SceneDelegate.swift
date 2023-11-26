@@ -24,18 +24,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let vc = TokenCheckViewController()
         
-        let rootViewController = UINavigationController(rootViewController: vc)
-        
-        window?.rootViewController = rootViewController
+        window?.rootViewController = vc
         window?.makeKeyAndVisible()
         
     }
     
     func changeRootVC(_ vc: UIViewController) {
         guard let window = self.window else { return }
-        
-        let rootViewController = UINavigationController(rootViewController: vc)
-        window.rootViewController = rootViewController // 전환
+
+        window.rootViewController = vc // 전환
         
         UIView.transition(with: window, duration: 0.2, options: [.transitionCrossDissolve], animations: nil, completion: nil)
     }

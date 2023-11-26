@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class BirthdayViewModel {
+final class BirthdayViewModel: ViewModelType {
     
     struct Input {
         let signUpValues: Observable<[String?]>

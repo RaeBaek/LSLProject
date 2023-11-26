@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class PasswordViewModel {
+final class PasswordViewModel: ViewModelType {
     
     struct Input {
         let inputText: ControlProperty<String>

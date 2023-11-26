@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class TokenCheckViewController: BaseViewController {
+final class TokenCheckViewController: BaseViewController {
     
     let viewModel = TokenCheckViewModel(repository: NetworkRepository())
     
@@ -48,10 +48,42 @@ class TokenCheckViewController: BaseViewController {
     }
     
     private func changeRootViewController(check: Bool) {
-        let vc = check ? SignInViewController() : MainHomeViewController()
         
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
+        if check {
+            let vc = SignInViewController()
+            
+            let rootVC = UINavigationController(rootViewController: vc)
+            
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(rootVC)
+            
+        } else {
+            let homeVC = UINavigationController(rootViewController: HomeViewController())
+            let searchVC = UINavigationController(rootViewController: SearchViewController())
+            let postVC = UINavigationController(rootViewController: PostViewController())
+            let heartVC = UINavigationController(rootViewController: HeartViewController())
+            let userVC = UINavigationController(rootViewController: UserViewController())
+            
+            let tabBC = UITabBarController()
+            tabBC.setViewControllers([homeVC, searchVC, postVC, heartVC, userVC], animated: true)
+            
+            tabBC.tabBar.tintColor = .black
+            
+            if let items = tabBC.tabBar.items {
+                
+                let barImages = ["home", "search", "post", "heart", "user"]
+                let barSelectImages = ["home.fill", "search.fill", "post.fill", "heart.fill", "user.fill"]
+                
+                for i in 0..<5 {
+                    items[i].image = UIImage(named: barImages[i])
+                    items[i].selectedImage = UIImage(named: barSelectImages[i])
+                    items[i].imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+                }
+                
+            }
+            
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(tabBC)
+        }
+        
     }
-    
     
 }

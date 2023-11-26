@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class PhoneNumberViewModel {
+final class PhoneNumberViewModel: ViewModelType {
     
     let disposeBag = DisposeBag()
     

@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class TokenCheckViewModel {
+final class TokenCheckViewModel: ViewModelType {
     
     struct Input {
         let token: BehaviorRelay<String>

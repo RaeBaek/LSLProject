@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class MainHomeViewModel {
+final class HomeViewModel: ViewModelType {
     
     struct Input {
         let withdraw: ControlEvent<Void>
@@ -19,9 +19,9 @@ final class MainHomeViewModel {
         let check: PublishRelay<Bool>
     }
     
-    let repository: NetworkRepository
+    private let repository: NetworkRepository
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     init(repository: NetworkRepository) {
         self.repository = repository
