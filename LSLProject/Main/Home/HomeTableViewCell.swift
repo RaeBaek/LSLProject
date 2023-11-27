@@ -18,19 +18,6 @@ class HomeTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let stackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        return view
-    }()
-    
-    let logoImageView = {
-        let view = UIImageView()
-        view.image = UIImage(named: "threads")
-        view.contentMode = .scaleAspectFit
-        return view
-    }()
-    
     lazy var profileImage = {
         let view = ProfileImageView(frame: .zero)
         view.contentMode = .scaleToFill
@@ -147,30 +134,17 @@ class HomeTableViewCell: BaseTableViewCell {
     override func configureCell() {
         super.configureCell()
         
-        [stackView, profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
+        [profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
             contentView.addSubview($0)
         }
-        
-        stackView.addArrangedSubview(logoImageView)
         
     }
     
     override func setConstraints() {
         super.setConstraints()
         
-        stackView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview()
-            
-        }
-        
-        logoImageView.snp.makeConstraints {
-            $0.width.equalTo(25)
-            $0.height.equalTo(35)
-        }
-        
         profileImage.snp.makeConstraints {
-            $0.top.equalTo(stackView.snp.bottom).offset(16)
+            $0.top.equalToSuperview().offset(16)
             $0.leading.equalToSuperview().offset(12)
             $0.size.equalTo(38)
         }

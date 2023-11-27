@@ -10,11 +10,13 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-final class HomeViewController: BaseViewController {
+final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     
     private let homeTableView = {
-        let view = UITableView()
+        let view = UITableView(frame: .zero, style: .grouped)
         view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
+        view.register(HomeTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeTableViewHeaderView.identifier)
+        view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
         return view
@@ -54,11 +56,15 @@ final class HomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBar()
-        setTabBar()
-        
         bind()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNavigationBar()
+        setTabBar()
     }
     
     private func setNavigationBar() {
@@ -83,25 +89,32 @@ final class HomeViewController: BaseViewController {
         let input = HomeViewModel.Input(withdraw: withdrawButton.rx.tap)
         let output = viewModel.transform(input: input)
         
-        let data = Observable.of([1, 2, 3, 4, 5])
-        
         let posts = [
-            Header(header: topView, items: [
-                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요")
-            ])
+            
+            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요")
+            
+//            Header(header: topView, items: [
+//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
+//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요")
+//            ])
             
         ]
         
         let dataSource = RxTableViewSectionedReloadDataSource<Header> { dataSource, tableView, indexPath, item in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as? HomeTableViewCell else { return UITableViewCell() }
             
-            if indexPath.row != 0 {
-                cell.logoImageView.isHidden = true
-            }
+//            guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UITableViewCell() }
+            
+//            if indexPath.row != 0 {
+//                cell.logoImageView.isHidden = true
+//            }
             
             cell.profileImage.image = UIImage(named: item.profileImage)
             cell.userNickname.text = item.userNickname
@@ -116,22 +129,29 @@ final class HomeViewController: BaseViewController {
         }
         
 //        dataSource.titleForHeaderInSection = { dataSource, indexPath in
-//            return "하이하이"//dataSource.sectionModels[indexPath].header
+//            return dataSource.sectionModels[indexPath].header //"하이하이"
 //            
 //        }
         
+//        Observable.just(posts)
+//            .bind(to: homeTableView.rx.items(dataSource: dataSource))
+//            .disposed(by: disposeBag)
+        
         Observable.just(posts)
-            .bind(to: homeTableView.rx.items(dataSource: dataSource))
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { (row, element, cell) in
+                
+                cell.profileImage.image = UIImage(named: element.profileImage)
+                cell.userNickname.text = element.userNickname
+                cell.mainText.text = element.mainText
+                cell.mainImage.image = UIImage(named: element.mainImage)
+                cell.statusLabel.text = element.status
+                
+                cell.selectionStyle = .none
+                
+            }
             .disposed(by: disposeBag)
         
-//        data
-//            .observe(on: MainScheduler.instance)
-//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { (row, element, cell) in
-//                
-//                cell.selectionStyle = .none
-//                
-//            }
-//            .disposed(by: disposeBag)
+        homeTableView.rx.setDelegate(self).disposed(by: disposeBag)
         
         output.check
             .withUnretained(self)
@@ -168,10 +188,15 @@ final class HomeViewController: BaseViewController {
 //            $0.
 //        }
         
+        
         homeTableView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(59)
             $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
 //            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        homeTableView.tableHeaderView?.snp.makeConstraints {
+            $0.height.equalTo(35)
         }
         
 //        checkLabel.snp.makeConstraints {
@@ -186,4 +211,14 @@ final class HomeViewController: BaseViewController {
         
     }
     
+}
+
+extension HomeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
+        
+        
+        return header
+    }
 }

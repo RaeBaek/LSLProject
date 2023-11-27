@@ -155,31 +155,9 @@ final class SignInViewController: BaseViewController {
     }
     
     private func changeRootViewController() {
-        let homeVC = UINavigationController(rootViewController: HomeViewController())
-        let searchVC = UINavigationController(rootViewController: SearchViewController())
-        let postVC = UINavigationController(rootViewController: PostViewController())
-        let heartVC = UINavigationController(rootViewController: HeartViewController())
-        let userVC = UINavigationController(rootViewController: UserViewController())
+        let rootVC = UINavigationController(rootViewController: MainTabBarController())
         
-        let tabBC = UITabBarController()
-        tabBC.setViewControllers([homeVC, searchVC, postVC, heartVC, userVC], animated: true)
-        
-        tabBC.tabBar.tintColor = .black
-        
-        if let items = tabBC.tabBar.items {
-            
-            let barImages = ["home", "search", "post", "heart", "user"]
-            let barSelectImages = ["home.fill", "search.fill", "post.fill", "heart.fill", "user.fill"]
-            
-            for i in 0..<5 {
-                items[i].image = UIImage(named: barImages[i])
-                items[i].selectedImage = UIImage(named: barSelectImages[i])
-                items[i].imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-            }
-            
-        }
-        
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(tabBC)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(rootVC)
         
     }
     

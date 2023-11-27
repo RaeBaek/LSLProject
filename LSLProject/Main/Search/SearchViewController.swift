@@ -8,6 +8,8 @@
 import UIKit
 
 final class SearchViewController: BaseViewController {
+    
+//    private let search
 
     override func viewDidLoad() {
         super.viewDidLoad()
