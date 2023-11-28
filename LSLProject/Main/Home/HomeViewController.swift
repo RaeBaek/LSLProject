@@ -140,11 +140,11 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         Observable.just(posts)
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { (row, element, cell) in
                 
-                cell.profileImage.image = UIImage(named: element.profileImage)
                 cell.userNickname.text = element.userNickname
                 cell.mainText.text = element.mainText
                 cell.mainImage.image = UIImage(named: element.mainImage)
                 cell.statusLabel.text = element.status
+                cell.profileImage.image = UIImage(named: element.profileImage)
                 
                 cell.selectionStyle = .none
                 

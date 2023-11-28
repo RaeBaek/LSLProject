@@ -37,12 +37,12 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .accessToken)
     }
     
-    func requestRetryAccessToken() -> Single<NetworkResult<AccessTokenResponse>> {
-        APIManager.shared.requestAccessToken(target: .accessToken)
-    }
-    
     func requestWithdraw() -> Single<NetworkResult<WithdrawResponse>> {
         APIManager.shared.request(target: .withdraw)
+    }
+    
+    func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>> {
+        APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
     }
     
 }

@@ -23,8 +23,8 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestAccessToken() -> Single<NetworkResult<AccessTokenResponse>>
     
-    func requestRetryAccessToken() -> Single<NetworkResult<AccessTokenResponse>>
-    
     func requestWithdraw() -> Single<NetworkResult<WithdrawResponse>>
+    
+    func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>>
     
 }

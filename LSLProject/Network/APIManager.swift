@@ -58,35 +58,6 @@ final class APIManager: NetworkService {
         .debug("request")
     }
     
-    func requestAccessToken(target: SeSACAPI) -> Single<NetworkResult<AccessTokenResponse>> {
-        return Single<NetworkResult<AccessTokenResponse>>.create { [weak self] (single) -> Disposable in
-            guard let self else { return Disposables.create() }
-
-            self.provider.request(target) { result in
-                switch result {
-                case .success(let response):
-                    dump(response)
-                    guard let data = try? response.map(AccessTokenResponse.self) else {
-                        single(.success(.failure(NetworkError.invalidData)))
-                        return
-                    }
-                    single(.success(.success(data)))
-                case .failure(let error):
-                    guard let statusCode = error.response?.statusCode,
-                          let networkError = NetworkError(rawValue: statusCode) else {
-                        single(.success(.failure(NetworkError.serverError)))
-                        return
-                    }
-                    print(statusCode)
-                    dump(error)
-                    single(.success(.failure(networkError)))
-                }
-            }
-            return Disposables.create()
-        }
-        .debug("requestAccessToken")
-    }
-    
 //    func emailValidationAPI(email: String) -> Single<Result<Void, EmailValidationError>> {
 //        return Single<Result<Void, EmailValidationError>>.create { [weak self] single in
 //            

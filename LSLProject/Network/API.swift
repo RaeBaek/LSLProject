@@ -14,6 +14,7 @@ enum SeSACAPI {
     case login(model: Login)
     case accessToken
     case withdraw
+    case postAdd(model: PostAdd)
     
 }
 
@@ -34,12 +35,14 @@ extension SeSACAPI: TargetType {
             return "refresh"
         case .withdraw:
             return "withdraw"
+        case .postAdd:
+            return "post"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .signUp, .emailValidation, .login:
+        case .signUp, .emailValidation, .login, .postAdd:
             return .post
         case .accessToken, .withdraw:
             return .get
@@ -50,12 +53,45 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp(let model):
             return .requestJSONEncodable(model)
+            
         case .emailValidation(let model):
             return .requestJSONEncodable(model)
+            
         case .login(let model):
             return .requestJSONEncodable(model)
+            
         case .accessToken, .withdraw:
             return .requestPlain
+            
+        case .postAdd(let model):
+            
+            var postData: [MultipartFormData] = []
+            
+            print("---------- \(model.file)")
+            print("---------- \(model.title)")
+            print("---------- \(model.productID)")
+            
+            if let file = model.file {
+                print("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ")
+//                let imageData = MultipartFormData(provider: .data(file), name: "file")
+                let imageData2 = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpeg", mimeType: "image/jpeg")
+                let imageData3 = MultipartFormData(provider: .data(file), name: "image", fileName: "image.jpeg", mimeType: "image/jpeg")
+                let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
+                let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
+                
+                print("!!!! \(imageData2)")
+                
+                postData.append(contentsOf: [imageData2, title, productId])
+                
+            }
+            
+            let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
+            let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
+            
+            postData.append(contentsOf: [title, productId])
+            
+            return .uploadMultipart(postData)
+            
         }
     }
     
@@ -72,6 +108,8 @@ extension SeSACAPI: TargetType {
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
         case .withdraw:
             return ["Authorization": token, "SesacKey": key]
+        case .postAdd:
+            return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
         }
         
     }

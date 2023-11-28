@@ -47,7 +47,6 @@ enum NetworkError: Int, LoggableError {
 }
 
 enum EmailValidationError: Int, LoggableError {
-    
     case noValue = 400
     case usingValue = 409
     
@@ -123,5 +122,29 @@ enum WithdrawError: Int, LoggableError {
         case .expireAccessToken:
             return "Access Token이 만료되었습니다."
         }
+    }
+}
+
+enum PostAddError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case dbServerError = 410
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            return "파일의 제한 사항과 맞지 않습니다."
+        case .inValidAccessToken:
+            return "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            return "Forbidden"
+        case .dbServerError:
+            return "DB 서버 장애로 게시글이 저장되지 않았을 때 입니다. 다시 시도해주세요."
+        case .expireAccessToken:
+            return "Access Token이 만료되었습니다."
+        }
+        
     }
 }
