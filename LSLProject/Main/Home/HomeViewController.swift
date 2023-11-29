@@ -22,25 +22,6 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         return view
     }()
     
-    private lazy var topView = {
-        let view = UIView()
-        view.backgroundColor = .systemBackground
-        return view
-    }()
-    
-    private let titleImageView = {
-        let view = UIImageView()
-        view.image = UIImage(named: "threads")
-        view.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let checkLabel = {
-        let view = UILabel()
-        view.font = .systemFont(ofSize: 30, weight: .regular)
-        return view
-    }()
-    
     private let withdrawButton = {
         let view = UIButton()
         view.setTitle("회원탈퇴", for: .normal)
@@ -68,12 +49,9 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
-
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.navigationBar.topItem?.titleView = titleImageView
-//        navigationController?.hidesBarsOnSwipe = true
         
     }
     
@@ -198,16 +176,6 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         homeTableView.tableHeaderView?.snp.makeConstraints {
             $0.height.equalTo(35)
         }
-        
-//        checkLabel.snp.makeConstraints {
-//            $0.center.equalToSuperview()
-//        }
-//        
-//        withdrawButton.snp.makeConstraints {
-//            $0.top.equalTo(checkLabel.snp.bottom).offset(10)
-//            $0.centerX.equalToSuperview()
-//            $0.size.equalTo(100)
-//        }
         
     }
     

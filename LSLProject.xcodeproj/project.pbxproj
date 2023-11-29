@@ -26,6 +26,8 @@
 		144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275F2B124B590008CBC3 /* ReusableProtocol.swift */; };
 		144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */; };
 		144B80AB2B09173600993347 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B80AA2B09173600993347 /* HomeViewController.swift */; };
+		145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */; };
+		145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FF2B178B6C00CB39E1 /* SearchModel.swift */; };
 		146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16CE2B0350C500073B91 /* MakeViewController.swift */; };
 		146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D12B03538000073B91 /* Extension + UIButton.swift */; };
 		146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */; };
@@ -89,6 +91,8 @@
 		1440275F2B124B590008CBC3 /* ReusableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProtocol.swift; sourceTree = "<group>"; };
 		144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewCell.swift"; sourceTree = "<group>"; };
 		144B80AA2B09173600993347 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchTableViewCell.swift; path = LSLProject/Main/Heart/SearchTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		145597FF2B178B6C00CB39E1 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		146B16CE2B0350C500073B91 /* MakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeViewController.swift; sourceTree = "<group>"; };
 		146B16D12B03538000073B91 /* Extension + UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIButton.swift"; sourceTree = "<group>"; };
 		146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITextFiled.swift"; sourceTree = "<group>"; };
@@ -183,8 +187,10 @@
 		14056ECC2B130DB200C8EDA2 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */,
 				14056ED02B130E3E00C8EDA2 /* SearchViewController.swift */,
 				14056EDC2B13239100C8EDA2 /* SearchViewModel.swift */,
+				145597FF2B178B6C00CB39E1 /* SearchModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -553,12 +559,14 @@
 				14056EDD2B13239100C8EDA2 /* SearchViewModel.swift in Sources */,
 				14056EE32B1323C300C8EDA2 /* UserViewModel.swift in Sources */,
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
+				145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */,
 				144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */,
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
 				14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */,
 				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */,
+				145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */,
 				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 				14056EDF2B1323A600C8EDA2 /* PostViewModel.swift in Sources */,
 				147CC5612B03D0B800D7DA7C /* API.swift in Sources */,
