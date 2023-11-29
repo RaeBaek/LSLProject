@@ -60,7 +60,7 @@ final class PostViewController: BaseViewController {
     
     var data: Data? = Data()
     
-//    lazy var data2 = BehaviorSubject(value: data)
+    lazy var data2 = BehaviorRelay(value: data)
     
     let disposeBag = DisposeBag()
     
@@ -81,7 +81,7 @@ final class PostViewController: BaseViewController {
     
     private func bind() {
         
-        let input = PostViewModel.Input(postButtonTap: postButton.rx.tap, imageButtonTap: imageButton.rx.tap, textView: mainTextView.rx.text.orEmpty, imageData: BehaviorRelay(value: data))
+        let input = PostViewModel.Input(postButtonTap: postButton.rx.tap, imageButtonTap: imageButton.rx.tap, textView: mainTextView.rx.text.orEmpty, imageData: data2)
         let output = viewModel.transform(input: input)
         
         output.postResult
@@ -110,12 +110,6 @@ final class PostViewController: BaseViewController {
 //        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = nil
 //        self.navigationController?.navigationBar.backgroundColor = .systemGray
-    }
-    
-    private func test() {
-        
-        
-        
     }
     
     private func presentPicker() {
@@ -181,6 +175,19 @@ final class PostViewController: BaseViewController {
 }
 
 extension PostViewController: PHPickerViewControllerDelegate {
+    
+    func compressImage(image: UIImage, targetSize: Int) -> Data? {
+        var compression: CGFloat = 1.0
+        var imageData = image.jpegData(compressionQuality: compression)
+
+        while (imageData?.count ?? 0) > targetSize && compression > 0 {
+            compression -= 0.1
+            imageData = image.jpegData(compressionQuality: compression)
+        }
+
+        return imageData
+    }
+    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         // 🎆 선택완료 혹은 취소하면 뷰 dismiss.
         picker.dismiss(animated: true, completion: nil)
@@ -196,45 +203,27 @@ extension PostViewController: PHPickerViewControllerDelegate {
                 // 🎆 itemProvider 는 background asnyc 작업이기 때문에 UI 와 관련된 업데이트는 꼭 main 쓰레드에서 실행해줘야 합니다.
                 DispatchQueue.main.sync { [weak self] in
                     guard let self else { return }
-                    self.myImageView.image = image as? UIImage
                     
-                    var imageFile: UIImage? = nil
+                    let image = image as? UIImage
                     
-                    guard let image = self.myImageView.image else {
-                        print("")
-                        print("=======================")
-                        print("image file is nil....")
-                        print("=======================")
-                        return
+                    let originalImage: UIImage = image!// 원본 이미지
+                    let targetSize: Int = 1 * 1024 * 1024 // 1MB
+                    
+                    if let compressedImageData = compressImage(image: originalImage, targetSize: targetSize) {
+                        
+                        // 압축된 이미지 데이터 사용
+                        print("압축된 이미지 입니다! \(compressedImageData)")
+                        self.myImageView.image = UIImage(data: compressedImageData) //image as? UIImage
+                        self.data2.accept(compressedImageData)
+                    } else {
+                        print("압축된 이미지가 아닙니다 \(image?.jpegData(compressionQuality: 0.5))")
+                        // 압축 실패 또는 원본 이미지가 이미 충분히 작을 때
+                        self.myImageView.image = UIImage(data: (image?.jpegData(compressionQuality: 0.5))!) //image as? UIImage
+                        self.data2.accept(image?.jpegData(compressionQuality: 0.5))
+                        
                     }
-                    
-                    imageFile = image
-                    print(imageFile?.jpegData(compressionQuality: 0.5))
-                    
-                    let pngData = imageFile?.jpegData(compressionQuality: 0.5)
-                    print(pngData)
-                    
-                    self.data = pngData
-                    
-//                    if let image = self.myImageView.image {
-//                        print("이거지~")
-//                        imageFile = image
-//                        print(imageFile?.pngData())
-//                    } else {
-//                        
-//                        return
-//                    }
-//                    
-//                    let pngData = imageFile?.pngData()
-//                    
-//                    self.data = pngData!
-                    
-                    
-                    
                 }
             }
         }
     }
-    
-    
 }

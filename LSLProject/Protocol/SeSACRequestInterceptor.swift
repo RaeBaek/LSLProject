@@ -25,11 +25,11 @@ final class SeSACRequestInterceptor: RequestInterceptor {
             return
         }
         
-        var urlRequest = urlRequest
+//        var urlRequest = urlRequest
         
-        urlRequest.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
-        urlRequest.setValue(UserDefaultsManager.refreshToken, forHTTPHeaderField: "Refresh")
-        urlRequest.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
+//        urlRequest.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
+//        urlRequest.setValue(UserDefaultsManager.refreshToken, forHTTPHeaderField: "Refresh")
+//        urlRequest.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
         
         print("adator 적용 \(urlRequest.headers)")
         completion(.success(urlRequest))

@@ -65,33 +65,25 @@ extension SeSACAPI: TargetType {
             
         case .postAdd(let model):
             
-            var postData: [MultipartFormData] = []
-            
             print("---------- \(model.file)")
             print("---------- \(model.title)")
             print("---------- \(model.productID)")
             
             if let file = model.file {
-                print("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ")
-//                let imageData = MultipartFormData(provider: .data(file), name: "file")
-                let imageData2 = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpeg", mimeType: "image/jpeg")
-                let imageData3 = MultipartFormData(provider: .data(file), name: "image", fileName: "image.jpeg", mimeType: "image/jpeg")
+                let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
                 let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
                 let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
                 
-                print("!!!! \(imageData2)")
+                print("!!!! \(imageData)")
                 
-                postData.append(contentsOf: [imageData2, title, productId])
+                return .uploadMultipart([imageData, title, productId])
                 
+            } else {
+                let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
+                let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
+                
+                return .uploadMultipart([title, productId])
             }
-            
-            let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
-            let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
-            
-            postData.append(contentsOf: [title, productId])
-            
-            return .uploadMultipart(postData)
-            
         }
     }
     

@@ -27,7 +27,7 @@ struct Login: Encodable {
 
 struct PostAdd: Encodable {
     let title: String?
-    let file: Data? // 확장자 제한: jpg, png, jpeg, gif, pdf - 용량제한 10MB/파일 당 - 최대 파일 개수: 5개
+    let file: Data? //UploadFile? // 확장자 제한: jpg, png, jpeg, gif, pdf - 용량제한 10MB/파일 당 - 최대 파일 개수: 5개
     let productID: String? // Threads
 //    let content: String?
 //    let content1: String? // 게시글의 comment

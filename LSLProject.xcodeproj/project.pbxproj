@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EC82B1306BA00C8EDA2 /* ProfileImageView.swift */; };
 		14056ED12B130E3E00C8EDA2 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056ED02B130E3E00C8EDA2 /* SearchViewController.swift */; };
-		14056ED32B130E5F00C8EDA2 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056ED22B130E5F00C8EDA2 /* PostViewController.swift */; };
 		14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056ED42B130E7F00C8EDA2 /* HeartViewController.swift */; };
 		14056ED72B130EA100C8EDA2 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056ED62B130EA100C8EDA2 /* UserViewController.swift */; };
 		14056EDB2B13220B00C8EDA2 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EDA2B13220B00C8EDA2 /* ViewModelType.swift */; };
@@ -19,6 +18,7 @@
 		14056EE32B1323C300C8EDA2 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE22B1323C300C8EDA2 /* UserViewModel.swift */; };
 		14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */; };
 		14056EE82B13716000C8EDA2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 14056EE72B13716000C8EDA2 /* RxDataSources */; };
+		141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141AD7482B173FB900D98D08 /* PostViewController.swift */; };
 		14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14360E8F2B146B30006AA532 /* MainTabBarController.swift */; };
 		144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */; };
 		1440275B2B1209880008CBC3 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */; };
@@ -73,7 +73,6 @@
 /* Begin PBXFileReference section */
 		14056EC82B1306BA00C8EDA2 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
 		14056ED02B130E3E00C8EDA2 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		14056ED22B130E5F00C8EDA2 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		14056ED42B130E7F00C8EDA2 /* HeartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartViewController.swift; sourceTree = "<group>"; };
 		14056ED62B130EA100C8EDA2 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		14056EDA2B13220B00C8EDA2 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
@@ -82,6 +81,7 @@
 		14056EE02B1323B200C8EDA2 /* HeartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartViewModel.swift; sourceTree = "<group>"; };
 		14056EE22B1323C300C8EDA2 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
+		141AD7482B173FB900D98D08 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		14360E8F2B146B30006AA532 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACRequestInterceptor.swift; sourceTree = "<group>"; };
 		1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
@@ -192,8 +192,8 @@
 		14056ECD2B130DBC00C8EDA2 /* Post */ = {
 			isa = PBXGroup;
 			children = (
-				14056ED22B130E5F00C8EDA2 /* PostViewController.swift */,
 				14056EDE2B1323A600C8EDA2 /* PostViewModel.swift */,
+				141AD7482B173FB900D98D08 /* PostViewController.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -518,7 +518,7 @@
 				14F8AB1C2B0B553500493AE1 /* NetworkRepository.swift in Sources */,
 				14056ED72B130EA100C8EDA2 /* UserViewController.swift in Sources */,
 				14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */,
-				14056ED32B130E5F00C8EDA2 /* PostViewController.swift in Sources */,
+				141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */,
 				146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */,
 				14056ED12B130E3E00C8EDA2 /* SearchViewController.swift in Sources */,
 				146B16D72B0362C300073B91 /* PasswordViewController.swift in Sources */,

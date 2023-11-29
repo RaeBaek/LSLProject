@@ -41,10 +41,10 @@ final class PostViewModel: ViewModelType {
             .withLatestFrom(input.textView) { _, text in
                 return text
             }
-            .withLatestFrom(input.imageData) { text, image in
-                guard let image else { return (text, image) }
-                print("여기지~ \(image)")
-                return (text, image)
+            .withLatestFrom(input.imageData) { text, file in
+//                guard let image else { return (text, image.image, image.filename) }
+                print("여기지~ \(file)")
+                return (text, file)
             }
             .flatMap { value in
                 let productID = "hihi"
