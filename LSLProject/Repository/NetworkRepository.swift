@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 class NetworkRepository: NetworkRepositoryType {
-    
+
     func requestEmailValidation(email: String) -> Single<NetworkResult<EmailValidationResponse>> {
         APIManager.shared.request(target: .emailValidation(model: EmailValidation(email: email)))
         
@@ -41,8 +41,16 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .withdraw)
     }
     
+    func requestAllPost(next: String, limit: String, productID: String) -> Single<NetworkResult<PostResponses>> {
+        APIManager.shared.request(target: .allPost(model: AllPost(next: next, limit: limit, productID: productID)))
+    }
+    
     func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>> {
         APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
+    }
+    
+    func reqeustDownloadImage(path: String) -> Single<NetworkResult<DownloadImageResponse>> {
+        APIManager.shared.request(target: .downloadImage(model: DownloadImage(path: path)))
     }
     
 }

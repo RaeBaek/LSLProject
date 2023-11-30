@@ -22,6 +22,7 @@ protocol NetworkService {
 
 final class APIManager: NetworkService {
     
+    
     static let shared = APIManager()
     
     private init() { }
@@ -56,7 +57,9 @@ final class APIManager: NetworkService {
             return Disposables.create()
         }
         .debug("request")
+        
     }
+    
     
 //    func emailValidationAPI(email: String) -> Single<Result<Void, EmailValidationError>> {
 //        return Single<Result<Void, EmailValidationError>>.create { [weak self] single in

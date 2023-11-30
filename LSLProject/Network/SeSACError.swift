@@ -125,6 +125,26 @@ enum WithdrawError: Int, LoggableError {
     }
 }
 
+enum AllPostError: Int, LoggableError {
+    case invalidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .invalidRequest:
+            return "잘못된 요청입니다. 확인해주세요."
+        case .inValidAccessToken:
+            return "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            return "Forbidden"
+        case .expireAccessToken:
+            return "Access Token이 만료되었습니다."
+        }
+    }
+}
+
 enum PostAddError: Int, LoggableError {
     case inValidRequest = 400
     case inValidAccessToken = 401

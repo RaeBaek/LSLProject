@@ -12,10 +12,13 @@ import RxCocoa
 final class HomeViewModel: ViewModelType {
     
     struct Input {
+        let userID: BehaviorRelay<String>
+        let allPost: BehaviorRelay<AllPost>
         let withdraw: ControlEvent<Void>
     }
     
     struct Output {
+        let items: PublishRelay<PostResponses>
         let check: PublishRelay<Bool>
     }
     
@@ -30,6 +33,30 @@ final class HomeViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let statusCode = BehaviorRelay<Int?>(value: nil)//PublishRelay<Int?>()
         let check = PublishRelay<Bool>()
+        let items = PublishRelay<PostResponses>()
+        
+        input.userID
+            .withLatestFrom(input.allPost, resultSelector: { _, value in
+                return value
+            })
+            .flatMap { value in
+                self.repository.requestAllPost(next: value.next, limit: value.limit, productID: value.productID)
+            }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success(let data):
+                    print("포스트 조회 성공!!")
+                    items.accept(data)
+                case .failure(let error):
+                    guard let allPostError = AllPostError(rawValue: error.rawValue) else {
+                        print("포스트 조회 실패.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 포스트 에러 \(allPostError.message)")
+                }
+            })
+            .disposed(by: disposeBag)
+        
         
         statusCode
             .skip(1)
@@ -79,7 +106,7 @@ final class HomeViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        return Output(check: check)
+        return Output(items: items, check: check)
     }
     
 }

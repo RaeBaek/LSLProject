@@ -3,4 +3,260 @@
    uuid = "E7106B33-B0D3-4BD1-BEEE-BCAC81A592C3"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7DEB6E4F-126A-48AB-8CF0-83F609811C16"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "bind()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9AA11C7F-0836-40F7-A24C-D8D66762CDAA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "bind()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11A0A5AC-68FA-49AA-8F40-144780B22AA3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "bind()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EA651B5D-CE75-45DC-8458-E91B1A6CA319"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "bind()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A60C2C9F-249F-4485-ADCA-26DA5D5CF459"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "loadImageAPI(path:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A60C2C9F-249F-4485-ADCA-26DA5D5CF459 - b4eb958687afe622"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "114"
+                  endingLineNumber = "114"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  uuid = "A60C2C9F-249F-4485-ADCA-26DA5D5CF459 - 9c2ad47f535a325a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (LSLProject.NetworkResult&lt;LSLProject.DownloadImageResponse&gt;) -&gt; () in LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "114"
+                  endingLineNumber = "114"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "A60C2C9F-249F-4485-ADCA-26DA5D5CF459 - b4eb958687afe622"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "114"
+                  endingLineNumber = "114"
+                  offsetFromSymbolStart = "276">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EEDBD696-B662-4A8C-9454-1626FBB161A7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "loadImageAPI(path:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EEDBD696-B662-4A8C-9454-1626FBB161A7 - b4eb958687afe411"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "1148">
+               </Location>
+               <Location
+                  uuid = "EEDBD696-B662-4A8C-9454-1626FBB161A7 - b4eb958687afe411"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "1156">
+               </Location>
+               <Location
+                  uuid = "EEDBD696-B662-4A8C-9454-1626FBB161A7 - b4eb958687afe411"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "1192">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "72F6EEF8-C40D-4EE4-8704-CA8C8804506C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
+            landmarkName = "loadImageAPI(path:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "72F6EEF8-C40D-4EE4-8704-CA8C8804506C - 9c2ad47f535a338c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (LSLProject.NetworkResult&lt;LSLProject.DownloadImageResponse&gt;) -&gt; () in LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "364">
+               </Location>
+               <Location
+                  uuid = "72F6EEF8-C40D-4EE4-8704-CA8C8804506C - 9c2ad47f535a338c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (LSLProject.NetworkResult&lt;LSLProject.DownloadImageResponse&gt;) -&gt; () in LSLProject.HomeViewController.loadImageAPI(path: Swift.String) -&gt; Foundation.Data"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "356">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0BD6003E-6A3C-44C1-9A73-2A50F0C47831"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "loadImageAPI(path:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

@@ -14,7 +14,9 @@ enum SeSACAPI {
     case login(model: Login)
     case accessToken
     case withdraw
+    case allPost(model: AllPost)
     case postAdd(model: PostAdd)
+    case downloadImage(model: DownloadImage)
     
 }
 
@@ -35,8 +37,10 @@ extension SeSACAPI: TargetType {
             return "refresh"
         case .withdraw:
             return "withdraw"
-        case .postAdd:
+        case .allPost, .postAdd:
             return "post"
+        case .downloadImage(let model):
+            return model.path
         }
     }
     
@@ -44,7 +48,7 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login, .postAdd:
             return .post
-        case .accessToken, .withdraw:
+        case .accessToken, .withdraw, .allPost, .downloadImage:
             return .get
         }
     }
@@ -60,21 +64,21 @@ extension SeSACAPI: TargetType {
         case .login(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw:
+        case .accessToken, .withdraw, .downloadImage:
             return .requestPlain
             
-        case .postAdd(let model):
+        case .allPost(let model):
+            return .requestParameters(parameters: ["next": model.next, "limit": model.limit, "product_id": model.productID], encoding: URLEncoding.queryString)
             
-            print("---------- \(model.file)")
-            print("---------- \(model.title)")
-            print("---------- \(model.productID)")
+        case .postAdd(let model):
+//            print("---------- \(model.file)")
+//            print("---------- \(model.title)")
+//            print("---------- \(model.productID)")
             
             if let file = model.file {
                 let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
                 let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
                 let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
-                
-                print("!!!! \(imageData)")
                 
                 return .uploadMultipart([imageData, title, productId])
                 
@@ -98,7 +102,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw:
+        case .withdraw, .allPost, .downloadImage:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

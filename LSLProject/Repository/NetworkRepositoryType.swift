@@ -25,6 +25,10 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestWithdraw() -> Single<NetworkResult<WithdrawResponse>>
     
+    func requestAllPost(next: String, limit: String, productID: String) -> Single<NetworkResult<PostResponses>>
+    
     func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>>
+    
+    func reqeustDownloadImage(path: String) -> Single<NetworkResult<DownloadImageResponse>>
     
 }

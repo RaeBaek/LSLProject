@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 //MARK: - Encodable
 struct SignUp: Encodable {
@@ -25,6 +26,17 @@ struct Login: Encodable {
     let password: String?
 }
 
+struct AllPost: Encodable {
+    var next: String
+    let limit: String
+    let productID: String
+    
+    enum CodingKeys: String, CodingKey {
+        case next, limit
+        case productID = "product_id"
+    }
+}
+
 struct PostAdd: Encodable {
     let title: String?
     let file: Data? //UploadFile? // 확장자 제한: jpg, png, jpeg, gif, pdf - 용량제한 10MB/파일 당 - 최대 파일 개수: 5개
@@ -41,6 +53,10 @@ struct PostAdd: Encodable {
 //        content, content1, content2, content3, content4, content5
         case productID = "product_id"
     }
+}
+
+struct DownloadImage: Encodable {
+    let path: String
 }
 
 //MARK: - Decodable {
@@ -85,6 +101,16 @@ struct WithdrawResponse: Decodable {
     }
 }
 
+struct PostResponses: Decodable {
+    let data: [PostResponse]
+    let nextCursor: String
+    
+    enum CodingKeys: String, CodingKey {
+        case data
+        case nextCursor = "next_cursor"
+    }
+}
+
 struct PostResponse: Decodable {
     let likes: [String]
     let image: [String]
@@ -103,7 +129,6 @@ struct PostResponse: Decodable {
     }
 }
 
-// MARK: - Creator
 struct Creator: Decodable {
     let id, nick: String
     let profile: String?
@@ -112,4 +137,10 @@ struct Creator: Decodable {
         case id = "_id"
         case nick, profile
     }
+}
+
+// 현재 홈화면의 각 Cell들의 이미지 요청 API는 200 응답 코드로 떨어짐 하지만 Decodable 할 때 타입이 맞지 않는지 LSLProject.NetworkError.invalidData를 뱉음
+// 타입을 확인해봐야 할 듯 함
+struct DownloadImageResponse: Decodable {
+    let image: Data
 }

@@ -30,7 +30,13 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         return view
     }()
     
-    private let viewModel = HomeViewModel(repository: NetworkRepository())
+    private var model = AllPost(next: "0", limit: "10", productID: "hihi")
+    
+    private lazy var allPost = BehaviorRelay<AllPost>(value: model)
+    
+    private let repository = NetworkRepository()
+    
+    private lazy var viewModel = HomeViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
     
@@ -64,65 +70,28 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func bind() {
-        let input = HomeViewModel.Input(withdraw: withdrawButton.rx.tap)
+        let input = HomeViewModel.Input(userID: BehaviorRelay(value: UserDefaultsManager.id), allPost: allPost, withdraw: withdrawButton.rx.tap)
         let output = viewModel.transform(input: input)
         
-        let posts = [
-            
-            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-            Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요")
-            
-//            Header(header: topView, items: [
-//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요"),
-//                Post(profileImage: "우동", userNickname: "hihihi", mainText: "안녕하세요~", uploadTime: "3시간", mainImage: "달", status: "80 답글 340 좋아요")
-//            ])
-            
-        ]
-        
-        let dataSource = RxTableViewSectionedReloadDataSource<Header> { dataSource, tableView, indexPath, item in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as? HomeTableViewCell else { return UITableViewCell() }
-            
-//            guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UITableViewCell() }
-            
-//            if indexPath.row != 0 {
-//                cell.logoImageView.isHidden = true
-//            }
-            
-            cell.profileImage.image = UIImage(named: item.profileImage)
-            cell.userNickname.text = item.userNickname
-            cell.mainText.text = item.mainText
-            cell.mainImage.image = UIImage(named: item.mainImage)
-            cell.statusLabel.text = item.status
-            
-            cell.selectionStyle = .none
-            
-            return cell
-            
-        }
-        
-//        dataSource.titleForHeaderInSection = { dataSource, indexPath in
-//            return dataSource.sectionModels[indexPath].header //"하이하이"
-//            
-//        }
-        
-//        Observable.just(posts)
-//            .bind(to: homeTableView.rx.items(dataSource: dataSource))
-//            .disposed(by: disposeBag)
-        
-        Observable.just(posts)
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { (row, element, cell) in
+        output.items
+            .withUnretained(self)
+            .map { value in
+                self.model.next = value.1.nextCursor
+                return value.1.data
+            }
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { [weak self] (row, element, cell) in
                 
-                cell.userNickname.text = element.userNickname
-                cell.mainText.text = element.mainText
-                cell.mainImage.image = UIImage(named: element.mainImage)
-                cell.statusLabel.text = element.status
-                cell.profileImage.image = UIImage(named: element.profileImage)
+                guard let self else { return }
+                
+                cell.userNickname.text = element.creator.nick
+                cell.mainText.text = element.title
+                
+                print("이미지 주소: \(element.image.first ?? "")")
+                
+                cell.mainImage.image = UIImage(data: self.loadImageAPI(path: element.image.first ?? ""))
+                
+                cell.statusLabel.text = element.productID
+                cell.profileImage.image = UIImage(named: element.creator.profile ?? "")
                 
                 cell.selectionStyle = .none
                 
@@ -138,6 +107,26 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
             }
             .disposed(by: disposeBag)
         
+    }
+    
+    private func loadImageAPI(path: String) -> Data {
+        
+        var result = Data()
+        
+        Observable.just(())
+            .observe(on: SerialDispatchQueueScheduler(qos: .background))
+            .flatMap { self.repository.reqeustDownloadImage(path: path) }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success(let data):
+                    result = data.image
+                case .failure(let error):
+                    print(error.message)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        return result
     }
     
     private func changeRootViewController() {
