@@ -37,7 +37,7 @@ class SearchTableViewCell: BaseTableViewCell {
     let userNameLabel = {
         let view = UILabel()
         view.text = "백래훈"
-        view.textColor = .darkGray
+        view.textColor = .lightGray
         view.font = .systemFont(ofSize: 15, weight: .regular)
         return view
     }()
@@ -52,19 +52,35 @@ class SearchTableViewCell: BaseTableViewCell {
     
     let followButton = {
         let view = UIButton()
+        
+        var config = UIButton.Configuration.plain() //apple system button
+        
+        var titleAttr = AttributedString.init("팔로우")
+        titleAttr.font = .systemFont(ofSize: 15, weight: .semibold)
+        
+        config.baseForegroundColor = .black
+        config.baseBackgroundColor = .yellow
+        config.attributedTitle = titleAttr
+        
+        view.configuration = config
+        
         view.layer.cornerRadius = 10
         view.layer.cornerCurve = .continuous
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.darkGray.cgColor
-        view.setTitle("팔로우", for: .normal)
-        view.setTitleColor(.black, for: .normal)
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        return view
+    }()
+    
+    let lineView = {
+        let view = UIView()
+        view.backgroundColor = .lightGray
         return view
     }()
     
     override func configureCell() {
         super.configureCell()
         
-        [profileImageView, userIDLabel, userNameLabel, followerLabel, followButton].forEach {
+        [profileImageView, userIDLabel, userNameLabel, followerLabel, followButton, lineView].forEach {
             contentView.addSubview($0)
         }
         
@@ -74,8 +90,9 @@ class SearchTableViewCell: BaseTableViewCell {
         super.setConstraints()
         
         profileImageView.snp.makeConstraints {
-            $0.top.leading.equalToSuperview().offset(16)
-            $0.size.equalTo(30)
+            $0.top.equalToSuperview().offset(12)
+            $0.leading.equalToSuperview().offset(16)
+            $0.size.equalTo(38)
         }
         
         userIDLabel.snp.makeConstraints {
@@ -89,16 +106,23 @@ class SearchTableViewCell: BaseTableViewCell {
         }
         
         followerLabel.snp.makeConstraints {
-            $0.top.equalTo(userNameLabel.snp.bottom).offset(16)
+            $0.top.equalTo(userNameLabel.snp.bottom).offset(12)
             $0.leading.equalTo(userNameLabel.snp.leading)
-            $0.bottom.equalToSuperview().offset(-16)
+        }
+        
+        lineView.snp.makeConstraints {
+            $0.top.equalTo(followerLabel.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().offset(70)
+            $0.trailing.equalToSuperview()
+            $0.height.equalTo(0.5)
+            $0.bottom.equalToSuperview()
         }
         
         followButton.snp.makeConstraints {
             $0.top.equalTo(userIDLabel.snp.top)
             $0.trailing.equalToSuperview().offset(-16)
             $0.width.equalTo(100)
-            $0.height.equalTo(25)
+            $0.height.equalTo(30)
         }
         
     }

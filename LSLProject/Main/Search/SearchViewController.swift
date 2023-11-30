@@ -17,6 +17,12 @@ final class SearchViewController: BaseViewController {
         return view
     }()
     
+    private lazy var searchBar = {
+        let view = UISearchBar()
+        view.delegate = self
+        return view
+    }()
+    
     private var searchTableView = {
         let view = UITableView()
         view.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.identifier)
@@ -73,17 +79,16 @@ final class SearchViewController: BaseViewController {
         self.navigationItem.title = "검색"
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.hidesBarsOnSwipe = true
-//        self.navigationController?.navigationBar.isHidden = true
+//        self.navigationController?.navigationBar.backgroundColor = .systemBackground
+//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
-//        searchTableView.scrollToRow(at: IndexPath(row: NSNotFound, section: 0), at: .top, animated: false)
-//        self.navigationController?.navigationBar.sizeToFit()
+        self.navigationItem.largeTitleDisplayMode = .inline
         
-        
-        [searchTableView].forEach {
+        [searchTableView, searchBar].forEach {
             view.addSubview($0)
         }
-        
         
     }
 
@@ -91,7 +96,8 @@ final class SearchViewController: BaseViewController {
         super.setConstraints()
         
         searchTableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
     }
