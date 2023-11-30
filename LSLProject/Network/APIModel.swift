@@ -60,8 +60,14 @@ struct SignUpResponse: Decodable {
 }
 
 struct LoginResponse: Decodable {
+    let id: String
     let token: String
     let refreshToken: String
+    
+    enum CodingKeys: String, CodingKey {
+        case token, refreshToken
+        case id = "_id"
+    }
 }
 
 struct AccessTokenResponse: Decodable {

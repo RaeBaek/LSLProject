@@ -80,6 +80,48 @@ final class BirthdayViewModel: ViewModelType {
             }
             .disposed(by: disposeBag)
         
+        statusCode
+            .map { $0 == 200 }
+            .filter { $0 }
+            .withLatestFrom(input.signUpValues, resultSelector: { bool, value in
+                textStatus.accept(bool)
+                return value
+            })
+            .flatMap { value in
+                self.repository.requestLogin(email: value[0], password: value[1])
+            }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success(let data):
+                    
+                    outputText.accept("정상적으로 로그인 처리되었습니다!")
+                    
+                    UserDefaultsManager.token = data.token
+                    UserDefaultsManager.refreshToken = data.refreshToken
+                    UserDefaultsManager.id = data.id
+                    
+                    print("로그인 성공!")
+                    print("Token: \(UserDefaultsManager.token)")
+                    print("Refresh Token: \(UserDefaultsManager.refreshToken)")
+                    print("id: \(UserDefaultsManager.id)")
+                    
+                    signUpStatus.accept(true)
+                    
+                case .failure(let error):
+                    guard let loginError = LoginError(rawValue: error.rawValue) else {
+                        print("=====", error.message)
+                        print("-----", error.rawValue)
+                        outputText.accept(error.message)
+                        statusCode.accept(error.rawValue)
+                        return
+                    }
+//                    statusCode.accept(loginError.rawValue)
+                    print("다음 오류가 발생할 확률은 거의 없지만...")
+                    print(loginError.message)
+                }
+            })
+            .disposed(by: disposeBag)
+        
         readyForSignUp
             .filter { !$0 }
             .bind { bool in
@@ -140,46 +182,6 @@ final class BirthdayViewModel: ViewModelType {
                     }
                     statusCode.accept(signUpError.rawValue)
                     outputText.accept(signUpError.message)
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        statusCode
-            .map { $0 == 200 }
-            .filter { $0 }
-            .withLatestFrom(input.signUpValues, resultSelector: { bool, value in
-                textStatus.accept(bool)
-                return value
-            })
-            .flatMap { value in
-                self.repository.requestLogin(email: value[0], password: value[1])
-            }
-            .subscribe(onNext: { value in
-                switch value {
-                case .success(let data):
-                    
-                    outputText.accept("정상적으로 로그인 처리되었습니다!")
-                    
-                    UserDefaultsManager.token = data.token
-                    UserDefaultsManager.refreshToken = data.refreshToken
-                    
-                    print("로그인 성공!")
-                    print("Token: \(UserDefaultsManager.token)")
-                    print("Refresh Token: \(UserDefaultsManager.refreshToken)")
-                    
-                    signUpStatus.accept(true)
-                    
-                case .failure(let error):
-                    guard let loginError = LoginError(rawValue: error.rawValue) else {
-                        print("=====", error.message)
-                        print("-----", error.rawValue)
-                        outputText.accept(error.message)
-                        statusCode.accept(error.rawValue)
-                        return
-                    }
-//                    statusCode.accept(loginError.rawValue)
-                    print("다음 오류가 발생할 확률은 거의 없지만...")
-                    print(loginError.message)
                 }
             })
             .disposed(by: disposeBag)

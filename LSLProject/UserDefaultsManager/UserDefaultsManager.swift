@@ -27,6 +27,7 @@ enum UserDefaultsManager {
     enum Key: String {
         case email
         case password
+        case id
         case token
         case refreshToken
     }
@@ -37,6 +38,9 @@ enum UserDefaultsManager {
     
     @RBDefaults(key: Key.password.rawValue, defaultValue: "비밀번호 없음")
     static var password
+    
+    @RBDefaults(key: Key.id.rawValue, defaultValue: "아이디 없음")
+    static var id
     
     @RBDefaults(key: Key.token.rawValue, defaultValue: "토큰 없음")
     static var token
