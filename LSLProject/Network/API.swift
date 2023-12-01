@@ -25,6 +25,14 @@ extension SeSACAPI: TargetType {
         URL(string: APIKey.sesacURL)! //27812: 테스트 서버, 27820: 본 서버
     }
     
+//    var downloadDestination: DownloadDestination {
+//        let url = URL(string: "\(baseURL)/\(path)")! // basePath is "http://myurl.com", path is "/eula.txt"
+//        
+//        return { tempUrl, response in
+//            return (url, .removePreviousFile)
+//        }
+//    }
+    
     var path: String {
         switch self {
         case .signUp:
@@ -64,7 +72,10 @@ extension SeSACAPI: TargetType {
         case .login(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage:
+        case .accessToken, .withdraw:
+            return .requestPlain
+            
+        case .downloadImage:
             return .requestPlain
             
         case .allPost(let model):

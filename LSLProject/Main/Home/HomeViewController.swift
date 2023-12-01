@@ -14,11 +14,17 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     
     private let homeTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
         view.register(HomeTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeTableViewHeaderView.identifier)
+        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
+        return view
+    }()
+    
+    private lazy var backBarbutton = {
+        let view = UIBarButtonItem(title: "이전", style: .plain, target: self, action: nil)
+        view.tintColor = .black
         return view
     }()
     
@@ -55,6 +61,7 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
+        self.navigationItem.backBarButtonItem = backBarbutton
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
@@ -64,8 +71,9 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     private func setTabBar() {
         tabBarController?.tabBar.backgroundImage = UIImage()
         tabBarController?.tabBar.shadowImage = UIImage()
-        
-        tabBarController?.tabBar.barTintColor = .white
+        tabBarController?.tabBar.isTranslucent = false
+        tabBarController?.tabBar.backgroundColor = .white
+//        tabBarController?.tabBar.barTintColor = .white
         
     }
     
@@ -81,22 +89,44 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { [weak self] (row, element, cell) in
                 
-                guard let self else { return }
+//                Task {
+                    guard let self else { return }
+                    
+                    cell.userNickname.text = element.creator.nick
+                    cell.mainText.text = element.title
+                    
+                    let path = element.image.first ?? ""
+                    
+                    print("이미지 주소: \(path)")
+                    
+                    cell.loadMainImage(path: path) { data in
+                        cell.mainImage.image = UIImage(data: data.value)
+                    }
                 
-                cell.userNickname.text = element.creator.nick
-                cell.mainText.text = element.title
-                
-                print("이미지 주소: \(element.image.first ?? "")")
-                
-                cell.mainImage.image = UIImage(data: self.loadImageAPI(path: element.image.first ?? ""))
-                
-                cell.statusLabel.text = element.productID
-                cell.profileImage.image = UIImage(named: element.creator.profile ?? "")
-                
-                cell.selectionStyle = .none
-                
+                cell.loadMainImage(path: element.creator.profile ?? "") { data in
+                    cell.profileImage.image = UIImage(data: data.value)
+                }
+                    
+                    print("-------cell", cell.mainImage.image)
+                    
+                    cell.statusLabel.text = element.productID
+                    
+                    
+                    cell.selectionStyle = .none
+//                }
             }
             .disposed(by: disposeBag)
+        
+        homeTableView.rx.modelSelected(PostResponse.self)
+            .withUnretained(self)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe { owner, value in
+                owner.nextDetailViewController(item: value)
+            }
+            .disposed(by: disposeBag)
+        
+//        output.items
+//            .bind(to: homeTableView.rx.itemSelected) -> //indexPath
         
         homeTableView.rx.setDelegate(self).disposed(by: disposeBag)
         
@@ -109,29 +139,16 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
     }
     
-    private func loadImageAPI(path: String) -> Data {
+    private func nextDetailViewController(item: PostResponse) {
+        let vc = HomeDetailViewController()
+        vc.item = item
+
+        self.navigationController?.pushViewController(vc, animated: true)
         
-        var result = Data()
-        
-        Observable.just(())
-            .observe(on: SerialDispatchQueueScheduler(qos: .background))
-            .flatMap { self.repository.reqeustDownloadImage(path: path) }
-            .subscribe(onNext: { value in
-                switch value {
-                case .success(let data):
-                    result = data.image
-                case .failure(let error):
-                    print(error.message)
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        return result
     }
     
     private func changeRootViewController() {
         let vc = SignInViewController()
-        
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
         
     }
@@ -150,20 +167,13 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     override func setConstraints() {
         super.setConstraints()
         
-//        topView.snp.makeConstraints {
-//            $0.top.horizontalEdges.equalToSuperview()
-//            $0.
-//        }
-        
+        homeTableView.tableHeaderView?.snp.makeConstraints {
+            $0.height.equalTo(35)
+        }
         
         homeTableView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(59)
             $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
-//            $0.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-        homeTableView.tableHeaderView?.snp.makeConstraints {
-            $0.height.equalTo(35)
         }
         
     }
@@ -172,9 +182,7 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
-        
         
         return header
     }

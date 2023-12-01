@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import Moya
 
 class NetworkRepository: NetworkRepositoryType {
 
@@ -49,7 +50,7 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
     }
     
-    func reqeustDownloadImage(path: String) -> Single<NetworkResult<DownloadImageResponse>> {
+    func reqeustImage(path: String) -> Single<NetworkResult<Data>> {
         APIManager.shared.request(target: .downloadImage(model: DownloadImage(path: path)))
     }
     

@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import Moya
 
 protocol NetworkRepositoryType: AnyObject {
     
@@ -29,6 +30,6 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>>
     
-    func reqeustDownloadImage(path: String) -> Single<NetworkResult<DownloadImageResponse>>
+    func reqeustImage(path: String) -> Single<NetworkResult<Data>>//Result<DownloadImageResponse, MoyaError>
     
 }

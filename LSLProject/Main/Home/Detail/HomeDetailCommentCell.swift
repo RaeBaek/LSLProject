@@ -1,8 +1,8 @@
 //
-//  HomeTableViewCell.swift
+//  HomeDetailCommentCell.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/25/23.
+//  Created by 백래훈 on 12/1/23.
 //
 
 import UIKit
@@ -10,14 +10,18 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class HomeTableViewCell: BaseTableViewCell {
+class HomeDetailCommentCell: BaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: HomeTableViewCell.identifier)
+        super.init(style: style, reuseIdentifier: HomeDetailCommentCell.identifier)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        profileImage.image = nil
     }
     
     var profileImage = {
@@ -62,23 +66,6 @@ class HomeTableViewCell: BaseTableViewCell {
         view.font = .systemFont(ofSize: 14, weight: .regular)
         view.textAlignment = .left
         view.numberOfLines = 0
-        return view
-    }()
-    
-    var mainImage = {
-        let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGreen
-        return view
-    }()
-    
-    private let lineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray4
         return view
     }()
     
@@ -130,21 +117,11 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    private let bottomLine = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    
     private let repository = NetworkRepository()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
-    override func prepareForReuse() {
-        mainImage.image = nil
-    }
-    
-    func loadMainImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
+    func loadImage(path: String, completion: @escaping (Data) -> Void) {
         
         let result = BehaviorRelay(value: Data())
         
@@ -152,12 +129,10 @@ class HomeTableViewCell: BaseTableViewCell {
             .observe(on: SerialDispatchQueueScheduler(qos: .background))
             .flatMap { self.repository.reqeustImage(path: path) }
             .subscribe(onNext: { value in
-                print("================================= \(value)")
                 switch value {
                 case .success(let data):
                     result.accept(data)
-                    completion(result)
-                    print("================data============= \(data)")
+                    completion(data)
                 case .failure(let error):
                     print(error.message)
                 }
@@ -169,7 +144,7 @@ class HomeTableViewCell: BaseTableViewCell {
     override func configureCell() {
         super.configureCell()
         
-        [profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
+        [profileImage, userNickname, mainText, uploadTime, moreButton, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -191,70 +166,50 @@ class HomeTableViewCell: BaseTableViewCell {
         
         moreButton.snp.makeConstraints {
             $0.centerY.equalTo(userNickname.snp.centerY)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.trailing.equalToSuperview().offset(-12)
             $0.size.equalTo(22)
         }
         
         uploadTime.snp.makeConstraints {
-            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.centerY.equalTo(moreButton.snp.centerY)
             $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
         }
         
         mainText.snp.makeConstraints {
-            $0.bottom.equalTo(profileImage.snp.bottom)
+            $0.top.equalTo(userNickname.snp.bottom).offset(12)
             $0.leading.equalTo(userNickname.snp.leading)
             $0.trailing.equalToSuperview().offset(-12)
         }
         
-        mainImage.snp.makeConstraints {
-            $0.top.equalTo(mainText.snp.bottom).offset(12)
-            $0.leading.equalTo(lineBar.snp.trailing).offset(30)
-            $0.trailing.equalToSuperview().inset(12)
-            $0.height.equalTo(500)
-        }
-        
-        lineBar.snp.makeConstraints {
-            $0.top.equalTo(profileImage.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(30)
-            $0.bottom.equalToSuperview().inset(16)
-            $0.width.equalTo(2)
-        }
-        
         heartButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(mainImage.snp.leading)
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
+            $0.leading.equalTo(mainText.snp.leading)
             $0.size.equalTo(22)
         }
         
         commentButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(heartButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         repostButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(commentButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         dmButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(repostButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         statusLabel.snp.makeConstraints {
-            $0.top.equalTo(heartButton.snp.bottom).offset(25)
+            $0.top.equalTo(heartButton.snp.bottom).offset(12)
             $0.leading.equalTo(heartButton.snp.leading)
+            $0.bottom.equalToSuperview().offset(-16)
         }
-        
-        bottomLine.snp.makeConstraints {
-            $0.top.equalTo(statusLabel.snp.bottom).offset(25)
-            $0.horizontalEdges.bottom.equalToSuperview()
-            $0.height.equalTo(0.5)
-        }
-        
         
     }
     

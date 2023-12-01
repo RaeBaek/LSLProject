@@ -29,6 +29,10 @@
 		144B80AB2B09173600993347 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B80AA2B09173600993347 /* HomeViewController.swift */; };
 		145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */; };
 		145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FF2B178B6C00CB39E1 /* SearchModel.swift */; };
+		14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C852B19D29B00C3A9D2 /* HomeDetailViewController.swift */; };
+		14648C892B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C882B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift */; };
+		14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C8A2B19F07900C3A9D2 /* HomeDetailCommentCell.swift */; };
+		14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C8C2B19F5C100C3A9D2 /* HomeDetailViewModel.swift */; };
 		146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16CE2B0350C500073B91 /* MakeViewController.swift */; };
 		146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D12B03538000073B91 /* Extension + UIButton.swift */; };
 		146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */; };
@@ -95,6 +99,10 @@
 		144B80AA2B09173600993347 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchTableViewCell.swift; path = LSLProject/Main/Heart/SearchTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		145597FF2B178B6C00CB39E1 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
+		14648C852B19D29B00C3A9D2 /* HomeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewController.swift; sourceTree = "<group>"; };
+		14648C882B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailPostHeaderView.swift; sourceTree = "<group>"; };
+		14648C8A2B19F07900C3A9D2 /* HomeDetailCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailCommentCell.swift; sourceTree = "<group>"; };
+		14648C8C2B19F5C100C3A9D2 /* HomeDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewModel.swift; sourceTree = "<group>"; };
 		146B16CE2B0350C500073B91 /* MakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeViewController.swift; sourceTree = "<group>"; };
 		146B16D12B03538000073B91 /* Extension + UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIButton.swift"; sourceTree = "<group>"; };
 		146B16D42B035A5500073B91 /* Extension + UITextFiled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITextFiled.swift"; sourceTree = "<group>"; };
@@ -182,6 +190,7 @@
 				1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */,
 				144B80AA2B09173600993347 /* HomeViewController.swift */,
 				14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */,
+				14648C872B19F00600C3A9D2 /* Detail */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -251,6 +260,17 @@
 			);
 			name = Extension;
 			path = Maps/Extension;
+			sourceTree = "<group>";
+		};
+		14648C872B19F00600C3A9D2 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				14648C852B19D29B00C3A9D2 /* HomeDetailViewController.swift */,
+				14648C882B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift */,
+				14648C8A2B19F07900C3A9D2 /* HomeDetailCommentCell.swift */,
+				14648C8C2B19F5C100C3A9D2 /* HomeDetailViewModel.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		146B16D02B03511600073B91 /* Make */ = {
@@ -531,10 +551,12 @@
 				146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */,
 				14056ED12B130E3E00C8EDA2 /* SearchViewController.swift in Sources */,
 				146B16D72B0362C300073B91 /* PasswordViewController.swift in Sources */,
+				14648C892B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift in Sources */,
 				146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */,
 				146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */,
 				146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */,
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
+				14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
 				143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */,
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
@@ -542,6 +564,7 @@
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
 				144B80AB2B09173600993347 /* HomeViewController.swift in Sources */,
 				14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */,
+				14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */,
 				14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */,
 				1499057E2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift in Sources */,
 				1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */,
@@ -555,6 +578,7 @@
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
+				14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */,
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
 				14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */,

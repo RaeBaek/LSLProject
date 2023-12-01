@@ -1,31 +1,32 @@
 //
-//  HomeTableViewCell.swift
+//  HomeDetailPostCell.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/25/23.
+//  Created by 백래훈 on 12/1/23.
 //
 
 import UIKit
-import SnapKit
 import RxSwift
 import RxCocoa
 
-class HomeTableViewCell: BaseTableViewCell {
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: HomeTableViewCell.identifier)
+final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
+
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        configureView()
+        setConstraints()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var profileImage = {
+    lazy var profileImage = {
         let view = ProfileImageView(frame: .zero)
         view.contentMode = .scaleToFill
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 0.5
-        view.image = UIImage(systemName: "star")
         return view
     }()
     
@@ -130,21 +131,11 @@ class HomeTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    private let bottomLine = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4
-        return view
-    }()
+    private let disposeBag = DisposeBag()
     
     private let repository = NetworkRepository()
     
-    let disposeBag = DisposeBag()
-    
-    override func prepareForReuse() {
-        mainImage.image = nil
-    }
-    
-    func loadMainImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
+    func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
         
         let result = BehaviorRelay(value: Data())
         
@@ -152,12 +143,10 @@ class HomeTableViewCell: BaseTableViewCell {
             .observe(on: SerialDispatchQueueScheduler(qos: .background))
             .flatMap { self.repository.reqeustImage(path: path) }
             .subscribe(onNext: { value in
-                print("================================= \(value)")
                 switch value {
                 case .success(let data):
                     result.accept(data)
                     completion(result)
-                    print("================data============= \(data)")
                 case .failure(let error):
                     print(error.message)
                 }
@@ -166,17 +155,15 @@ class HomeTableViewCell: BaseTableViewCell {
         
     }
     
-    override func configureCell() {
-        super.configureCell()
+    private func configureView() {
         
-        [profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
+        [profileImage, userNickname, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
             contentView.addSubview($0)
         }
         
     }
     
-    override func setConstraints() {
-        super.setConstraints()
+    private func setConstraints() {
         
         profileImage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
@@ -185,13 +172,13 @@ class HomeTableViewCell: BaseTableViewCell {
         }
         
         userNickname.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
+            $0.centerY.equalTo(profileImage.snp.centerY)
             $0.leading.equalTo(profileImage.snp.trailing).offset(12)
         }
         
         moreButton.snp.makeConstraints {
             $0.centerY.equalTo(userNickname.snp.centerY)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.trailing.equalToSuperview().offset(-12)
             $0.size.equalTo(22)
         }
         
@@ -201,23 +188,14 @@ class HomeTableViewCell: BaseTableViewCell {
         }
         
         mainText.snp.makeConstraints {
-            $0.bottom.equalTo(profileImage.snp.bottom)
-            $0.leading.equalTo(userNickname.snp.leading)
-            $0.trailing.equalToSuperview().offset(-12)
+            $0.top.equalTo(profileImage.snp.bottom).offset(12)
+            $0.horizontalEdges.equalToSuperview().inset(12)
         }
         
         mainImage.snp.makeConstraints {
             $0.top.equalTo(mainText.snp.bottom).offset(12)
-            $0.leading.equalTo(lineBar.snp.trailing).offset(30)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.horizontalEdges.equalToSuperview().inset(12)
             $0.height.equalTo(500)
-        }
-        
-        lineBar.snp.makeConstraints {
-            $0.top.equalTo(profileImage.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(30)
-            $0.bottom.equalToSuperview().inset(16)
-            $0.width.equalTo(2)
         }
         
         heartButton.snp.makeConstraints {
@@ -245,16 +223,10 @@ class HomeTableViewCell: BaseTableViewCell {
         }
         
         statusLabel.snp.makeConstraints {
-            $0.top.equalTo(heartButton.snp.bottom).offset(25)
+            $0.top.equalTo(heartButton.snp.bottom).offset(12)
             $0.leading.equalTo(heartButton.snp.leading)
+            $0.bottom.equalToSuperview().offset(-12)
         }
-        
-        bottomLine.snp.makeConstraints {
-            $0.top.equalTo(statusLabel.snp.bottom).offset(25)
-            $0.horizontalEdges.bottom.equalToSuperview()
-            $0.height.equalTo(0.5)
-        }
-        
         
     }
     

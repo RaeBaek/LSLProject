@@ -114,7 +114,8 @@ struct PostResponses: Decodable {
 struct PostResponse: Decodable {
     let likes: [String]
     let image: [String]
-    let hashTags, comments: [String]
+    let hashTags: [String]
+    let comments: [Comment]
     let id: String
     let creator: Creator
     let time, title: String
@@ -126,6 +127,16 @@ struct PostResponse: Decodable {
         case id = "_id"
         case creator, time, title, content, content1, content2, content3, content4, content5
         case productID = "product_id"
+    }
+}
+
+struct Comment: Decodable {
+    let id, content, time: String
+    let creator: Creator
+
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case content, time, creator
     }
 }
 
