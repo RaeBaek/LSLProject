@@ -87,33 +87,8 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 self.model.next = value.1.nextCursor
                 return value.1.data
             }
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { [weak self] (row, element, cell) in
-                
-//                Task {
-                    guard let self else { return }
-                    
-                    cell.userNickname.text = element.creator.nick
-                    cell.mainText.text = element.title
-                    
-                    let path = element.image.first ?? ""
-                    
-                    print("이미지 주소: \(path)")
-                    
-                    cell.loadMainImage(path: path) { data in
-                        cell.mainImage.image = UIImage(data: data.value)
-                    }
-                
-                cell.loadMainImage(path: element.creator.profile ?? "") { data in
-                    cell.profileImage.image = UIImage(data: data.value)
-                }
-                    
-                    print("-------cell", cell.mainImage.image)
-                    
-                    cell.statusLabel.text = element.productID
-                    
-                    
-                    cell.selectionStyle = .none
-//                }
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
+                cell.setCell(element)
             }
             .disposed(by: disposeBag)
         

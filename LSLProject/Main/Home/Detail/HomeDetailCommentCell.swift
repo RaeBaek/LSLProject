@@ -24,12 +24,17 @@ class HomeDetailCommentCell: BaseTableViewCell {
         profileImage.image = nil
     }
     
+    private let topLine = {
+        let view = UIView()
+        view.backgroundColor = .systemGray5
+        return view
+    }()
+    
     var profileImage = {
         let view = ProfileImageView(frame: .zero)
         view.contentMode = .scaleToFill
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 0.5
-        view.image = UIImage(systemName: "star")
         return view
     }()
     
@@ -144,7 +149,7 @@ class HomeDetailCommentCell: BaseTableViewCell {
     override func configureCell() {
         super.configureCell()
         
-        [profileImage, userNickname, mainText, uploadTime, moreButton, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
+        [topLine, profileImage, userNickname, mainText, uploadTime, moreButton, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -153,8 +158,13 @@ class HomeDetailCommentCell: BaseTableViewCell {
     override func setConstraints() {
         super.setConstraints()
         
+        topLine.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(0.5)
+        }
+        
         profileImage.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
+            $0.top.equalTo(topLine.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(12)
             $0.size.equalTo(38)
         }

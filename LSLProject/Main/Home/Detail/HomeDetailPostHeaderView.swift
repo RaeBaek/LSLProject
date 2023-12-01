@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 import RxSwift
 import RxCocoa
 
@@ -48,7 +49,7 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
     
     private let moreButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 15)
         let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -70,8 +71,9 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         let view = UIImageView()
         view.contentMode = .scaleToFill
         view.layer.cornerRadius = 10
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 0.5
         view.clipsToBounds = true
-        view.backgroundColor = .systemGreen
         return view
     }()
     
@@ -179,7 +181,7 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         moreButton.snp.makeConstraints {
             $0.centerY.equalTo(userNickname.snp.centerY)
             $0.trailing.equalToSuperview().offset(-12)
-            $0.size.equalTo(22)
+            $0.size.equalTo(15)
         }
         
         uploadTime.snp.makeConstraints {

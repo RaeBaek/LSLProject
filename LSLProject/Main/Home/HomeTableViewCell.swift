@@ -25,7 +25,6 @@ class HomeTableViewCell: BaseTableViewCell {
         view.contentMode = .scaleToFill
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 0.5
-        view.image = UIImage(systemName: "star")
         return view
     }()
     
@@ -47,7 +46,7 @@ class HomeTableViewCell: BaseTableViewCell {
     
     private let moreButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 15)
         let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
         view.tintColor = .black
         view.setImage(image, for: .normal)
@@ -67,10 +66,11 @@ class HomeTableViewCell: BaseTableViewCell {
     
     var mainImage = {
         let view = UIImageView()
-        view.contentMode = .scaleToFill
+        view.contentMode = .scaleAspectFit
         view.layer.cornerRadius = 10
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 0.5
         view.clipsToBounds = true
-        view.backgroundColor = .systemGreen
         return view
     }()
     
@@ -78,7 +78,7 @@ class HomeTableViewCell: BaseTableViewCell {
         let view = UIView()
         view.layer.cornerRadius = 1
         view.clipsToBounds = true
-        view.backgroundColor = .systemGray4
+        view.backgroundColor = .systemGray5
         return view
     }()
     
@@ -132,7 +132,7 @@ class HomeTableViewCell: BaseTableViewCell {
     
     private let bottomLine = {
         let view = UIView()
-        view.backgroundColor = .systemGray4
+        view.backgroundColor = .systemGray5
         return view
     }()
     
@@ -141,10 +141,136 @@ class HomeTableViewCell: BaseTableViewCell {
     let disposeBag = DisposeBag()
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         mainImage.image = nil
+        mainImage.snp.removeConstraints()
+        
+        profileImage.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(38)
+        }
+        
+        userNickname.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
+        }
+        
+        moreButton.snp.makeConstraints {
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.size.equalTo(15)
+        }
+        
+        uploadTime.snp.makeConstraints {
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
+        }
+        
+        mainImage.snp.makeConstraints {
+            $0.top.equalTo(mainText.snp.bottom).offset(12)
+            $0.leading.equalTo(lineBar.snp.trailing).offset(30)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.height.equalTo(300)
+        }
+        
+        mainText.snp.makeConstraints {
+            $0.bottom.equalTo(profileImage.snp.bottom)
+            $0.leading.equalTo(userNickname.snp.leading)
+            $0.trailing.equalToSuperview().offset(-12)
+        }
+        
+        lineBar.snp.makeConstraints {
+            $0.top.equalTo(profileImage.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().offset(30)
+            $0.bottom.equalToSuperview().inset(16)
+            $0.width.equalTo(2)
+        }
+        
+        heartButton.snp.makeConstraints {
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(mainImage.snp.leading)
+            $0.size.equalTo(22)
+        }
+        
+        commentButton.snp.makeConstraints {
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        repostButton.snp.makeConstraints {
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        dmButton.snp.makeConstraints {
+            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        statusLabel.snp.makeConstraints {
+            $0.top.equalTo(heartButton.snp.bottom).offset(25)
+            $0.leading.equalTo(heartButton.snp.leading)
+        }
+        
+        bottomLine.snp.makeConstraints {
+            $0.top.equalTo(statusLabel.snp.bottom).offset(25)
+            $0.horizontalEdges.bottom.equalToSuperview()
+            $0.height.equalTo(0.5)
+        }
+        
     }
     
-    func loadMainImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
+    func setCell(_ element: PostResponse) {
+        
+        userNickname.text = element.creator.nick
+        mainText.text = element.title
+        
+        let path = element.image.first ?? ""
+        
+        print("이미지 주소: \(path)")
+        
+        loadImage(path: path) { [weak self] data in
+            guard let self else { return }
+            
+            if let image = UIImage(data: data.value) {
+                self.mainImage.image = image
+                let aspectRatio = image.size.height / image.size.width
+                
+                mainImage.snp.makeConstraints {
+                    $0.top.equalTo(self.mainText.snp.bottom).offset(12)
+                    $0.leading.equalTo(self.lineBar.snp.trailing).offset(30)
+                    $0.trailing.equalToSuperview().inset(12)
+                    
+                    // 이미지가 세로로 긴 경우
+                    if image.size.height > image.size.width {
+                        $0.height.equalTo(self.mainImage.snp.width).multipliedBy(aspectRatio)
+                    } else {
+                        // 이미지가 가로로 긴 경우
+                        $0.height.equalTo(self.mainImage.snp.width).multipliedBy(aspectRatio)
+                    }
+                }
+                
+            }
+        }
+        
+        loadImage(path: element.creator.profile ?? "") { [weak self] data in
+            guard let self else { return }
+            
+            self.profileImage.image = UIImage(data: data.value)
+        }
+        
+        statusLabel.text = element.productID
+        
+        selectionStyle = .none
+        
+    }
+    
+    func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
         
         let result = BehaviorRelay(value: Data())
         
@@ -192,7 +318,7 @@ class HomeTableViewCell: BaseTableViewCell {
         moreButton.snp.makeConstraints {
             $0.centerY.equalTo(userNickname.snp.centerY)
             $0.trailing.equalToSuperview().inset(12)
-            $0.size.equalTo(22)
+            $0.size.equalTo(15)
         }
         
         uploadTime.snp.makeConstraints {
@@ -210,7 +336,7 @@ class HomeTableViewCell: BaseTableViewCell {
             $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(lineBar.snp.trailing).offset(30)
             $0.trailing.equalToSuperview().inset(12)
-            $0.height.equalTo(500)
+            $0.height.equalTo(300)
         }
         
         lineBar.snp.makeConstraints {
