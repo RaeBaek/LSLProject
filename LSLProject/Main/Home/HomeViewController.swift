@@ -88,7 +88,11 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 return value.1.data
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
-                cell.setCell(element)
+                
+//                cell.element = element
+                cell.setCell(row: row, element: element)
+                
+                
             }
             .disposed(by: disposeBag)
         
