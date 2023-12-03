@@ -108,14 +108,37 @@ final class PostViewController: BaseViewController {
         view.backgroundColor = .systemGray6
         view.sizeToFit()
         view.isScrollEnabled = false
+        view.textContentType = .oneTimeCode
+        return view
+    }()
+    
+    let toolView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
+    let replyAllowButton = {
+        let view = UIButton()
+        let attributedTitle = NSAttributedString(string: "내 팔로워에게 답글 허용",
+                                                 attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13, weight: .regular),
+                                                              NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        view.setAttributedTitle(attributedTitle, for: .normal)
         return view
     }()
     
     let postButton = {
         let view = UIButton()
-        view.setTitle("게시", for: .normal)
-        view.tintColor = .black
-        view.backgroundColor = .systemYellow
+        var config = UIButton.Configuration.filled()
+        config.baseForegroundColor = .white
+        config.baseBackgroundColor = .black
+        config.cornerStyle = .capsule
+        
+        var titleAttr = AttributedString.init("게시")
+        titleAttr.font = .systemFont(ofSize: 13, weight: .regular)
+        config.attributedTitle = titleAttr
+        
+        view.configuration = config
         return view
     }()
     
@@ -159,7 +182,7 @@ final class PostViewController: BaseViewController {
     private func bind() {
         
         let input = PostViewModel.Input(postButtonTap: postButton.rx.tap,
-                                        imageButtonTap: imageButton.rx.tap,
+                                        imageButtonTap: albumButton.rx.tap,
                                         textViewText: mainTextView.rx.text.orEmpty,
                                         textViewBeginEditing: mainTextView.rx.didBeginEditing,
                                         textViewEndEditing: mainTextView.rx.didEndEditing,
@@ -247,9 +270,15 @@ final class PostViewController: BaseViewController {
         super.configureView()
         
         view.addSubview(scrollView)
+        view.addSubview(toolView)
+        
+        [replyAllowButton, postButton].forEach {
+            toolView.addSubview($0)
+        }
+        
         scrollView.addSubview(contentView)
         
-        [profileImage, userNickname, mainTextView, lineBar, albumButton, gifButton, recordButton, voteButton].forEach {
+        [profileImage, userNickname, mainTextView, myImageView, lineBar, albumButton, gifButton, recordButton, voteButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -260,7 +289,13 @@ final class PostViewController: BaseViewController {
         
         scrollView.snp.makeConstraints {
             $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top).offset(-10)
+            $0.bottom.equalTo(toolView.snp.top).offset(-12)
+        }
+        
+        toolView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+            $0.height.equalTo(48)
         }
         
         contentView.snp.makeConstraints {
@@ -283,6 +318,12 @@ final class PostViewController: BaseViewController {
             $0.top.equalTo(userNickname.snp.bottom).offset(12)
             $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
+        }
+        
+        myImageView.snp.makeConstraints {
+            $0.top.equalTo(albumButton.snp.bottom).offset(16)
+            $0.leading.equalTo(mainTextView)
+            $0.trailing.equalToSuperview().offset(-18)
         }
         
         lineBar.snp.makeConstraints {
@@ -317,23 +358,17 @@ final class PostViewController: BaseViewController {
             $0.size.equalTo(22)
         }
         
-//        postButton.snp.makeConstraints {
-//            $0.top.equalTo(mainTextView.snp.bottom).offset(12)
-//            $0.centerX.equalToSuperview()
-//            $0.size.equalTo(50)
-//        }
-//        
-//        imageButton.snp.makeConstraints {
-//            $0.top.equalTo(postButton.snp.bottom).offset(12)
-//            $0.centerX.equalToSuperview()
-//            $0.size.equalTo(50)
-//        }
-//        
-//        myImageView.snp.makeConstraints {
-//            $0.top.equalTo(imageButton.snp.bottom).offset(12)
-//            $0.centerX.equalToSuperview()
-//            $0.size.equalTo(200)
-//        }
+        replyAllowButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview().offset(-6)
+            $0.leading.equalToSuperview().offset(12)
+        }
+        
+        postButton.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.trailing.equalToSuperview().offset(-12)
+            $0.bottom.equalToSuperview().offset(-12)
+            $0.width.equalTo(50)
+        }
         
     }
 
@@ -383,6 +418,31 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         self.data2.accept(image?.jpegData(compressionQuality: 0.3))
                         
                     }
+                    
+                    if self.myImageView.image != nil {
+                        myImageView.snp.remakeConstraints {
+                            $0.top.equalTo(self.albumButton.snp.bottom).offset(16)
+                            $0.leading.equalTo(self.mainTextView)
+                            $0.trailing.equalToSuperview().offset(-18)
+                            $0.height.equalTo(300)
+                        }
+                        
+                        [albumButton, gifButton, recordButton, voteButton].forEach {
+                            $0.isHidden = true
+                        }
+                        
+                    } else {
+                        myImageView.snp.remakeConstraints {
+                            $0.top.equalTo(self.albumButton.snp.bottom).offset(16)
+                            $0.leading.equalTo(self.mainTextView)
+                            $0.trailing.equalToSuperview().offset(-18)
+                        }
+                        
+                        [albumButton, gifButton, recordButton, voteButton].forEach {
+                            $0.isHidden = false
+                        }
+                    }
+                    
                 }
             }
         }
