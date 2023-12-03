@@ -15,9 +15,43 @@ class HomeDetailViewController: BaseViewController {
         let view = UITableView(frame: .zero, style: .grouped)
         view.register(HomeDetailPostHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeDetailPostHeaderView.identifier)
         view.register(HomeDetailCommentCell.self, forCellReuseIdentifier: HomeDetailCommentCell.identifier)
-        view.backgroundColor = .clear
+        view.backgroundColor = .systemBackground
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
+        view.tableFooterView = UIView(frame: .zero)
+        return view
+    }()
+    
+    let commentWriteView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
+    lazy var backView = {
+        let view = BackView()
+        view.backgroundColor = .systemGray6
+        return view
+    }()
+    
+    let myProfileImage = {
+        let view = ProfileImageView(frame: .zero)
+        view.image = UIImage(systemName: "star")
+        view.backgroundColor = .systemYellow
+        return view
+    }()
+    
+    let commentTitle = {
+        let view = UILabel()
+        view.font = .systemFont(ofSize: 15, weight: .regular)
+        view.textColor = .lightGray
+        view.text = "@@@님에게 답글 남기기"
+        return view
+    }()
+    
+    let commentButton = {
+        let view = UIButton()
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -30,6 +64,9 @@ class HomeDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        detailTableView.contentInset = .zero
+        detailTableView.contentInsetAdjustmentBehavior = .never
+        
         setNavigationBar()
         setTabBar()
         
@@ -39,8 +76,16 @@ class HomeDetailViewController: BaseViewController {
     
     private func bind() {
         guard let item else { return }
-        let input = HomeDetailViewModel.Input(item: BehaviorRelay(value: item))
+        let input = HomeDetailViewModel.Input(item: BehaviorRelay(value: item), commentButtonTap: commentButton.rx.tap)
         let output = viewModel.transform(input: input)
+        
+        output.commentButtonTap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.commentWriteViewController()
+            }
+            .disposed(by: disposeBag)
+        
         
         let comments = [
             Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
@@ -79,6 +124,7 @@ class HomeDetailViewController: BaseViewController {
     }
     
     private func setTabBar() {
+        
 //        tabBarController?.tabBar.backgroundImage = UIImage()
 //        tabBarController?.tabBar.shadowImage = UIImage()
 //        tabBarController?.tabBar.isTranslucent = false
@@ -87,11 +133,25 @@ class HomeDetailViewController: BaseViewController {
         
     }
     
+    private func commentWriteViewController() {
+        let vc = PostViewController()
+        
+        self.present(vc, animated: true)
+    }
+    
     override func configureView() {
         super.configureView()
         
-        [detailTableView].forEach {
+        [detailTableView, commentWriteView].forEach {
             view.addSubview($0)
+        }
+        
+        [backView].forEach {
+            commentWriteView.addSubview($0)
+        }
+        
+        [myProfileImage, commentTitle, commentButton].forEach {
+            backView.addSubview($0)
         }
         
     }
@@ -103,10 +163,34 @@ class HomeDetailViewController: BaseViewController {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
         
+        commentWriteView.snp.makeConstraints {
+            $0.horizontalEdges.bottom.equalToSuperview()
+            $0.height.equalTo(60)
+        }
+        
+        backView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(12)
+        }
+        
+        myProfileImage.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(20)
+        }
+        
+        commentTitle.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(myProfileImage.snp.trailing).offset(6)
+        }
+        
+        commentButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
     }
 }
 
-extension HomeDetailViewController: UITableViewDelegate {
+extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item else { return UIView() }
         
@@ -123,4 +207,27 @@ extension HomeDetailViewController: UITableViewDelegate {
         
         return header
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        return view
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        detailTableView.snp.remakeConstraints {
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(commentWriteView.snp.top)
+        }
+        
+    }
+    
 }

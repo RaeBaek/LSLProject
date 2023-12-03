@@ -41,6 +41,7 @@ class MainTabBarController: UITabBarController {
         
         self.tabBar.tintColor = .black
         
+        
         if let items = self.tabBar.items {
             
             let barImages = ["home", "search", "post", "heart", "user"]

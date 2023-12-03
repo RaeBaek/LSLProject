@@ -13,16 +13,25 @@ class HomeDetailViewModel: ViewModelType {
     
     struct Input {
         let item: BehaviorRelay<PostResponse>
+        let commentButtonTap: ControlEvent<Void>
     }
     
     struct Output {
         let item: BehaviorRelay<PostResponse>
+        let commentButtonTap: PublishRelay<Void>
     }
+    
+    let disposeBag = DisposeBag()
     
     func transform(input: Input) -> Output {
         
         let item = input.item
+        let commentButtonTap = PublishRelay<Void>()
         
-        return Output(item: item)
+        input.commentButtonTap
+            .bind(to: commentButtonTap)
+            .disposed(by: disposeBag)
+        
+        return Output(item: item, commentButtonTap: commentButtonTap)
     }
 }

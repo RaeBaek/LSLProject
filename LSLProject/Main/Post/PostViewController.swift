@@ -24,10 +24,74 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
+    let profileImage = {
+        let view = ProfileImageView(frame: .zero)
+        view.backgroundColor = .systemGreen
+        return view
+    }()
+    
+    let userNickname = {
+        let view = UILabel()
+        view.font = .systemFont(ofSize: 14, weight: .semibold)
+        view.textColor = .black
+        view.text = "100_r_h"
+        return view
+    }()
+    
+    private let lineBar = {
+        let view = UIView()
+        view.layer.cornerRadius = 1
+        view.clipsToBounds = true
+        view.backgroundColor = .systemGray5
+        return view
+    }()
+    
+    let albumButton = {
+        let view = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let image = UIImage(systemName: "photo.on.rectangle.angled", withConfiguration: imageConfig)
+        view.tintColor = .lightGray
+        view.setImage(image, for: .normal)
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    let gifButton = {
+        let view = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let image = UIImage(systemName: "book.pages", withConfiguration: imageConfig)
+        view.tintColor = .lightGray
+        view.setImage(image, for: .normal)
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    let recordButton = {
+        let view = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let image = UIImage(systemName: "mic", withConfiguration: imageConfig)
+        view.tintColor = .lightGray
+        view.setImage(image, for: .normal)
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    let voteButton = {
+        let view = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let image = UIImage(systemName: "line.3.horizontal.decrease", withConfiguration: imageConfig)
+        view.tintColor = .lightGray
+        view.setImage(image, for: .normal)
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+    
     let mainTextView = {
         let view = UITextView()
-        view.textColor = .black
         view.font = .systemFont(ofSize: 15, weight: .regular)
+        view.text = "스레드를 시작하세요..."
+        view.textColor = .lightGray
+        view.backgroundColor = .systemGray6
         return view
     }()
     
@@ -54,8 +118,6 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
-//    private var itemProviders: [NSItemProvider] = []
-    
     let viewModel = PostViewModel(repository: NetworkRepository())
     
     var data: Data? = Data()
@@ -69,7 +131,6 @@ final class PostViewController: BaseViewController {
 
         setNavigationBar()
         
-        print("ㅇㅇㅇ...")
         bind()
         
     }
@@ -81,8 +142,35 @@ final class PostViewController: BaseViewController {
     
     private func bind() {
         
-        let input = PostViewModel.Input(postButtonTap: postButton.rx.tap, imageButtonTap: imageButton.rx.tap, textView: mainTextView.rx.text.orEmpty, imageData: data2)
+        let input = PostViewModel.Input(postButtonTap: postButton.rx.tap,
+                                        imageButtonTap: imageButton.rx.tap,
+                                        textViewText: mainTextView.rx.text.orEmpty,
+                                        textViewBeginEditing: mainTextView.rx.didBeginEditing,
+                                        textViewEndEditing: mainTextView.rx.didEndEditing,
+                                        imageData: data2)
+        
         let output = viewModel.transform(input: input)
+        
+        
+        output.textViewBeginEditing
+            .withUnretained(self)
+            .bind { owner, _ in
+                if owner.mainTextView.textColor == UIColor.lightGray {
+                    owner.mainTextView.text = nil
+                    owner.mainTextView.textColor = .black
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        output.textViewEndEditing
+            .withUnretained(self)
+            .bind { owner, bool in
+                if bool {
+                    owner.mainTextView.text = "스레드를 시작하세요..."
+                    owner.mainTextView.textColor = .lightGray
+                }
+            }
+            .disposed(by: disposeBag)
         
         output.postResult
             .withUnretained(self)
@@ -115,12 +203,7 @@ final class PostViewController: BaseViewController {
     private func presentPicker() {
         
         var configuration = PHPickerConfiguration()
-        // 🎆 selectionLimit
-        // 🎆 유저가 선택할 수 있는 에셋의 최대 갯수. 기본값 1. 0 설정시 제한은 시스템이 지원하는 최대값으로 설정.
         configuration.selectionLimit = 1
-
-        // 🎆 filter
-        // 🎆 picker 가 표시하는 에셋 타입 제한을 적용. 기본적으로 모든 에셋 유형을 표시(이미지, 라이브포토, 비디오)
         configuration.filter = .images
         // configuration.filter = .any(of: [.images, .livePhotos, .videos])
         
@@ -138,7 +221,7 @@ final class PostViewController: BaseViewController {
     override func configureView() {
         super.configureView()
         
-        [mainTextView, myImageView, postButton, imageButton].forEach {
+        [profileImage, userNickname, mainTextView, lineBar, albumButton, gifButton, recordButton, voteButton].forEach {
             view.addSubview($0)
         }
         
@@ -147,28 +230,72 @@ final class PostViewController: BaseViewController {
     override func setConstraints() {
         super.setConstraints()
         
+        profileImage.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(38)
+        }
+        
+        userNickname.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
+        }
+        
         mainTextView.snp.makeConstraints {
-            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(12)
+            $0.top.equalTo(userNickname.snp.bottom).offset(12)
+            $0.leading.equalTo(userNickname)
+            $0.trailing.equalToSuperview().offset(-12)
             $0.height.equalTo(50)
         }
         
-        postButton.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(12)
-            $0.centerX.equalToSuperview()
-            $0.size.equalTo(50)
+        lineBar.snp.makeConstraints {
+            $0.top.equalTo(profileImage.snp.bottom).offset(16)
+            $0.centerX.equalTo(profileImage)
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.width.equalTo(2)
         }
         
-        imageButton.snp.makeConstraints {
-            $0.top.equalTo(postButton.snp.bottom).offset(12)
-            $0.centerX.equalToSuperview()
-            $0.size.equalTo(50)
+        albumButton.snp.makeConstraints {
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(mainTextView)
+            $0.size.equalTo(22)
         }
         
-        myImageView.snp.makeConstraints {
-            $0.top.equalTo(imageButton.snp.bottom).offset(12)
-            $0.centerX.equalToSuperview()
-            $0.size.equalTo(200)
+        gifButton.snp.makeConstraints {
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(albumButton.snp.trailing).offset(16)
+            $0.size.equalTo(22)
         }
+        
+        recordButton.snp.makeConstraints {
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(gifButton.snp.trailing).offset(16)
+            $0.size.equalTo(22)
+        }
+        
+        voteButton.snp.makeConstraints {
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(recordButton.snp.trailing).offset(16)
+            $0.size.equalTo(22)
+        }
+        
+//        postButton.snp.makeConstraints {
+//            $0.top.equalTo(mainTextView.snp.bottom).offset(12)
+//            $0.centerX.equalToSuperview()
+//            $0.size.equalTo(50)
+//        }
+//        
+//        imageButton.snp.makeConstraints {
+//            $0.top.equalTo(postButton.snp.bottom).offset(12)
+//            $0.centerX.equalToSuperview()
+//            $0.size.equalTo(50)
+//        }
+//        
+//        myImageView.snp.makeConstraints {
+//            $0.top.equalTo(imageButton.snp.bottom).offset(12)
+//            $0.centerX.equalToSuperview()
+//            $0.size.equalTo(200)
+//        }
         
     }
 
@@ -189,18 +316,14 @@ extension PostViewController: PHPickerViewControllerDelegate {
     }
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        // 🎆 선택완료 혹은 취소하면 뷰 dismiss.
+        
         picker.dismiss(animated: true, completion: nil)
         
-        // 🎆 itemProvider 를 가져온다.
         let itemProvider = results.first?.itemProvider
         if let itemProvider = itemProvider,
-           // 🎆 itemProvider 에서 지정한 타입으로 로드할 수 있는지 체크
            itemProvider.canLoadObject(ofClass: UIImage.self) {
-            // 🎆 loadObject() 메서드는 completionHandler 로 NSItemProviderReading 과 error 를 준다.
             itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                 
-                // 🎆 itemProvider 는 background asnyc 작업이기 때문에 UI 와 관련된 업데이트는 꼭 main 쓰레드에서 실행해줘야 합니다.
                 DispatchQueue.main.sync { [weak self] in
                     guard let self else { return }
                     
@@ -216,10 +339,10 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         self.myImageView.image = UIImage(data: compressedImageData) //image as? UIImage
                         self.data2.accept(compressedImageData)
                     } else {
-                        print("압축된 이미지가 아닙니다 \(image?.jpegData(compressionQuality: 0.5))")
+                        print("압축된 이미지가 아닙니다 \(image?.jpegData(compressionQuality: 0.3))")
                         // 압축 실패 또는 원본 이미지가 이미 충분히 작을 때
-                        self.myImageView.image = UIImage(data: (image?.jpegData(compressionQuality: 0.5))!) //image as? UIImage
-                        self.data2.accept(image?.jpegData(compressionQuality: 0.5))
+                        self.myImageView.image = UIImage(data: (image?.jpegData(compressionQuality: 0.3))!) //image as? UIImage
+                        self.data2.accept(image?.jpegData(compressionQuality: 0.3))
                         
                     }
                 }

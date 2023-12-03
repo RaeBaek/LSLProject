@@ -69,6 +69,8 @@
 		14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */; };
 		14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */; };
 		14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */; };
+		14BBD6A32B1C44FB00CEF094 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* UIImage.swift */; };
+		14BBD6A52B1C4BF100CEF094 /* BackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* BackView.swift */; };
 		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
 		14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */; };
 		14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB182B0B479000493AE1 /* SeSACError.swift */; };
@@ -135,6 +137,8 @@
 		14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		14BBD6A22B1C44FA00CEF094 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		14BBD6A42B1C4BF100CEF094 /* BackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackView.swift; sourceTree = "<group>"; };
 		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
 		14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAndFlatMap.swift; sourceTree = "<group>"; };
 		14F8AB182B0B479000493AE1 /* SeSACError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACError.swift; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				14056EC82B1306BA00C8EDA2 /* ProfileImageView.swift */,
+				14BBD6A42B1C4BF100CEF094 /* BackView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */,
 				1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */,
 				143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */,
+				14BBD6A22B1C44FA00CEF094 /* UIImage.swift */,
 			);
 			name = Extension;
 			path = Maps/Extension;
@@ -562,6 +568,7 @@
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
+				14BBD6A32B1C44FB00CEF094 /* UIImage.swift in Sources */,
 				144B80AB2B09173600993347 /* HomeViewController.swift in Sources */,
 				14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */,
 				14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */,
@@ -578,6 +585,7 @@
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
+				14BBD6A52B1C4BF100CEF094 /* BackView.swift in Sources */,
 				14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */,
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,

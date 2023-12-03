@@ -19,6 +19,8 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
+        view.tableFooterView = UIView(frame: .zero)
+        view.sectionFooterHeight = 0
         return view
     }()
     
@@ -147,7 +149,7 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         super.setConstraints()
         
         homeTableView.tableHeaderView?.snp.makeConstraints {
-            $0.height.equalTo(35)
+            $0.height.equalTo(40)
         }
         
         homeTableView.snp.makeConstraints {

@@ -14,13 +14,17 @@ final class PostViewModel: ViewModelType {
     struct Input {
         let postButtonTap: ControlEvent<Void>
         let imageButtonTap: ControlEvent<Void>
-        let textView: ControlProperty<String>
+        let textViewText: ControlProperty<String>
+        let textViewBeginEditing: ControlEvent<Void>
+        let textViewEndEditing: ControlEvent<Void>
         let imageData: BehaviorRelay<Data?>
     }
     
     struct Output {
         let postResult: PublishRelay<Bool>
         let phpicker: PublishRelay<Bool>
+        let textViewBeginEditing: PublishRelay<Void>
+        let textViewEndEditing: PublishRelay<Bool>
     }
     
     var repository: NetworkRepository
@@ -35,10 +39,23 @@ final class PostViewModel: ViewModelType {
         
         let postResult = PublishRelay<Bool>()
         let phpicker = PublishRelay<Bool>()
+        let textViewBeginEditing = PublishRelay<Void>()
+        let textViewEndEditing = PublishRelay<Bool>()
+        
+        input.textViewBeginEditing
+            .bind(to: textViewBeginEditing)
+            .disposed(by: disposeBag)
+        
+        input.textViewEndEditing
+            .withLatestFrom(input.textViewText) { _, text in
+                return text.isEmpty
+            }
+            .bind(to: textViewEndEditing)
+            .disposed(by: disposeBag)
         
         input.postButtonTap
             .observe(on: MainScheduler.asyncInstance)
-            .withLatestFrom(input.textView) { _, text in
+            .withLatestFrom(input.textViewText) { _, text in
                 return text
             }
             .withLatestFrom(input.imageData) { text, file in
@@ -75,7 +92,10 @@ final class PostViewModel: ViewModelType {
             .disposed(by: disposeBag)
         
         
-        return Output(postResult: postResult, phpicker: phpicker)
+        return Output(postResult: postResult,
+                      phpicker: phpicker,
+                      textViewBeginEditing: textViewBeginEditing,
+                      textViewEndEditing: textViewEndEditing)
     }
     
 }

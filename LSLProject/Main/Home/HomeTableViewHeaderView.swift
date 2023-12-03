@@ -34,7 +34,6 @@ final class HomeTableViewHeaderView: UITableViewHeaderFooterView {
     func setConstraints() {
         
         logoImageView.snp.makeConstraints {
-//            $0.center.equalToSuperview()
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview().offset(5)
             $0.width.equalTo(35)

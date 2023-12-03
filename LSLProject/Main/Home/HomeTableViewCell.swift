@@ -7,6 +7,8 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
+
 import RxSwift
 import RxCocoa
 import Moya
@@ -153,6 +155,13 @@ class HomeTableViewCell: BaseTableViewCell {
     
     // 이미지 다운로드 작업을 관리하는 객체
     private var imageDownloadTask: Cancellable?
+    
+    let imageDownloadRequest = AnyModifier { request in
+        var requestBody = request
+        requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
+        requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
+        return requestBody
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
