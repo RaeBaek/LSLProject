@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 import RxSwift
 import RxCocoa
 import PhotosUI
@@ -21,6 +22,19 @@ final class PostViewController: BaseViewController {
     lazy var moreBarbutton = {
         let view = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(dismissViewController))
         view.tintColor = .black
+        return view
+    }()
+    
+    private let scrollView = {
+        let view = UIScrollView()
+        view.backgroundColor = .systemBackground
+        view.isScrollEnabled = true
+        return view
+    }()
+    
+    private let contentView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
         return view
     }()
     
@@ -92,6 +106,8 @@ final class PostViewController: BaseViewController {
         view.text = "스레드를 시작하세요..."
         view.textColor = .lightGray
         view.backgroundColor = .systemGray6
+        view.sizeToFit()
+        view.isScrollEnabled = false
         return view
     }()
     
@@ -151,6 +167,15 @@ final class PostViewController: BaseViewController {
         
         let output = viewModel.transform(input: input)
         
+        mainTextView.rx.didChange
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.mainTextView.sizeToFit()
+                
+                // UIScrollView의 contentSize 업데이트
+                owner.scrollView.contentSize = owner.contentView.frame.size
+            }
+            .disposed(by: disposeBag)
         
         output.textViewBeginEditing
             .withUnretained(self)
@@ -221,8 +246,11 @@ final class PostViewController: BaseViewController {
     override func configureView() {
         super.configureView()
         
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
         [profileImage, userNickname, mainTextView, lineBar, albumButton, gifButton, recordButton, voteButton].forEach {
-            view.addSubview($0)
+            contentView.addSubview($0)
         }
         
     }
@@ -230,14 +258,24 @@ final class PostViewController: BaseViewController {
     override func setConstraints() {
         super.setConstraints()
         
+        scrollView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top).offset(-10)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.width.equalTo(scrollView.snp.width)
+        }
+        
         profileImage.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.top.equalToSuperview().offset(16)
             $0.leading.equalToSuperview().offset(12)
             $0.size.equalTo(38)
         }
         
         userNickname.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.top.equalToSuperview().offset(16)
             $0.leading.equalTo(profileImage.snp.trailing).offset(12)
         }
         
@@ -245,19 +283,19 @@ final class PostViewController: BaseViewController {
             $0.top.equalTo(userNickname.snp.bottom).offset(12)
             $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
-            $0.height.equalTo(50)
         }
         
         lineBar.snp.makeConstraints {
             $0.top.equalTo(profileImage.snp.bottom).offset(16)
             $0.centerX.equalTo(profileImage)
-            $0.bottom.equalToSuperview().offset(-16)
+            $0.bottom.equalTo(albumButton)
             $0.width.equalTo(2)
         }
         
         albumButton.snp.makeConstraints {
             $0.top.equalTo(mainTextView.snp.bottom).offset(16)
             $0.leading.equalTo(mainTextView)
+            $0.bottom.equalToSuperview().offset(-16)
             $0.size.equalTo(22)
         }
         
