@@ -30,6 +30,8 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>>
     
-    func reqeustImage(path: String) -> Single<NetworkResult<Data>>//Result<DownloadImageResponse, MoyaError>
+    func requestImage(path: String) -> Single<NetworkResult<Data>>//Result<DownloadImageResponse, MoyaError>
+    
+    func requestMyProfile() -> Single<NetworkResult<MyProfile>>
     
 }

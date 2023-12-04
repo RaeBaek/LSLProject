@@ -60,6 +60,26 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
+    let imageDeleteButton = {
+        let view = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let image = UIImage(systemName: "xmark", withConfiguration: imageConfig)
+        view.tintColor = .white
+        view.backgroundColor = .systemGray6
+        view.setImage(image, for: .normal)
+        view.imageView?.contentMode = .scaleAspectFit
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
+    let buttonStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.spacing = 16
+        view.distribution = .fillEqually
+        return view
+    }()
+    
     let albumButton = {
         let view = UIButton()
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
@@ -169,7 +189,6 @@ final class PostViewController: BaseViewController {
         super.viewDidLoad()
 
         setNavigationBar()
-        
         bind()
         
     }
@@ -230,10 +249,17 @@ final class PostViewController: BaseViewController {
         output.phpicker
             .withUnretained(self)
             .bind { owner, value in
+                print("ㅎㅇㅎㅇ?")
                 owner.presentPicker()
             }
             .disposed(by: disposeBag)
         
+        imageDeleteButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.deleteImage()
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setNavigationBar() {
@@ -266,6 +292,27 @@ final class PostViewController: BaseViewController {
         
     }
     
+    @objc func deleteImage() {
+        self.myImageView.image = nil
+        
+        myImageView.snp.remakeConstraints {
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(mainTextView)
+            $0.trailing.equalToSuperview().offset(-18)
+        }
+        
+        imageDeleteButton.snp.removeConstraints() 
+        imageDeleteButton.isHidden = true
+        
+        mainTextView.sizeToFit()
+        scrollView.contentSize = self.contentView.frame.size
+        
+        [albumButton, gifButton, recordButton, voteButton].forEach {
+            $0.isHidden = false
+        }
+        
+    }
+    
     override func configureView() {
         super.configureView()
         
@@ -278,9 +325,14 @@ final class PostViewController: BaseViewController {
         
         scrollView.addSubview(contentView)
         
-        [profileImage, userNickname, mainTextView, myImageView, lineBar, albumButton, gifButton, recordButton, voteButton].forEach {
+        [profileImage, userNickname, mainTextView, myImageView, lineBar, buttonStackView, imageDeleteButton].forEach {
             contentView.addSubview($0)
         }
+        
+        [albumButton, gifButton, recordButton, voteButton].forEach {
+            buttonStackView.addArrangedSubview($0)
+        }
+        
         
     }
     
@@ -321,7 +373,7 @@ final class PostViewController: BaseViewController {
         }
         
         myImageView.snp.makeConstraints {
-            $0.top.equalTo(albumButton.snp.bottom).offset(16)
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
             $0.leading.equalTo(mainTextView)
             $0.trailing.equalToSuperview().offset(-18)
         }
@@ -329,32 +381,38 @@ final class PostViewController: BaseViewController {
         lineBar.snp.makeConstraints {
             $0.top.equalTo(profileImage.snp.bottom).offset(16)
             $0.centerX.equalTo(profileImage)
-            $0.bottom.equalTo(albumButton)
+            $0.bottom.equalToSuperview().offset(-16)
             $0.width.equalTo(2)
         }
         
-        albumButton.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-            $0.leading.equalTo(mainTextView)
+        buttonStackView.snp.makeConstraints {
+            $0.top.equalTo(myImageView.snp.bottom).offset(16)
+            $0.leading.equalTo(myImageView)
             $0.bottom.equalToSuperview().offset(-16)
+        }
+        
+        albumButton.snp.makeConstraints {
+//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+//            $0.leading.equalTo(mainTextView)
+//            $0.bottom.equalToSuperview().offset(-16)
             $0.size.equalTo(22)
         }
         
         gifButton.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-            $0.leading.equalTo(albumButton.snp.trailing).offset(16)
+//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+//            $0.leading.equalTo(albumButton.snp.trailing).offset(16)
             $0.size.equalTo(22)
         }
         
         recordButton.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-            $0.leading.equalTo(gifButton.snp.trailing).offset(16)
+//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+//            $0.leading.equalTo(gifButton.snp.trailing).offset(16)
             $0.size.equalTo(22)
         }
         
         voteButton.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-            $0.leading.equalTo(recordButton.snp.trailing).offset(16)
+//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+//            $0.leading.equalTo(recordButton.snp.trailing).offset(16)
             $0.size.equalTo(22)
         }
         
@@ -421,11 +479,22 @@ extension PostViewController: PHPickerViewControllerDelegate {
                     
                     if self.myImageView.image != nil {
                         myImageView.snp.remakeConstraints {
-                            $0.top.equalTo(self.albumButton.snp.bottom).offset(16)
+                            $0.top.equalTo(self.mainTextView.snp.bottom).offset(16)
                             $0.leading.equalTo(self.mainTextView)
                             $0.trailing.equalToSuperview().offset(-18)
                             $0.height.equalTo(300)
                         }
+                        
+                        imageDeleteButton.snp.remakeConstraints {
+                            $0.top.equalTo(self.myImageView.snp.top).offset(20)
+                            $0.trailing.equalTo(self.myImageView.snp.trailing).offset(-20)
+                            $0.size.equalTo(22)
+                        }
+                        
+                        imageDeleteButton.isHidden = false
+                        
+                        mainTextView.sizeToFit()
+                        scrollView.contentSize = self.contentView.frame.size
                         
                         [albumButton, gifButton, recordButton, voteButton].forEach {
                             $0.isHidden = true
@@ -433,10 +502,12 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         
                     } else {
                         myImageView.snp.remakeConstraints {
-                            $0.top.equalTo(self.albumButton.snp.bottom).offset(16)
+                            $0.top.equalTo(self.mainTextView.snp.bottom).offset(16)
                             $0.leading.equalTo(self.mainTextView)
                             $0.trailing.equalToSuperview().offset(-18)
                         }
+                        
+                        imageDeleteButton.snp.removeConstraints()
                         
                         [albumButton, gifButton, recordButton, voteButton].forEach {
                             $0.isHidden = false

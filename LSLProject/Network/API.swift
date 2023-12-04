@@ -17,6 +17,7 @@ enum SeSACAPI {
     case allPost(model: AllPost)
     case postAdd(model: PostAdd)
     case downloadImage(model: DownloadImage)
+    case myProfile
     
 }
 
@@ -24,14 +25,6 @@ extension SeSACAPI: TargetType {
     var baseURL: URL {
         URL(string: APIKey.sesacURL)! //27812: 테스트 서버, 27820: 본 서버
     }
-    
-//    var downloadDestination: DownloadDestination {
-//        let url = URL(string: "\(baseURL)/\(path)")! // basePath is "http://myurl.com", path is "/eula.txt"
-//        
-//        return { tempUrl, response in
-//            return (url, .removePreviousFile)
-//        }
-//    }
     
     var path: String {
         switch self {
@@ -49,6 +42,8 @@ extension SeSACAPI: TargetType {
             return "post"
         case .downloadImage(let model):
             return model.path
+        case .myProfile:
+            return "profile/me"
         }
     }
     
@@ -56,7 +51,7 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login, .postAdd:
             return .post
-        case .accessToken, .withdraw, .allPost, .downloadImage:
+        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile:
             return .get
         }
     }
@@ -72,10 +67,7 @@ extension SeSACAPI: TargetType {
         case .login(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw:
-            return .requestPlain
-            
-        case .downloadImage:
+        case .accessToken, .withdraw, .downloadImage, .myProfile:
             return .requestPlain
             
         case .allPost(let model):
@@ -113,7 +105,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage:
+        case .withdraw, .allPost, .downloadImage, .myProfile:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

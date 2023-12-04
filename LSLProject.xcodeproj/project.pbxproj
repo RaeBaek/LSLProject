@@ -69,6 +69,8 @@
 		14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */; };
 		14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */; };
 		14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */; };
+		14B709532B1E0582005DDE2D /* UserTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */; };
+		14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */; };
 		14BBD6A32B1C44FB00CEF094 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* UIImage.swift */; };
 		14BBD6A52B1C4BF100CEF094 /* BackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* BackView.swift */; };
 		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
@@ -137,6 +139,8 @@
 		14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableHeaderView.swift; sourceTree = "<group>"; };
+		14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		14BBD6A22B1C44FA00CEF094 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		14BBD6A42B1C4BF100CEF094 /* BackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackView.swift; sourceTree = "<group>"; };
 		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
@@ -234,6 +238,8 @@
 			children = (
 				14056ED62B130EA100C8EDA2 /* UserViewController.swift */,
 				14056EE22B1323C300C8EDA2 /* UserViewModel.swift */,
+				14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */,
+				14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -561,6 +567,7 @@
 				146B16D22B03538000073B91 /* Extension + UIButton.swift in Sources */,
 				146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */,
 				146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */,
+				14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */,
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
@@ -600,6 +607,7 @@
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
 				14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */,
 				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
+				14B709532B1E0582005DDE2D /* UserTableHeaderView.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */,
 				145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */,

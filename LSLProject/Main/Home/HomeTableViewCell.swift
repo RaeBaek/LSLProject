@@ -332,7 +332,7 @@ class HomeTableViewCell: BaseTableViewCell {
         
         Observable.of(())
             .observe(on: SerialDispatchQueueScheduler(qos: .background))
-            .flatMap { self.repository.reqeustImage(path: path) }
+            .flatMap { self.repository.requestImage(path: path) }
             .subscribe(onNext: { value in
                 print("================================= \(value)")
                 switch value {

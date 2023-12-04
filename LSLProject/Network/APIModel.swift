@@ -143,15 +143,31 @@ struct Comment: Decodable {
 struct Creator: Decodable {
     let id, nick: String
     let profile: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case nick, profile
     }
 }
 
-// 현재 홈화면의 각 Cell들의 이미지 요청 API는 200 응답 코드로 떨어짐 하지만 Decodable 할 때 타입이 맞지 않는지 LSLProject.NetworkError.invalidData를 뱉음
-// 타입을 확인해봐야 할 듯 함
-struct DownloadImageResponse: Decodable {
-    let image: Data
+struct MyProfile: Decodable {
+    let posts: [String]
+    let followers, following: [Follow]
+    let id, email, nick, phoneNum: String?
+    let birthDay, profile: String?
+
+    enum CodingKeys: String, CodingKey {
+        case posts, followers, following
+        case id = "_id"
+        case email, nick, phoneNum, birthDay, profile
+    }
+}
+
+struct Follow: Decodable {
+    let id, nick, profile: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case nick, profile
+    }
 }

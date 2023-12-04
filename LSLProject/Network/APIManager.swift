@@ -18,7 +18,6 @@ import RxCocoa
 
 protocol NetworkService {
     func request<T: Decodable>(target: SeSACAPI) -> Single<NetworkResult<T>>
-//    func requstImage(target: SeSACAPI, completionHandler: @escaping (Result<DownloadImageResponse, MoyaError>) -> Void)
 }
 
 final class APIManager: NetworkService {
@@ -28,21 +27,6 @@ final class APIManager: NetworkService {
     private init() { }
     
     private let provider = MoyaProvider<SeSACAPI>(session: Moya.Session(interceptor: SeSACRequestInterceptor.shared))
-    
-//    func requstImage(target: SeSACAPI) -> Result<DownloadImageResponse, MoyaError> {
-//        self.provider.request(target) { result in
-//            switch result {
-//            case .success(let response):
-//                guard let data = try? response.map(DownloadImageResponse.self) else {
-//                    print("이미지 요청 실패")
-//                    return
-//                }
-//                
-//            case .failure(let error):
-//                
-//            }
-//        }
-//    }
     
     func request<T: Decodable>(target: SeSACAPI) -> Single<NetworkResult<T>> {
         return Single<NetworkResult<T>>.create { [weak self] (single) -> Disposable in

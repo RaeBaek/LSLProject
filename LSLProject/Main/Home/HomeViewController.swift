@@ -109,7 +109,8 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
 //        output.items
 //            .bind(to: homeTableView.rx.itemSelected) -> //indexPath
         
-        homeTableView.rx.setDelegate(self).disposed(by: disposeBag)
+        homeTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
         
         output.check
             .withUnretained(self)
@@ -137,8 +138,6 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     override func configureView() {
         super.configureView()
         
-        view.backgroundColor = .systemBackground
-        
         [homeTableView].forEach {
             view.addSubview($0)
         }
@@ -148,9 +147,9 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     override func setConstraints() {
         super.setConstraints()
         
-        homeTableView.tableHeaderView?.snp.makeConstraints {
-            $0.height.equalTo(40)
-        }
+//        homeTableView.tableHeaderView?.snp.makeConstraints {
+//            $0.height.equalTo(40)
+//        }
         
         homeTableView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(59)

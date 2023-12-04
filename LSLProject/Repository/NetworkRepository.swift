@@ -50,8 +50,12 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
     }
     
-    func reqeustImage(path: String) -> Single<NetworkResult<Data>> {
+    func requestImage(path: String) -> Single<NetworkResult<Data>> {
         APIManager.shared.request(target: .downloadImage(model: DownloadImage(path: path)))
+    }
+    
+    func requestMyProfile() -> Single<NetworkResult<MyProfile>> {
+        APIManager.shared.request(target: .myProfile)
     }
     
 }
