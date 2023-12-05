@@ -10,7 +10,7 @@ import RxSwift
 import Moya
 
 class NetworkRepository: NetworkRepositoryType {
-
+    
     func requestEmailValidation(email: String) -> Single<NetworkResult<EmailValidationResponse>> {
         APIManager.shared.request(target: .emailValidation(model: EmailValidation(email: email)))
         
@@ -56,6 +56,10 @@ class NetworkRepository: NetworkRepositoryType {
     
     func requestMyProfile() -> Single<NetworkResult<MyProfile>> {
         APIManager.shared.request(target: .myProfile)
+    }
+    
+    func requestUserPosts(id: String) -> Single<NetworkResult<PostResponses>> {
+        APIManager.shared.request(target: .userPosts(model: UserID(id: id)))
     }
     
 }

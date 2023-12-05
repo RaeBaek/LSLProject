@@ -17,6 +17,7 @@ enum SeSACAPI {
     case allPost(model: AllPost)
     case postAdd(model: PostAdd)
     case downloadImage(model: DownloadImage)
+    case userPosts(model: UserID)
     case myProfile
     
 }
@@ -44,6 +45,8 @@ extension SeSACAPI: TargetType {
             return model.path
         case .myProfile:
             return "profile/me"
+        case .userPosts(let model):
+            return "post/user/\(model.id)"
         }
     }
     
@@ -51,7 +54,7 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login, .postAdd:
             return .post
-        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile:
+        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return .get
         }
     }
@@ -67,16 +70,13 @@ extension SeSACAPI: TargetType {
         case .login(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts:
             return .requestPlain
             
         case .allPost(let model):
             return .requestParameters(parameters: ["next": model.next, "limit": model.limit, "product_id": model.productID], encoding: URLEncoding.queryString)
             
         case .postAdd(let model):
-//            print("---------- \(model.file)")
-//            print("---------- \(model.title)")
-//            print("---------- \(model.productID)")
             
             if let file = model.file {
                 let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
@@ -91,6 +91,7 @@ extension SeSACAPI: TargetType {
                 
                 return .uploadMultipart([title, productId])
             }
+            
         }
     }
     
@@ -105,7 +106,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

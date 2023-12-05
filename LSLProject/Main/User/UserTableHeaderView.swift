@@ -7,6 +7,9 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
+import RxSwift
+import RxCocoa
 
 final class UserTableHeaderView: UITableViewHeaderFooterView {
     
@@ -18,7 +21,7 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         return view
     }()
     
-    let nicknameLable = {
+    let nickNameLabel = {
         let view = UILabel()
         view.text = "100_r_h"
         view.textColor = .black
@@ -52,8 +55,9 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     
     let profileImageView = {
         let view = ProfileImageView(frame: .zero)
-        view.backgroundColor = .systemBlue
         view.contentMode = .scaleAspectFit
+        view.layer.borderWidth = 0.5
+        view.layer.borderColor = UIColor.lightGray.cgColor
         return view
     }()
     
@@ -105,6 +109,10 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         return view
     }()
     
+    private let repository = NetworkRepository()
+    
+    private let disposeBag = DisposeBag()
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         configureView()
@@ -116,8 +124,32 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setHeaderView(profile: PublishRelay<MyProfile>) {
+        
+        profile
+            .withUnretained(self)
+            .bind { owner, value in
+                let url = URL(string: APIKey.sesacURL + (value.profile ?? ""))
+                
+                let imageDownloadRequest = AnyModifier { request in
+                    var requestBody = request
+                    requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
+                    requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
+                    return requestBody
+                }
+                
+                owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+                
+                owner.emailLabel.text = value.email
+                owner.nickNameLabel.text = value.nick
+                owner.followerLabel.text = "팔로워 \(value.followers.count)명"
+            }
+            .disposed(by: disposeBag)
+        
+    }
+    
     func configureView() {
-        [emailLabel, nicknameLable, threadsNetButton, followerLabel, profileStackView, profileImageView].forEach {
+        [emailLabel, nickNameLabel, threadsNetButton, followerLabel, profileStackView, profileImageView].forEach {
             contentView.addSubview($0)
         }
         
@@ -131,23 +163,23 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         
         emailLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
-            $0.leading.equalToSuperview().offset(12)
+            $0.leading.equalToSuperview().offset(16)
         }
         
-        nicknameLable.snp.makeConstraints {
+        nickNameLabel.snp.makeConstraints {
             $0.top.equalTo(emailLabel.snp.bottom).offset(12)
             $0.leading.equalTo(emailLabel)
         }
         
         threadsNetButton.snp.makeConstraints {
-            $0.centerY.equalTo(nicknameLable)
-            $0.leading.equalTo(nicknameLable.snp.trailing).offset(6)
+            $0.centerY.equalTo(nickNameLabel)
+            $0.leading.equalTo(nickNameLabel.snp.trailing).offset(6)
             $0.height.equalTo(20)
         }
         
         followerLabel.snp.makeConstraints {
             $0.top.equalTo(threadsNetButton.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(12)
+            $0.leading.equalTo(nickNameLabel)
         }
         
         profileStackView.snp.makeConstraints {

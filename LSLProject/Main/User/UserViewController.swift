@@ -11,9 +11,20 @@ import RxCocoa
 
 final class UserViewController: BaseViewController, UIScrollViewDelegate {
 
+    lazy var lockBarbutton = {
+        let view = UIBarButtonItem(image: UIImage(systemName: "lock"), style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
+    lazy var settingBarbutton = {
+        let view = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
     private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        
         view.register(UserTableHeaderView.self, forHeaderFooterViewReuseIdentifier: UserTableHeaderView.identifier)
         view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
         view.backgroundColor = .clear
@@ -24,20 +35,26 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
         return view
     }()
     
-    private let viewModel = UserViewModel(reposity: NetworkRepository())
+    var profile = PublishRelay<MyProfile>()
+    
+    let repository = NetworkRepository()
+    
+    private lazy var viewModel = UserViewModel(reposity: repository)
     
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setNavigationBar()
+        
         bind()
         
     }
     
     private func bind() {
         
-        let input = UserViewModel.Input(userToken: BehaviorRelay(value: UserDefaultsManager.token))
+        let input = UserViewModel.Input(userToken: BehaviorRelay(value: UserDefaultsManager.token), userID: BehaviorRelay(value: UserDefaultsManager.id))
         let output = viewModel.transform(input: input)
         
         
@@ -48,12 +65,20 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
         // 유저별 작성한 포스트 조회 API 사용해야 할듯 (본인 포함)
         // headerView에는 내 프로필 조회를
         // cell 에서는 포스트 조회 API를 사용해야할 듯 함.
-        output.items
-            .map { value in
-                return value.posts
-            }
-            .bind(to: userTableView.rx.items(cellIdentifier: UserTableViewCell.identifier, cellType: UserTableViewCell.self)) { row, element, cell in
-                
+        output.profile
+            .bind(to: profile)
+            .disposed(by: disposeBag)
+            
+        output.userPosts
+            .map { $0.data }
+            .bind(to: userTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
+                cell.setCell(row: row, element: element) {
+                    UIView.setAnimationsEnabled(false)
+                    self.userTableView.beginUpdates()
+                    cell.layoutIfNeeded()
+                    self.userTableView.endUpdates()
+                    UIView.setAnimationsEnabled(true)
+                }
             }
             .disposed(by: disposeBag)
         
@@ -68,6 +93,11 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
             view.addSubview($0)
         }
         
+    }
+    
+    private func setNavigationBar() {
+        self.navigationItem.leftBarButtonItem = lockBarbutton
+        self.navigationItem.rightBarButtonItem = settingBarbutton
     }
     
     override func setConstraints() {
@@ -88,6 +118,8 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
 extension UserViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserTableHeaderView.identifier) as? UserTableHeaderView else { return UIView() }
+        
+        header.setHeaderView(profile: profile)
         
         return header
     }

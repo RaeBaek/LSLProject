@@ -37,6 +37,7 @@ final class APIManager: NetworkService {
                 case .success(let response):
                     dump(response)
                     
+                    // T의 타입이 Data 타입인지 확인
                     if T.Type.self == Data.Type.self {
                         single(.success(.success(response.data as! T)))
                         return

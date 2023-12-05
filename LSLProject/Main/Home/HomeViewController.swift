@@ -90,11 +90,13 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 return value.1.data
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
-                
-//                cell.element = element
-                cell.setCell(row: row, element: element)
-                
-                
+                cell.setCell(row: row, element: element) {
+                    UIView.setAnimationsEnabled(false)
+                    self.homeTableView.beginUpdates()
+                    cell.layoutIfNeeded()
+                    self.homeTableView.endUpdates()
+                    UIView.setAnimationsEnabled(true)
+                }
             }
             .disposed(by: disposeBag)
         

@@ -34,4 +34,6 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestMyProfile() -> Single<NetworkResult<MyProfile>>
     
+    func requestUserPosts(id: String) -> Single<NetworkResult<PostResponses>>
+    
 }

@@ -185,3 +185,23 @@ enum MyProfileError: Int, LoggableError {
         }
     }
 }
+
+enum UserPostsError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            "유효하지 않은 요청입니다."
+        case .inValidAccessToken:
+            "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        }
+    }
+}

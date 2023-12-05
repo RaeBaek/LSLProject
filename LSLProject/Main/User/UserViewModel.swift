@@ -13,33 +13,36 @@ final class UserViewModel: ViewModelType {
     
     struct Input {
         let userToken: BehaviorRelay<String>
+        let userID: BehaviorRelay<String>
     }
     
     struct Output {
-        let items: PublishRelay<MyProfile>
+        let profile: PublishRelay<MyProfile>
+        let userPosts: PublishRelay<PostResponses>
     }
     
-    private let reposity: NetworkRepository
+    private let repository: NetworkRepository
     
     private let disposeBag = DisposeBag()
     
     init(reposity: NetworkRepository) {
-        self.reposity = reposity
+        self.repository = reposity
     }
     
     func transform(input: Input) -> Output {
         
-        let items = PublishRelay<MyProfile>()
+        let profile = PublishRelay<MyProfile>()
+        let userPosts = PublishRelay<PostResponses>()
         
         input.userToken
             .flatMap { value in
-                self.reposity.requestMyProfile()
+                self.repository.requestMyProfile()
             }
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):
                     print("내 프로필 조회 성공!")
-                    items.accept(data)
+                    profile.accept(data)
                 case .failure(let error):
                     guard let allPostError = MyProfileError(rawValue: error.rawValue) else {
                         print("내 프로필 조회 실패.. \(error.message)")
@@ -50,7 +53,26 @@ final class UserViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        return Output(items: items)
+        input.userID
+            .flatMap { value in
+                self.repository.requestUserPosts(id: UserDefaultsManager.id)
+            }
+            .subscribe(onNext: { value in
+                switch value {
+                case .success(let data):
+                    print("내가 작성한 포스트 조회 성공! (내 프로필 화면)")
+                    userPosts.accept(data)
+                case .failure(let error):
+                    guard let userPostsError = UserPostsError(rawValue: error.rawValue) else {
+                        print("내가 작성한 포스트 조회 실패.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 유저별 작성한 포스트 조회 에러 \(userPostsError.message)")
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        return Output(profile: profile, userPosts: userPosts)
     }
     
 }

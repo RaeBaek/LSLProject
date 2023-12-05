@@ -59,6 +59,10 @@ struct DownloadImage: Encodable {
     let path: String
 }
 
+struct UserID: Encodable {
+    let id: String
+}
+
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String
