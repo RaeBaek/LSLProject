@@ -20,9 +20,10 @@
 		14056EE82B13716000C8EDA2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 14056EE72B13716000C8EDA2 /* RxDataSources */; };
 		141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141AD7482B173FB900D98D08 /* PostViewController.swift */; };
 		14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14360E8F2B146B30006AA532 /* MainTabBarController.swift */; };
+		143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B405D2B20422700F6A02D /* DeleteButton.swift */; };
 		143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */; };
 		144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */; };
-		1440275B2B1209880008CBC3 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */; };
+		1440275B2B1209880008CBC3 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275A2B1209880008CBC3 /* PostTableViewCell.swift */; };
 		1440275D2B1209C40008CBC3 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275C2B1209C40008CBC3 /* BaseTableViewCell.swift */; };
 		144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275F2B124B590008CBC3 /* ReusableProtocol.swift */; };
 		144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */; };
@@ -71,8 +72,8 @@
 		14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */; };
 		14B709532B1E0582005DDE2D /* UserTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */; };
 		14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */; };
-		14BBD6A32B1C44FB00CEF094 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* UIImage.swift */; };
-		14BBD6A52B1C4BF100CEF094 /* BackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* BackView.swift */; };
+		14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */; };
+		14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */; };
 		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
 		14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */; };
 		14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB182B0B479000493AE1 /* SeSACError.swift */; };
@@ -94,9 +95,10 @@
 		14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
 		141AD7482B173FB900D98D08 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		14360E8F2B146B30006AA532 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		143B405D2B20422700F6A02D /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIImageView.swift"; sourceTree = "<group>"; };
 		144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACRequestInterceptor.swift; sourceTree = "<group>"; };
-		1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		1440275A2B1209880008CBC3 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		1440275C2B1209C40008CBC3 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		1440275F2B124B590008CBC3 /* ReusableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProtocol.swift; sourceTree = "<group>"; };
 		144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewCell.swift"; sourceTree = "<group>"; };
@@ -141,8 +143,8 @@
 		14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableHeaderView.swift; sourceTree = "<group>"; };
 		14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
-		14BBD6A22B1C44FA00CEF094 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
-		14BBD6A42B1C4BF100CEF094 /* BackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackView.swift; sourceTree = "<group>"; };
+		14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIImage.swift"; sourceTree = "<group>"; };
+		14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBackView.swift; sourceTree = "<group>"; };
 		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
 		14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAndFlatMap.swift; sourceTree = "<group>"; };
 		14F8AB182B0B479000493AE1 /* SeSACError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACError.swift; sourceTree = "<group>"; };
@@ -173,7 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				14056EC82B1306BA00C8EDA2 /* ProfileImageView.swift */,
-				14BBD6A42B1C4BF100CEF094 /* BackView.swift */,
+				14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */,
+				143B405D2B20422700F6A02D /* DeleteButton.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -196,7 +199,7 @@
 			children = (
 				14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */,
 				1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */,
-				1440275A2B1209880008CBC3 /* HomeTableViewCell.swift */,
+				1440275A2B1209880008CBC3 /* PostTableViewCell.swift */,
 				144B80AA2B09173600993347 /* HomeViewController.swift */,
 				14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */,
 				14648C872B19F00600C3A9D2 /* Detail */,
@@ -218,8 +221,8 @@
 		14056ECD2B130DBC00C8EDA2 /* Post */ = {
 			isa = PBXGroup;
 			children = (
-				14056EDE2B1323A600C8EDA2 /* PostViewModel.swift */,
 				141AD7482B173FB900D98D08 /* PostViewController.swift */,
+				14056EDE2B1323A600C8EDA2 /* PostViewModel.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -268,7 +271,7 @@
 				144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */,
 				1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */,
 				143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */,
-				14BBD6A22B1C44FA00CEF094 /* UIImage.swift */,
+				14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */,
 			);
 			name = Extension;
 			path = Maps/Extension;
@@ -575,7 +578,7 @@
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
-				14BBD6A32B1C44FB00CEF094 /* UIImage.swift in Sources */,
+				14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */,
 				144B80AB2B09173600993347 /* HomeViewController.swift in Sources */,
 				14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */,
 				14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */,
@@ -592,7 +595,8 @@
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
-				14BBD6A52B1C4BF100CEF094 /* BackView.swift in Sources */,
+				14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */,
+				143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */,
 				14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */,
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
@@ -614,7 +618,7 @@
 				149562232B024DA6006CED34 /* BaseViewController.swift in Sources */,
 				14056EDF2B1323A600C8EDA2 /* PostViewModel.swift in Sources */,
 				147CC5612B03D0B800D7DA7C /* API.swift in Sources */,
-				1440275B2B1209880008CBC3 /* HomeTableViewCell.swift in Sources */,
+				1440275B2B1209880008CBC3 /* PostTableViewCell.swift in Sources */,
 				146B16DD2B037D2800073B91 /* BirthdayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

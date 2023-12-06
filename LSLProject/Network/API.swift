@@ -80,7 +80,7 @@ extension SeSACAPI: TargetType {
             
             if let file = model.file {
                 let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
-                let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!)!), name: "title")
+                let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!) ?? Data()), name: "title")
                 let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
                 
                 return .uploadMultipart([imageData, title, productId])

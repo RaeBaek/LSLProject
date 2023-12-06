@@ -29,7 +29,7 @@ class HomeDetailViewController: BaseViewController {
     }()
     
     lazy var backView = {
-        let view = BackView()
+        let view = CommentBackView()
         view.backgroundColor = .systemGray6
         return view
     }()

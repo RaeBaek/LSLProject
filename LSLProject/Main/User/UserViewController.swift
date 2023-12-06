@@ -26,7 +26,7 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
     private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.register(UserTableHeaderView.self, forHeaderFooterViewReuseIdentifier: UserTableHeaderView.identifier)
-        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
+        view.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
@@ -71,7 +71,7 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
             
         output.userPosts
             .map { $0.data }
-            .bind(to: userTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
+            .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { row, element, cell in
                 cell.setCell(row: row, element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.userTableView.beginUpdates()

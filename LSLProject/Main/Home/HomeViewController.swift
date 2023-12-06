@@ -15,7 +15,7 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     private let homeTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.register(HomeTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeTableViewHeaderView.identifier)
-        view.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
+        view.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
@@ -89,7 +89,7 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 self.model.next = value.1.nextCursor
                 return value.1.data
             }
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { row, element, cell in
+            .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { row, element, cell in
                 cell.setCell(row: row, element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()

@@ -13,10 +13,10 @@ import RxSwift
 import RxCocoa
 import Moya
 
-class HomeTableViewCell: BaseTableViewCell {
+class PostTableViewCell: BaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: HomeTableViewCell.identifier)
+        super.init(style: style, reuseIdentifier: PostTableViewCell.identifier)
         
     }
     
@@ -73,8 +73,6 @@ class HomeTableViewCell: BaseTableViewCell {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.layer.cornerRadius = 10
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
         view.clipsToBounds = true
         return view
     }()
@@ -154,6 +152,9 @@ class HomeTableViewCell: BaseTableViewCell {
         super.prepareForReuse()
         
         mainImage.image = nil
+        mainImage.layer.cornerRadius = 10
+        mainImage.layer.borderWidth = 0
+        mainImage.layer.borderColor = nil
 
         mainImage.snp.remakeConstraints {
             $0.top.equalTo(mainText.snp.bottom).offset(12)
@@ -174,13 +175,6 @@ class HomeTableViewCell: BaseTableViewCell {
         let path = element.image.first ?? ""
         
         let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
-        
-        let imageDownloadRequest = AnyModifier { request in
-            var requestBody = request
-            requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
-            requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
-            return requestBody
-        }
         
         // 프로필 이미지는 이미지의 data를 다루지 않기에 KingFisher를 이용하여 바로 호출
         profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
@@ -251,7 +245,10 @@ class HomeTableViewCell: BaseTableViewCell {
 //                    $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
 //                    $0.width.equalTo(2)
 //                }
-//                
+                
+                mainImage.layer.borderColor = UIColor.lightGray.cgColor
+                mainImage.layer.borderWidth = 0.5
+//
                 mainImage.snp.remakeConstraints {
                     $0.top.equalTo(mainText.snp.bottom).offset(12)
                     $0.leading.equalTo(mainText)

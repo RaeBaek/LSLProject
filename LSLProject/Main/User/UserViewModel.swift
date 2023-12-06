@@ -35,7 +35,7 @@ final class UserViewModel: ViewModelType {
         let userPosts = PublishRelay<PostResponses>()
         
         input.userToken
-            .flatMap { value in
+            .flatMap { _ in
                 self.repository.requestMyProfile()
             }
             .subscribe(onNext: { value in

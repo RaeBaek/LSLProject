@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 import RxSwift
 import RxCocoa
 import PhotosUI
@@ -40,15 +41,31 @@ final class PostViewController: BaseViewController {
     
     let profileImage = {
         let view = ProfileImageView(frame: .zero)
-        view.backgroundColor = .systemGreen
+        view.contentMode = .scaleAspectFit
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 0.5
         return view
     }()
     
-    let userNickname = {
+    var userNickname = {
         let view = UILabel()
         view.font = .systemFont(ofSize: 14, weight: .semibold)
         view.textColor = .black
         view.text = "100_r_h"
+        return view
+    }()
+    
+    let startMessage = "스레드를 시작하세요..."
+    
+    lazy var mainTextView = {
+        let view = UITextView()
+        view.font = .systemFont(ofSize: 14, weight: .regular)
+        view.text = startMessage
+        view.textColor = .lightGray
+        view.sizeToFit()
+        view.isScrollEnabled = false
+        view.textContainer.lineFragmentPadding = 0
+        view.textContainerInset = .zero
         return view
     }()
     
@@ -60,15 +77,22 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
+    let myImageView = {
+        let view = UIImageView()
+        view.layer.cornerRadius = 10
+        view.clipsToBounds = true
+        return view
+    }()
+    
     let imageDeleteButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let view = DeleteButton(frame: .zero)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 12)
         let image = UIImage(systemName: "xmark", withConfiguration: imageConfig)
         view.tintColor = .white
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .black
+        view.layer.opacity = 0.7
         view.setImage(image, for: .normal)
         view.imageView?.contentMode = .scaleAspectFit
-        view.layer.cornerRadius = 10
         return view
     }()
     
@@ -82,7 +106,7 @@ final class PostViewController: BaseViewController {
     
     let albumButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
         let image = UIImage(systemName: "photo.on.rectangle.angled", withConfiguration: imageConfig)
         view.tintColor = .lightGray
         view.setImage(image, for: .normal)
@@ -92,7 +116,7 @@ final class PostViewController: BaseViewController {
     
     let gifButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
         let image = UIImage(systemName: "book.pages", withConfiguration: imageConfig)
         view.tintColor = .lightGray
         view.setImage(image, for: .normal)
@@ -102,7 +126,7 @@ final class PostViewController: BaseViewController {
     
     let recordButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
         let image = UIImage(systemName: "mic", withConfiguration: imageConfig)
         view.tintColor = .lightGray
         view.setImage(image, for: .normal)
@@ -112,23 +136,11 @@ final class PostViewController: BaseViewController {
     
     let voteButton = {
         let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
         let image = UIImage(systemName: "line.3.horizontal.decrease", withConfiguration: imageConfig)
         view.tintColor = .lightGray
         view.setImage(image, for: .normal)
         view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    let mainTextView = {
-        let view = UITextView()
-        view.font = .systemFont(ofSize: 15, weight: .regular)
-        view.text = "스레드를 시작하세요..."
-        view.textColor = .lightGray
-        view.backgroundColor = .systemGray6
-        view.sizeToFit()
-        view.isScrollEnabled = false
-        view.textContentType = .oneTimeCode
         return view
     }()
     
@@ -159,29 +171,19 @@ final class PostViewController: BaseViewController {
         config.attributedTitle = titleAttr
         
         view.configuration = config
-        return view
-    }()
-    
-    let imageButton = {
-        let view = UIButton()
-        view.setTitle("사진", for: .normal)
-        view.tintColor = .black
-        view.backgroundColor = .systemOrange
-        return view
-    }()
-    
-    let myImageView = {
-        let view = UIImageView()
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
+//        view.isEnabled = false
         return view
     }()
     
     let viewModel = PostViewModel(repository: NetworkRepository())
     
-    var data: Data? = Data()
+    var data: Data? {
+        didSet(newValue) {
+            imageData.accept(newValue)
+        }
+    }
     
-    lazy var data2 = BehaviorRelay(value: data)
+    lazy var imageData = BehaviorRelay(value: data)
     
     let disposeBag = DisposeBag()
     
@@ -198,6 +200,10 @@ final class PostViewController: BaseViewController {
         
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        scrollView.endEditing(true)
+    }
+    
     private func bind() {
         
         let input = PostViewModel.Input(postButtonTap: postButton.rx.tap,
@@ -205,15 +211,29 @@ final class PostViewController: BaseViewController {
                                         textViewText: mainTextView.rx.text.orEmpty,
                                         textViewBeginEditing: mainTextView.rx.didBeginEditing,
                                         textViewEndEditing: mainTextView.rx.didEndEditing,
-                                        imageData: data2)
+                                        imageData: imageData,
+                                        userToken: BehaviorRelay(value: UserDefaultsManager.token))
         
         let output = viewModel.transform(input: input)
+        
+        output.profile
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.userNickname.text = value
+            }
+            .disposed(by: disposeBag)
+        
+        output.profileImageURL
+            .withUnretained(self)
+            .bind { owner, url in
+                owner.profileImage.kf.setImage(with: url, options: [.requestModifier(self.imageDownloadRequest)])
+            }
+            .disposed(by: disposeBag)
         
         mainTextView.rx.didChange
             .withUnretained(self)
             .bind { owner, _ in
                 owner.mainTextView.sizeToFit()
-                
                 // UIScrollView의 contentSize 업데이트
                 owner.scrollView.contentSize = owner.contentView.frame.size
             }
@@ -233,7 +253,7 @@ final class PostViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, bool in
                 if bool {
-                    owner.mainTextView.text = "스레드를 시작하세요..."
+                    owner.mainTextView.text = owner.startMessage
                     owner.mainTextView.textColor = .lightGray
                 }
             }
@@ -242,15 +262,21 @@ final class PostViewController: BaseViewController {
         output.postResult
             .withUnretained(self)
             .bind { owner, value in
-                print("\(value)면 성공~")
+                owner.dismissViewController()
             }
             .disposed(by: disposeBag)
         
         output.phpicker
             .withUnretained(self)
             .bind { owner, value in
-                print("ㅎㅇㅎㅇ?")
                 owner.presentPicker()
+            }
+            .disposed(by: disposeBag)
+        
+        output.postButtonStatus
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.postButton.isEnabled = value
             }
             .disposed(by: disposeBag)
         
@@ -294,11 +320,17 @@ final class PostViewController: BaseViewController {
     
     @objc func deleteImage() {
         self.myImageView.image = nil
+        self.data = nil
         
         myImageView.snp.remakeConstraints {
+            $0.leading.equalTo(userNickname)
+            $0.trailing.equalToSuperview().offset(-12)
+        }
+        
+        buttonStackView.snp.remakeConstraints {
             $0.top.equalTo(mainTextView.snp.bottom).offset(16)
             $0.leading.equalTo(mainTextView)
-            $0.trailing.equalToSuperview().offset(-18)
+            $0.bottom.equalToSuperview().offset(-16)
         }
         
         imageDeleteButton.snp.removeConstraints() 
@@ -307,9 +339,7 @@ final class PostViewController: BaseViewController {
         mainTextView.sizeToFit()
         scrollView.contentSize = self.contentView.frame.size
         
-        [albumButton, gifButton, recordButton, voteButton].forEach {
-            $0.isHidden = false
-        }
+        buttonStackView.isHidden = false
         
     }
     
@@ -367,15 +397,14 @@ final class PostViewController: BaseViewController {
         }
         
         mainTextView.snp.makeConstraints {
-            $0.top.equalTo(userNickname.snp.bottom).offset(12)
+            $0.top.equalTo(userNickname.snp.bottom).offset(6)
             $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
         }
         
         myImageView.snp.makeConstraints {
-            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-            $0.leading.equalTo(mainTextView)
-            $0.trailing.equalToSuperview().offset(-18)
+            $0.leading.equalTo(userNickname)
+            $0.trailing.equalToSuperview().offset(-12)
         }
         
         lineBar.snp.makeConstraints {
@@ -386,34 +415,13 @@ final class PostViewController: BaseViewController {
         }
         
         buttonStackView.snp.makeConstraints {
-            $0.top.equalTo(myImageView.snp.bottom).offset(16)
-            $0.leading.equalTo(myImageView)
+            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
+            $0.leading.equalTo(mainTextView)
             $0.bottom.equalToSuperview().offset(-16)
         }
         
         albumButton.snp.makeConstraints {
-//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-//            $0.leading.equalTo(mainTextView)
-//            $0.bottom.equalToSuperview().offset(-16)
-            $0.size.equalTo(22)
-        }
-        
-        gifButton.snp.makeConstraints {
-//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-//            $0.leading.equalTo(albumButton.snp.trailing).offset(16)
-            $0.size.equalTo(22)
-        }
-        
-        recordButton.snp.makeConstraints {
-//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-//            $0.leading.equalTo(gifButton.snp.trailing).offset(16)
-            $0.size.equalTo(22)
-        }
-        
-        voteButton.snp.makeConstraints {
-//            $0.top.equalTo(mainTextView.snp.bottom).offset(16)
-//            $0.leading.equalTo(recordButton.snp.trailing).offset(16)
-            $0.size.equalTo(22)
+            $0.size.equalTo(25)
         }
         
         replyAllowButton.snp.makeConstraints {
@@ -461,6 +469,7 @@ extension PostViewController: PHPickerViewControllerDelegate {
                     let image = image as? UIImage
                     
                     let originalImage: UIImage = image!// 원본 이미지
+                    
                     let targetSize: Int = 1 * 1024 * 1024 // 1MB
                     
                     if let compressedImageData = compressImage(image: originalImage, targetSize: targetSize) {
@@ -468,27 +477,37 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         // 압축된 이미지 데이터 사용
                         print("압축된 이미지 입니다! \(compressedImageData)")
                         self.myImageView.image = UIImage(data: compressedImageData) //image as? UIImage
-                        self.data2.accept(compressedImageData)
+                        self.imageData.accept(compressedImageData)
                     } else {
                         print("압축된 이미지가 아닙니다 \(image?.jpegData(compressionQuality: 0.3))")
                         // 압축 실패 또는 원본 이미지가 이미 충분히 작을 때
                         self.myImageView.image = UIImage(data: (image?.jpegData(compressionQuality: 0.3))!) //image as? UIImage
-                        self.data2.accept(image?.jpegData(compressionQuality: 0.3))
+                        self.imageData.accept(image?.jpegData(compressionQuality: 0.3))
                         
                     }
                     
                     if self.myImageView.image != nil {
+                        
+                        let expectedHeight = self.myImageView.bounds.width * (originalImage.size.height / originalImage.size.width)
+                        
                         myImageView.snp.remakeConstraints {
                             $0.top.equalTo(self.mainTextView.snp.bottom).offset(16)
                             $0.leading.equalTo(self.mainTextView)
                             $0.trailing.equalToSuperview().offset(-18)
-                            $0.height.equalTo(300)
+                            // 이미지 높이 계산 식 추가할 것. PostTableViewCell 참고!
+                            $0.height.equalTo(expectedHeight)
                         }
                         
                         imageDeleteButton.snp.remakeConstraints {
                             $0.top.equalTo(self.myImageView.snp.top).offset(20)
                             $0.trailing.equalTo(self.myImageView.snp.trailing).offset(-20)
-                            $0.size.equalTo(22)
+                            $0.size.equalTo(25)
+                        }
+                        
+                        buttonStackView.snp.remakeConstraints {
+                            $0.top.equalTo(self.myImageView.snp.bottom).offset(16)
+                            $0.leading.equalTo(self.myImageView)
+                            $0.bottom.equalToSuperview()
                         }
                         
                         imageDeleteButton.isHidden = false
@@ -496,9 +515,11 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         mainTextView.sizeToFit()
                         scrollView.contentSize = self.contentView.frame.size
                         
-                        [albumButton, gifButton, recordButton, voteButton].forEach {
-                            $0.isHidden = true
-                        }
+                        buttonStackView.isHidden = true
+                        
+//                        [albumButton, gifButton, recordButton, voteButton].forEach {
+//                            $0.isHidden = true
+//                        }
                         
                     } else {
                         myImageView.snp.remakeConstraints {
@@ -509,9 +530,11 @@ extension PostViewController: PHPickerViewControllerDelegate {
                         
                         imageDeleteButton.snp.removeConstraints()
                         
-                        [albumButton, gifButton, recordButton, voteButton].forEach {
-                            $0.isHidden = false
-                        }
+                        buttonStackView.isHidden = false
+                        
+//                        [albumButton, gifButton, recordButton, voteButton].forEach {
+//                            $0.isHidden = false
+//                        }
                     }
                     
                 }
