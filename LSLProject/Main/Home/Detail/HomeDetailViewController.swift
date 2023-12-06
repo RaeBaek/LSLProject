@@ -85,7 +85,7 @@ final class HomeDetailViewController: BaseViewController {
         output.commentButtonTap
             .withUnretained(self)
             .bind { owner, _ in
-                owner.commentWriteViewController()
+                owner.commentViewController(item: item)
             }
             .disposed(by: disposeBag)
         
@@ -118,10 +118,14 @@ final class HomeDetailViewController: BaseViewController {
         
     }
     
-    private func commentWriteViewController() {
-        let vc = PostViewController()
+    private func commentViewController(item: PostResponse) {
+        let vc = CommentViewController()
         
-        self.present(vc, animated: true)
+        let nav = UINavigationController(rootViewController: vc)
+        
+        vc.post = item
+        
+        self.present(nav, animated: true)
     }
     
     override func configureView() {
@@ -179,16 +183,7 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item else { return UIView() }
         
-        header.loadImage(path: item.creator.profile ?? "") { data in
-            header.profileImage.image = UIImage(data: data.value)
-        }
-        
-        header.loadImage(path: item.image.first ?? "") { data in
-            header.mainImage.image = UIImage(data: data.value)
-        }
-        
-        header.userNickname.text = item.creator.nick
-        header.mainText.text = item.title
+        header.setHeaderView(item: item)
         
         return header
     }

@@ -212,7 +212,7 @@ class PostTableViewCell: BaseTableViewCell {
                 
                 mainImage.layer.borderColor = UIColor.lightGray.cgColor
                 mainImage.layer.borderWidth = 0.5
-//
+
                 mainImage.snp.remakeConstraints {
                     $0.top.equalTo(mainText.snp.bottom).offset(12)
                     $0.leading.equalTo(mainText)
@@ -282,7 +282,7 @@ class PostTableViewCell: BaseTableViewCell {
         }
         
         lineBar.snp.makeConstraints {
-            $0.top.equalTo(profileImage.snp.bottom).offset(16)
+            $0.top.equalTo(profileImage.snp.bottom).offset(8)
             $0.centerX.equalTo(profileImage)
             $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
             $0.width.equalTo(2)

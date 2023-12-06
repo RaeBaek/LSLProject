@@ -171,7 +171,6 @@ final class PostViewController: BaseViewController {
         config.attributedTitle = titleAttr
         
         view.configuration = config
-//        view.isEnabled = false
         return view
     }()
     

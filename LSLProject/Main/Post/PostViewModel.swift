@@ -92,7 +92,7 @@ final class PostViewModel: ViewModelType {
         input.textViewText
             .withUnretained(self)
             .map { owner, value in
-                if value == "" || value == self.startMessage {
+                if value == "" || value == owner.startMessage {
                     return false
                 } else {
                     return true

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 import RxSwift
 import RxCocoa
 
@@ -137,12 +138,35 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
     
     private let repository = NetworkRepository()
     
+    private let imageDownloadRequest = AnyModifier { request in
+        var requestBody = request
+        requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
+        requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
+        return requestBody
+    }
+    
+    func setHeaderView(item: PostResponse) {
+        
+        let url = URL(string: APIKey.sesacURL + (item.creator.profile ?? ""))
+        
+        profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        
+        loadImage(path: item.image.first ?? "") { [weak self] data in
+            guard let self else { return }
+            self.mainImage.image = UIImage(data: data.value)
+        }
+        
+        userNickname.text = item.creator.nick
+        mainText.text = item.title
+        
+    }
+    
     func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
         
         let result = BehaviorRelay(value: Data())
         
         Observable.of(())
-            .observe(on: SerialDispatchQueueScheduler(qos: .background))
+            .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
             .flatMap { self.repository.requestImage(path: path) }
             .subscribe(onNext: { value in
                 switch value {

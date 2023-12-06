@@ -118,11 +118,11 @@ struct PostResponses: Decodable {
 struct PostResponse: Decodable {
     let likes: [String]
     let image: [String]
-    let hashTags: [String]
+    let hashTags: [String?]
     let comments: [Comment]
     let id: String
     let creator: Creator
-    let time, title: String
+    let time, title: String?
     let content, content1, content2, content3, content4, content5: String?
     let productID: String
 
