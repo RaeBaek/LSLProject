@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class NicknameViewModel {
+final class NicknameViewModel: ViewModelType {
     
     struct Input {
         let inputText: ControlProperty<String>

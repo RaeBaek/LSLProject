@@ -9,15 +9,13 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class HomeDetailViewModel: ViewModelType {
+final class HomeDetailViewModel: ViewModelType {
     
     struct Input {
-        let item: BehaviorRelay<PostResponse>
         let commentButtonTap: ControlEvent<Void>
     }
     
     struct Output {
-        let item: BehaviorRelay<PostResponse>
         let commentButtonTap: PublishRelay<Void>
     }
     
@@ -25,13 +23,12 @@ class HomeDetailViewModel: ViewModelType {
     
     func transform(input: Input) -> Output {
         
-        let item = input.item
         let commentButtonTap = PublishRelay<Void>()
-        
+            
         input.commentButtonTap
             .bind(to: commentButtonTap)
             .disposed(by: disposeBag)
         
-        return Output(item: item, commentButtonTap: commentButtonTap)
+        return Output(commentButtonTap: commentButtonTap)
     }
 }

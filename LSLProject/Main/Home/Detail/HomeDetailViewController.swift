@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import SnapKit
+import Kingfisher
 import RxSwift
 import RxCocoa
 
-class HomeDetailViewController: BaseViewController {
+final class HomeDetailViewController: BaseViewController {
     
     private let detailTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -76,7 +78,8 @@ class HomeDetailViewController: BaseViewController {
     
     private func bind() {
         guard let item else { return }
-        let input = HomeDetailViewModel.Input(item: BehaviorRelay(value: item), commentButtonTap: commentButton.rx.tap)
+        
+        let input = HomeDetailViewModel.Input(commentButtonTap: commentButton.rx.tap)
         let output = viewModel.transform(input: input)
         
         output.commentButtonTap
@@ -86,34 +89,16 @@ class HomeDetailViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
-        
-        let comments = [
-            Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
-                    creator: Creator(id: "1번 유저", nick: "sesac_user", profile: ".jpg")),
-            Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
-                    creator: Creator(id: "1번 유저", nick: "sesac_user", profile: ".jpg")),
-            Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
-                    creator: Creator(id: "1번 유저", nick: "sesac_user", profile: ".jpg")),
-            Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
-                    creator: Creator(id: "1번 유저", nick: "sesac_user", profile: ".jpg")),
-            Comment(id: "1번 게시물", content: "너무 멋있어요~~", time: "2023-12-01 22:33:44",
-                    creator: Creator(id: "1번 유저", nick: "sesac_user", profile: ".jpg"))
-        ]
-        
-        Observable.just(comments)
-            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { (row, element, cell) in
-                
-                cell.loadImage(path: element.creator.profile ?? "") { data in
-                    cell.profileImage.image = UIImage(data: data)
+        Observable.just(item.comments)
+            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { row, element, cell in
+                cell.setCell(element: element) {
+                    cell.layoutIfNeeded()
                 }
-                
-                cell.userNickname.text = element.creator.nick
-                cell.mainText.text = element.content
-                
             }
             .disposed(by: disposeBag)
         
-        detailTableView.rx.setDelegate(self).disposed(by: disposeBag)
+        detailTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
         
     }
     

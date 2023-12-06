@@ -10,7 +10,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class HomeDetailCommentCell: BaseTableViewCell {
+final class HomeDetailCommentCell: BaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: HomeDetailCommentCell.identifier)
@@ -125,6 +125,17 @@ class HomeDetailCommentCell: BaseTableViewCell {
     private let repository = NetworkRepository()
     
     private let disposeBag = DisposeBag()
+    
+    func setCell(element: Comment, completion: @escaping () -> ()) {
+        let url = URL(string: APIKey.sesacURL + (element.creator?.profile ?? ""))
+        
+        profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        
+        userNickname.text = element.creator?.nick
+        mainText.text = element.content
+        
+        completion()
+    }
     
     func loadImage(path: String, completion: @escaping (Data) -> Void) {
         

@@ -21,6 +21,8 @@
 		141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141AD7482B173FB900D98D08 /* PostViewController.swift */; };
 		14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14360E8F2B146B30006AA532 /* MainTabBarController.swift */; };
 		143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B405D2B20422700F6A02D /* DeleteButton.swift */; };
+		143B40612B20766100F6A02D /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B40602B20766100F6A02D /* CommentViewController.swift */; };
+		143B40632B20766B00F6A02D /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B40622B20766B00F6A02D /* CommentViewModel.swift */; };
 		143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */; };
 		144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */; };
 		1440275B2B1209880008CBC3 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275A2B1209880008CBC3 /* PostTableViewCell.swift */; };
@@ -96,6 +98,8 @@
 		141AD7482B173FB900D98D08 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		14360E8F2B146B30006AA532 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		143B405D2B20422700F6A02D /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
+		143B40602B20766100F6A02D /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		143B40622B20766B00F6A02D /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		143EBF8A2B18E933007D1A16 /* Extension + UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIImageView.swift"; sourceTree = "<group>"; };
 		144027582B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACRequestInterceptor.swift; sourceTree = "<group>"; };
 		1440275A2B1209880008CBC3 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
@@ -190,6 +194,7 @@
 				14056ECD2B130DBC00C8EDA2 /* Post */,
 				14056ECE2B130DFF00C8EDA2 /* Heart */,
 				14056ECF2B130E0700C8EDA2 /* User */,
+				143B405F2B20762B00F6A02D /* Comment */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -253,6 +258,15 @@
 				14360E8F2B146B30006AA532 /* MainTabBarController.swift */,
 			);
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		143B405F2B20762B00F6A02D /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				143B40602B20766100F6A02D /* CommentViewController.swift */,
+				143B40622B20766B00F6A02D /* CommentViewModel.swift */,
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 		1440275E2B124B480008CBC3 /* Protocol */ = {
@@ -574,6 +588,7 @@
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
+				143B40632B20766B00F6A02D /* CommentViewModel.swift in Sources */,
 				143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */,
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
@@ -593,6 +608,7 @@
 				14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */,
 				144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */,
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
+				143B40612B20766100F6A02D /* CommentViewController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
 				14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */,

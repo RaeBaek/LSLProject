@@ -135,8 +135,8 @@ struct PostResponse: Decodable {
 }
 
 struct Comment: Decodable {
-    let id, content, time: String
-    let creator: Creator
+    let id, content, time: String?
+    let creator: Creator?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
