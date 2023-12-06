@@ -209,42 +209,6 @@ class PostTableViewCell: BaseTableViewCell {
             
             if let image = mainImage.image {
                 let expectedHeight = mainImage.bounds.width * (image.size.height / image.size.width)
-                print("==============", expectedHeight)
-                
-//                profileImage.snp.remakeConstraints {
-//                    $0.top.equalToSuperview().offset(16)
-//                    $0.leading.equalToSuperview().offset(12)
-//                    $0.size.equalTo(38)
-//                }
-//                
-//                userNickname.snp.remakeConstraints {
-//                    $0.top.equalToSuperview().offset(16)
-//                    $0.leading.equalTo(profileImage.snp.trailing).offset(12)
-//                }
-//                
-//                moreButton.snp.remakeConstraints {
-//                    $0.centerY.equalTo(userNickname.snp.centerY)
-//                    $0.trailing.equalToSuperview().inset(12)
-//                    $0.size.equalTo(15)
-//                }
-//                
-//                uploadTime.snp.remakeConstraints {
-//                    $0.centerY.equalTo(userNickname.snp.centerY)
-//                    $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
-//                }
-//                
-//                mainText.snp.remakeConstraints {
-//                    $0.bottom.equalTo(profileImage.snp.bottom)
-//                    $0.leading.equalTo(userNickname.snp.leading)
-//                    $0.trailing.equalToSuperview().offset(-12)
-//                }
-//                
-//                lineBar.snp.remakeConstraints {
-//                    $0.top.equalTo(profileImage.snp.bottom).offset(16)
-//                    $0.centerX.equalTo(profileImage)
-//                    $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
-//                    $0.width.equalTo(2)
-//                }
                 
                 mainImage.layer.borderColor = UIColor.lightGray.cgColor
                 mainImage.layer.borderWidth = 0.5
@@ -258,48 +222,6 @@ class PostTableViewCell: BaseTableViewCell {
                 }
                 invalidateIntrinsicContentSize()
                 
-//                mainImage.snp.updateConstraints {
-//                    $0.height.equalTo(expectedHeight).priority(999)
-//                }
-//                invalidateIntrinsicContentSize()
-//
-//                heartButton.snp.remakeConstraints {
-//                    $0.top.equalTo(mainImage.snp.bottom).offset(12)
-//                    $0.leading.equalTo(statusLabel)
-//                    $0.size.equalTo(22)
-//                }
-//                
-//                commentButton.snp.remakeConstraints {
-//                    $0.top.equalTo(heartButton)
-//                    $0.leading.equalTo(heartButton.snp.trailing).offset(12)
-//                    $0.size.equalTo(22)
-//                }
-//                
-//                repostButton.snp.remakeConstraints {
-//                    $0.top.equalTo(heartButton)
-//                    $0.leading.equalTo(commentButton.snp.trailing).offset(12)
-//                    $0.size.equalTo(22)
-////                    $0.bottom.equalTo(heartButton)
-//                }
-//                
-//                dmButton.snp.remakeConstraints {
-//                    $0.top.equalTo(heartButton)
-//                    $0.leading.equalTo(repostButton.snp.trailing).offset(12)
-//                    $0.size.equalTo(22)
-////                    $0.bottom.equalTo(heartButton)
-//                }
-//                
-//                statusLabel.snp.remakeConstraints {
-//                    $0.top.equalTo(heartButton.snp.bottom).offset(25)
-//                    $0.leading.equalTo(mainText)
-//                }
-//                
-//                bottomLine.snp.remakeConstraints {
-//                    $0.top.equalTo(statusLabel.snp.bottom).offset(25)
-//                    $0.horizontalEdges.equalToSuperview()
-//                    $0.bottom.equalToSuperview()
-//                    $0.height.equalTo(1)
-//                }
             }
         }
         completion()
@@ -359,12 +281,6 @@ class PostTableViewCell: BaseTableViewCell {
             $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
         }
         
-        mainText.snp.makeConstraints {
-            $0.bottom.equalTo(profileImage.snp.bottom)
-            $0.leading.equalTo(userNickname.snp.leading)
-            $0.trailing.equalToSuperview().offset(-12)
-        }
-        
         lineBar.snp.makeConstraints {
             $0.top.equalTo(profileImage.snp.bottom).offset(16)
             $0.centerX.equalTo(profileImage)
@@ -372,8 +288,15 @@ class PostTableViewCell: BaseTableViewCell {
             $0.width.equalTo(2)
         }
         
+        mainText.snp.makeConstraints {
+            $0.top.equalTo(userNickname.snp.bottom).offset(6)
+            $0.leading.equalTo(userNickname.snp.leading)
+            $0.trailing.equalToSuperview().offset(-12)
+        }
+        
+        // postViewController과 같이 초기화시에는 image의 좌우만 걸어두자.
         mainImage.snp.makeConstraints {
-            $0.top.equalTo(mainText.snp.bottom).offset(12)
+            $0.top.equalTo(mainText.snp.bottom).offset(8)
             $0.leading.equalTo(mainText)
             $0.trailing.equalToSuperview().offset(-12)
             $0.bottom.equalTo(heartButton.snp.top).offset(-12)
