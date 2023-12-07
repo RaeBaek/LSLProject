@@ -142,7 +142,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         let result = BehaviorRelay(value: Data())
         
         Observable.of(())
-            .observe(on: SerialDispatchQueueScheduler(qos: .background))
+            .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
             .flatMap { self.repository.requestImage(path: path) }
             .subscribe(onNext: { value in
                 switch value {

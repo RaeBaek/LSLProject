@@ -205,3 +205,26 @@ enum UserPostsError: Int, LoggableError {
         }
     }
 }
+
+enum CommentAddError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case dbServerFailure = 410
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            "필수 값이 누락되었습니다."
+        case .inValidAccessToken:
+            "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        case .dbServerFailure:
+            "댓글을 추가할 게시물을 찾을 수 없습니다."
+        }
+    }
+}

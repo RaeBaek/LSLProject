@@ -19,6 +19,7 @@ enum SeSACAPI {
     case downloadImage(model: DownloadImage)
     case userPosts(model: UserID)
     case myProfile
+    case commentAdd(model: CommentMessage, id: String)
     
 }
 
@@ -47,12 +48,14 @@ extension SeSACAPI: TargetType {
             return "profile/me"
         case .userPosts(let model):
             return "post/user/\(model.id)"
+        case .commentAdd(_, let id):
+            return "post/\(id)/comment"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .signUp, .emailValidation, .login, .postAdd:
+        case .signUp, .emailValidation, .login, .postAdd, .commentAdd:
             return .post
         case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return .get
@@ -68,6 +71,9 @@ extension SeSACAPI: TargetType {
             return .requestJSONEncodable(model)
             
         case .login(let model):
+            return .requestJSONEncodable(model)
+            
+        case .commentAdd(let model, _):
             return .requestJSONEncodable(model)
             
         case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts:
@@ -91,7 +97,6 @@ extension SeSACAPI: TargetType {
                 
                 return .uploadMultipart([title, productId])
             }
-            
         }
     }
     
@@ -104,6 +109,8 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login:
             return ["Content-Type": "application/json", "SesacKey": key]
+        case .commentAdd:
+            return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
         case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:

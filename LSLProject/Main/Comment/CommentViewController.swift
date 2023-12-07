@@ -143,9 +143,11 @@ final class CommentViewController: BaseViewController {
     
     var post: PostResponse?
     
+    var sendDelegate: SendData? 
+    
     private let repository = NetworkRepository()
     
-    private let viewModel = CommentViewModel()
+    private lazy var viewModel = CommentViewModel(post: post!, repository: repository)
     
     private let disposeBag = DisposeBag()
     
@@ -159,7 +161,8 @@ final class CommentViewController: BaseViewController {
     }
     
     @objc func dismissViewController() {
-        dismiss(animated: true)
+        self.dismiss(animated: true)
+        sendDelegate?.sendData(data: Data())
         
     }
     
@@ -173,7 +176,8 @@ final class CommentViewController: BaseViewController {
         
         let input = CommentViewModel.Input(textViewText: myTextView.rx.text.orEmpty,
                                            textViewBeginEditing: myTextView.rx.didBeginEditing,
-                                           textViewEndEditing: myTextView.rx.didEndEditing)
+                                           textViewEndEditing: myTextView.rx.didEndEditing,
+                                           postButtonTap: postButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
@@ -213,18 +217,23 @@ final class CommentViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
+        output.postAddStatus
+            .withUnretained(self)
+            .bind { owner, bool in
+                if bool {
+                    owner.dismissViewController()
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     func setView() {
-        
         guard let post else { return }
         
         if let title = post.title {
-            
             userTextLabel.text = title
             
             if let image = post.image.first {
-                
                 loadImage(path: image) { [weak self] data in
                     guard let self else { return }
                     

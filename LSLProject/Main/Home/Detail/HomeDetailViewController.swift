@@ -11,7 +11,11 @@ import Kingfisher
 import RxSwift
 import RxCocoa
 
-final class HomeDetailViewController: BaseViewController {
+protocol SendData {
+    func sendData(data: Data)
+}
+
+final class HomeDetailViewController: BaseViewController, SendData {
     
     private let detailTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -57,9 +61,19 @@ final class HomeDetailViewController: BaseViewController {
         return view
     }()
     
-    let viewModel = HomeDetailViewModel()
+    private let repository = NetworkRepository()
     
-    let disposeBag = DisposeBag()
+    private lazy var viewModel = HomeDetailViewModel(repository: repository)
+    
+    private let disposeBag = DisposeBag()
+    
+    var sendData: Data? {
+        didSet(newValue) {
+            observeData.accept(newValue)
+        }
+    }
+    
+    lazy var observeData = BehaviorRelay(value: sendData)
     
     var item: PostResponse?
     
@@ -76,10 +90,26 @@ final class HomeDetailViewController: BaseViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print("뷰윌어피얼~")
+        // 현재 API에서는 전체 포스트만 조회가 가능하기 때문에 디테일뷰에 진입했을 때 게시글의 id만 가지고 있다가
+        // 전체 게시글 중에서 동일한 id의 PostResponse를 가져오는 것이다.
+        
+    }
+    
+    func sendData(data: Data) {
+        sendData = data
+//        detailTableView.reloadData()
+    }
+    
     private func bind() {
         guard let item else { return }
         
-        let input = HomeDetailViewModel.Input(commentButtonTap: commentButton.rx.tap)
+        let input = HomeDetailViewModel.Input(sendData: observeData,
+                                              contentID: BehaviorRelay(value: item.id),
+                                              commentButtonTap: commentButton.rx.tap)
         let output = viewModel.transform(input: input)
         
         output.commentButtonTap
@@ -89,13 +119,22 @@ final class HomeDetailViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
-        Observable.just(item.comments)
+        output.postResponse
+            .map { $0.comments }
             .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { row, element, cell in
                 cell.setCell(element: element) {
                     cell.layoutIfNeeded()
                 }
             }
             .disposed(by: disposeBag)
+        
+//        Observable.just(item.comments)
+//            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { row, element, cell in
+//                cell.setCell(element: element) {
+//                    cell.layoutIfNeeded()
+//                }
+//            }
+//            .disposed(by: disposeBag)
         
         detailTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
@@ -124,6 +163,7 @@ final class HomeDetailViewController: BaseViewController {
         let nav = UINavigationController(rootViewController: vc)
         
         vc.post = item
+        vc.sendDelegate = self
         
         self.present(nav, animated: true)
     }

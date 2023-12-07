@@ -63,6 +63,10 @@ struct UserID: Encodable {
     let id: String
 }
 
+struct CommentMessage: Encodable {
+    let content: String
+}
+
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String

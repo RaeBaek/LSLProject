@@ -62,4 +62,8 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .userPosts(model: UserID(id: id)))
     }
     
+    func requestCommentAdd(id: String, comment: String) -> Single<NetworkResult<Comment>> {
+        APIManager.shared.request(target: .commentAdd(model: CommentMessage(content: comment), id: id))
+    }
+    
 }

@@ -36,4 +36,6 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestUserPosts(id: String) -> Single<NetworkResult<PostResponses>>
     
+    func requestCommentAdd(id: String, comment: String) -> Single<NetworkResult<Comment>>
+    
 }
