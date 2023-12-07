@@ -12,6 +12,8 @@ final class ProfileImageView: UIImageView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.image = UIImage(systemName: "person")
+        
     }
     
     required init?(coder: NSCoder) {
@@ -22,8 +24,11 @@ final class ProfileImageView: UIImageView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        layer.cornerRadius = self.layer.frame.width / 2
-        clipsToBounds = true
+        self.layer.cornerRadius = self.layer.frame.width / 2
+        self.clipsToBounds = true
+        self.contentMode = .scaleAspectFit
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderWidth = 0.5
         
     }
     

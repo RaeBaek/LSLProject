@@ -30,49 +30,15 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         return view
     }()
     
-    var profileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleToFill
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        return view
-    }()
+    var profileImage = ProfileImageView(frame: .zero)
     
-    var userNickname = {
-        let view = UILabel()
-        view.text = "100_r_h"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        return view
-    }()
+    var userNickname = NicknameLabel(frame: .zero)
     
-    var uploadTime = {
-        let view = UILabel()
-        view.text = "3시간"
-        view.textColor = .lightGray
-        view.font = .systemFont(ofSize: 13, weight: .regular)
-        return view
-    }()
+    var uploadTime = UploadTimeLabel(frame: .zero)
     
-    private let moreButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    private let moreButton = MoreButton(frame: .zero)
     
-    var mainText = {
-        let view = UILabel()
-        view.text = "업로드 완료!"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        return view
-    }()
+    var mainText = MainTitle(frame: .zero)
     
     private let heartButton = {
         let view = UIButton()

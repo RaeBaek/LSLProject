@@ -18,13 +18,7 @@ class SearchTableViewCell: BaseTableViewCell {
     }
     
     
-    lazy var profileImageView = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleToFill
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 1
-        return view
-    }()
+    lazy var profileImageView = ProfileImageView(frame: .zero)
     
     let userIDLabel = {
         let view = UILabel()

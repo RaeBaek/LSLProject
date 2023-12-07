@@ -66,7 +66,6 @@ final class HomeDetailViewModel: ViewModelType {
             }
             .disposed(by: disposeBag)
         
-        
         return Output(commentButtonTap: commentButtonTap,
                       postResponse: postResponse)
     }

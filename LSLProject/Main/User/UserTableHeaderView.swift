@@ -53,13 +53,7 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     }()
     
     
-    let profileImageView = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleAspectFit
-        view.layer.borderWidth = 0.5
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        return view
-    }()
+    let profileImageView = ProfileImageView(frame: .zero)
     
     let profileStackView = {
         let view = UIStackView()

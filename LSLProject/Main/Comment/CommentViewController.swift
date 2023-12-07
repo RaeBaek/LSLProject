@@ -31,85 +31,25 @@ final class CommentViewController: BaseViewController {
         return view
     }()
     
-    let userProfileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleAspectFit
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        view.image = UIImage(systemName: "star")
-        return view
-    }()
+    let userProfileImage = ProfileImageView(frame: .zero)
     
-    var userNickname = {
-        let view = UILabel()
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        view.textColor = .black
-        view.text = "100_r_h"
-        return view
-    }()
+    var userNickname = NicknameLabel(frame: .zero)
     
-    private let userLineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray5
-        return view
-    }()
+    private let userLineBar = CustomLineBar(frame: .zero)
     
-    let userTextLabel = {
-        let view = UILabel()
-        view.textColor = .black
-        view.text = "테스트테스트"
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        return view
-    }()
+    let userTextLabel = MainTitle(frame: .zero)
     
-    let userImageView = {
-        let view = UIImageView()
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
-        return view
-    }()
+    let userImageView = MainImageView(frame: .zero)
     
-    let myProfileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleAspectFit
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        return view
-    }()
+    let myProfileImage = ProfileImageView(frame: .zero)
     
-    var myNickname = {
-        let view = UILabel()
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        view.textColor = .black
-        view.text = "100_r_h"
-        return view
-    }()
+    var myNickname = NicknameLabel(frame: .zero)
     
     let startMessage = "@@@@님에게 답글 남기기..."
     
-    lazy var myTextView = {
-        let view = UITextView()
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.text = startMessage
-        view.textColor = .lightGray
-        view.sizeToFit()
-        view.isScrollEnabled = false
-        view.textContainer.lineFragmentPadding = 0
-        view.textContainerInset = .zero
-        return view
-    }()
+    lazy var myTextView = CustomTextView(frame: .zero, textContainer: .none)
     
-    private let myLineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray5
-        return view
-    }()
+    private let myLineBar = CustomLineBar(frame: .zero)
     
     let toolView = {
         let view = UIView()
@@ -153,6 +93,8 @@ final class CommentViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        myTextView.text = StartMessage.post.placeholder
         
         setNavigationBar()
         bind()

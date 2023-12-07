@@ -24,66 +24,19 @@ class PostTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var profileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleAspectFit
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        return view
-    }()
+    var profileImage = ProfileImageView(frame: .zero)
     
-    var userNickname = {
-        let view = UILabel()
-        view.text = "100_r_h"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        return view
-    }()
+    var userNickname = NicknameLabel(frame: .zero)
     
-    var uploadTime = {
-        let view = UILabel()
-        view.text = "3시간"
-        view.textColor = .lightGray
-        view.font = .systemFont(ofSize: 13, weight: .regular)
-        return view
-    }()
+    var uploadTime = UploadTimeLabel(frame: .zero)
     
-    private let moreButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 15)
-        let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    private let moreButton = MoreButton(frame: .zero)
     
-    var mainText = {
-        let view = UILabel()
-        view.text = "업로드 완료!"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-//        view.setContentHuggingPriority(.init(rawValue: 251), for: .vertical)
-        return view
-    }()
+    var mainText = MainTitle(frame: .zero)
     
-    var mainImage = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFit
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
-        return view
-    }()
+    var mainImage = MainImageView(frame: .zero)
     
-    private let lineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray5
-        return view
-    }()
+    private let lineBar = CustomLineBar(frame: .zero)
     
     private let heartButton = {
         let view = UIButton()

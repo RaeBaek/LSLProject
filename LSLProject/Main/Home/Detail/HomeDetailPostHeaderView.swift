@@ -24,107 +24,24 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var profileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleToFill
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        return view
-    }()
+    lazy var profileImage = ProfileImageView(frame: .zero)
     
-    var userNickname = {
-        let view = UILabel()
-        view.text = "100_r_h"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        return view
-    }()
+    var userNickname = NicknameLabel(frame: .zero)
     
-    var uploadTime = {
-        let view = UILabel()
-        view.text = "3시간"
-        view.textColor = .lightGray
-        view.font = .systemFont(ofSize: 13, weight: .regular)
-        return view
-    }()
+    var uploadTime = UploadTimeLabel(frame: .zero)
     
-    private let moreButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 15)
-        let image = UIImage(systemName: "ellipsis", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    private let moreButton = MoreButton(frame: .zero)
     
-    var mainText = {
-        let view = UILabel()
-        view.text = "업로드 완료!"
-        view.textColor = .black
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        return view
-    }()
+    var mainText = MainTitle(frame: .zero)
     
-    var mainImage = {
-        let view = UIImageView()
-        view.contentMode = .scaleToFill
-        view.layer.cornerRadius = 10
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        view.clipsToBounds = true
-        return view
-    }()
+    var mainImage = MainImageView(frame: .zero)
     
-    private let lineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray4
-        return view
-    }()
+    private let lineBar = CustomLineBar(frame: .zero)
     
-    private let heartButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let commentButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "message", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let repostButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "repeat", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let dmButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "paperplane", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    private let heartButton = CustomActiveButton(frame: .zero)
+    private let commentButton = CustomActiveButton(frame: .zero)
+    private let repostButton = CustomActiveButton(frame: .zero)
+    private let dmButton = CustomActiveButton(frame: .zero)
     
     var statusLabel = {
         let view = UILabel()
@@ -145,20 +62,161 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         return requestBody
     }
     
-    func setHeaderView(item: PostResponse) {
+    func setHeaderView(item: PostResponse, completion: @escaping () -> ()) {
         
         let url = URL(string: APIKey.sesacURL + (item.creator.profile ?? ""))
         
         profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
         
-        loadImage(path: item.image.first ?? "") { [weak self] data in
-            guard let self else { return }
-            self.mainImage.image = UIImage(data: data.value)
-        }
-        
         userNickname.text = item.creator.nick
-        mainText.text = item.title
         
+        // 현재 서버에 올라가 있는 제목이 없는 것! 처럼 보이는 게시물들은
+        // 제목이 빈값이 아닌 "" 이기때문에 없는 것 처럼 보이며
+        // 로직을 수정해야함!!!!!!
+        if let title = item.title {
+            mainText.text = title
+            
+            if let image = item.image.first {
+                loadImage(path: image) { [weak self] data in
+                    guard let self else { return }
+                    
+                    DispatchQueue.main.async {
+                        self.setImage(data: data.value) { data in
+                            
+                            self.mainText.snp.remakeConstraints {
+                                $0.top.equalTo(self.profileImage.snp.bottom).offset(12)
+                                $0.horizontalEdges.equalToSuperview().inset(12)
+                            }
+                            
+                            self.mainImage.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainText.snp.bottom).offset(12)
+                                $0.horizontalEdges.equalToSuperview().inset(12)
+                                $0.height.equalTo(data).priority(999)
+                            }
+                            
+                            self.heartButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainImage.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.mainImage)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.commentButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.heartButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.repostButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.commentButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.dmButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.repostButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.statusLabel.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.heartButton)
+                                $0.bottom.equalToSuperview().offset(-12)
+                            }
+                            completion()
+                        }
+                    }
+                }
+            } else {
+                mainText.snp.remakeConstraints {
+                    $0.top.equalTo(profileImage.snp.bottom).offset(12)
+                    $0.horizontalEdges.equalToSuperview().inset(12)
+                }
+                
+                mainImage.snp.removeConstraints()
+                
+                heartButton.snp.remakeConstraints {
+                    $0.top.equalTo(mainText.snp.bottom).offset(12)
+                    $0.leading.equalTo(mainText)
+                    $0.size.equalTo(22)
+                }
+                
+                commentButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                repostButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                dmButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                statusLabel.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton.snp.bottom).offset(12)
+                    $0.leading.equalTo(heartButton)
+                    $0.bottom.equalToSuperview().offset(-12)
+                }
+                completion()
+            }
+        } else {
+            if let image = item.image.first {
+                loadImage(path: image) { [weak self] data in
+                    guard let self else { return }
+                    
+                    DispatchQueue.main.async {
+                        self.setImage(data: data.value) { data in
+                            
+                            self.mainText.snp.removeConstraints()
+                            
+                            self.mainImage.snp.remakeConstraints {
+                                $0.top.equalTo(self.profileImage.snp.bottom).offset(-12)
+                                $0.horizontalEdges.equalToSuperview().inset(12)
+                                $0.height.equalTo(data).priority(999)
+                            }
+                            
+                            self.heartButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainImage.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.mainImage)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.commentButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.heartButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.repostButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.commentButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.dmButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.repostButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.statusLabel.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.heartButton)
+                                $0.bottom.equalToSuperview().offset(-12)
+                            }
+                            completion()
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
@@ -181,11 +239,37 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         
     }
     
+    private func setImage(data: Data?, completion: @escaping (CGFloat) -> ()) {
+        
+        mainImage.image = nil
+        
+        if let data = data {
+            // Set image using Data
+            mainImage.image = UIImage(data: data)
+            mainImage.contentMode = .scaleAspectFit
+            
+            if let image = mainImage.image {
+                let expectedHeight = mainImage.bounds.width * (image.size.height / image.size.width)
+                
+                mainImage.layer.borderColor = UIColor.lightGray.cgColor
+                mainImage.layer.borderWidth = 0.5
+                
+                completion(expectedHeight)
+                
+            }
+        }
+    }
+    
     private func configureView() {
         
         [profileImage, userNickname, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
             contentView.addSubview($0)
         }
+        
+        heartButton.setSymbolImage(image: "heart", size: 22)
+        commentButton.setSymbolImage(image: "message", size: 22)
+        repostButton.setSymbolImage(image: "repeat", size: 22)
+        dmButton.setSymbolImage(image: "paperplane", size: 22)
         
     }
     
@@ -214,43 +298,43 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         }
         
         mainText.snp.makeConstraints {
-            $0.top.equalTo(profileImage.snp.bottom).offset(12)
+//            $0.top.equalTo(profileImage.snp.bottom).offset(12)
             $0.horizontalEdges.equalToSuperview().inset(12)
         }
         
         mainImage.snp.makeConstraints {
-            $0.top.equalTo(mainText.snp.bottom).offset(12)
+//            $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.horizontalEdges.equalToSuperview().inset(12)
-            $0.height.equalTo(500)
+//            $0.height.equalTo(500)
         }
         
         heartButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(mainImage.snp.leading)
+            $0.top.equalTo(profileImage.snp.bottom).offset(12)
+            $0.leading.equalTo(profileImage)
             $0.size.equalTo(22)
         }
         
         commentButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(heartButton)
             $0.leading.equalTo(heartButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         repostButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(heartButton)
             $0.leading.equalTo(commentButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         dmButton.snp.makeConstraints {
-            $0.top.equalTo(mainImage.snp.bottom).offset(12)
+            $0.top.equalTo(heartButton)
             $0.leading.equalTo(repostButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
         }
         
         statusLabel.snp.makeConstraints {
             $0.top.equalTo(heartButton.snp.bottom).offset(12)
-            $0.leading.equalTo(heartButton.snp.leading)
+            $0.leading.equalTo(heartButton)
             $0.bottom.equalToSuperview().offset(-12)
         }
         

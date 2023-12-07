@@ -39,43 +39,17 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
-    let profileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.contentMode = .scaleAspectFit
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 0.5
-        return view
-    }()
+    let profileImage = ProfileImageView(frame: .zero)
     
-    var userNickname = {
-        let view = UILabel()
-        view.font = .systemFont(ofSize: 14, weight: .semibold)
-        view.textColor = .black
-        view.text = "100_r_h"
-        return view
-    }()
+    var userNickname = NicknameLabel(frame: .zero)
     
     let startMessage = "스레드를 시작하세요..."
     
-    lazy var mainTextView = {
-        let view = UITextView()
-        view.font = .systemFont(ofSize: 14, weight: .regular)
-        view.text = startMessage
-        view.textColor = .lightGray
-        view.sizeToFit()
-        view.isScrollEnabled = false
-        view.textContainer.lineFragmentPadding = 0
-        view.textContainerInset = .zero
-        return view
-    }()
     
-    private let lineBar = {
-        let view = UIView()
-        view.layer.cornerRadius = 1
-        view.clipsToBounds = true
-        view.backgroundColor = .systemGray5
-        return view
-    }()
+    //확인!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    lazy var mainTextView = CustomTextView(frame: .zero)
+    
+    private let lineBar = CustomLineBar(frame: .zero)
     
     let myImageView = {
         let view = UIImageView()
@@ -189,6 +163,8 @@ final class PostViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        mainTextView.text = StartMessage.comment.placeholder
+        
         setNavigationBar()
         bind()
         

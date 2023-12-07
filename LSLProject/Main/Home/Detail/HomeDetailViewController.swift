@@ -40,12 +40,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
         return view
     }()
     
-    let myProfileImage = {
-        let view = ProfileImageView(frame: .zero)
-        view.image = UIImage(systemName: "star")
-        view.backgroundColor = .systemYellow
-        return view
-    }()
+    let myProfileImage = ProfileImageView(frame: .zero)
     
     let commentTitle = {
         let view = UILabel()
@@ -93,10 +88,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("뷰윌어피얼~")
-        // 현재 API에서는 전체 포스트만 조회가 가능하기 때문에 디테일뷰에 진입했을 때 게시글의 id만 가지고 있다가
-        // 전체 게시글 중에서 동일한 id의 PostResponse를 가져오는 것이다.
-        
     }
     
     func sendData(data: Data) {
@@ -127,14 +118,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
                 }
             }
             .disposed(by: disposeBag)
-        
-//        Observable.just(item.comments)
-//            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { row, element, cell in
-//                cell.setCell(element: element) {
-//                    cell.layoutIfNeeded()
-//                }
-//            }
-//            .disposed(by: disposeBag)
         
         detailTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
@@ -223,7 +206,14 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item else { return UIView() }
         
-        header.setHeaderView(item: item)
+        header.setHeaderView(item: item) { [weak self] in
+            guard let self else { return }
+            UIView.setAnimationsEnabled(false)
+            self.detailTableView.beginUpdates()
+            header.layoutIfNeeded()
+            self.detailTableView.endUpdates()
+            UIView.setAnimationsEnabled(true)
+        }
         
         return header
     }

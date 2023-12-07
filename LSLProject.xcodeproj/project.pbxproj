@@ -18,6 +18,13 @@
 		14056EE32B1323C300C8EDA2 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE22B1323C300C8EDA2 /* UserViewModel.swift */; };
 		14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */; };
 		14056EE82B13716000C8EDA2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 14056EE72B13716000C8EDA2 /* RxDataSources */; };
+		1416D2122B21F06E009FDC56 /* MoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2112B21F06E009FDC56 /* MoreButton.swift */; };
+		1416D2142B21F4C5009FDC56 /* NicknameLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2132B21F4C5009FDC56 /* NicknameLabel.swift */; };
+		1416D2162B21F793009FDC56 /* UploadTimeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2152B21F793009FDC56 /* UploadTimeLabel.swift */; };
+		1416D2182B21F839009FDC56 /* MainTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2172B21F839009FDC56 /* MainTitle.swift */; };
+		1416D21A2B21FA6D009FDC56 /* MainImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2192B21FA6D009FDC56 /* MainImageView.swift */; };
+		1416D21C2B21FB6A009FDC56 /* CustomLineBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D21B2B21FB6A009FDC56 /* CustomLineBar.swift */; };
+		1416D21E2B21FCE9009FDC56 /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D21D2B21FCE9009FDC56 /* CustomTextView.swift */; };
 		141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141AD7482B173FB900D98D08 /* PostViewController.swift */; };
 		14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14360E8F2B146B30006AA532 /* MainTabBarController.swift */; };
 		143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B405D2B20422700F6A02D /* DeleteButton.swift */; };
@@ -48,6 +55,7 @@
 		146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */; };
 		146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */; };
 		146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */; };
+		1479BFF52B221A8F00C6A383 /* CustomActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */; };
 		147CC55D2B03C99B00D7DA7C /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 147CC55C2B03C99B00D7DA7C /* Moya */; };
 		147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147CC55E2B03CF4800D7DA7C /* APIModel.swift */; };
 		147CC5612B03D0B800D7DA7C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147CC5602B03D0B800D7DA7C /* API.swift */; };
@@ -95,6 +103,13 @@
 		14056EE02B1323B200C8EDA2 /* HeartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartViewModel.swift; sourceTree = "<group>"; };
 		14056EE22B1323C300C8EDA2 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
+		1416D2112B21F06E009FDC56 /* MoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButton.swift; sourceTree = "<group>"; };
+		1416D2132B21F4C5009FDC56 /* NicknameLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameLabel.swift; sourceTree = "<group>"; };
+		1416D2152B21F793009FDC56 /* UploadTimeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTimeLabel.swift; sourceTree = "<group>"; };
+		1416D2172B21F839009FDC56 /* MainTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTitle.swift; sourceTree = "<group>"; };
+		1416D2192B21FA6D009FDC56 /* MainImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainImageView.swift; sourceTree = "<group>"; };
+		1416D21B2B21FB6A009FDC56 /* CustomLineBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLineBar.swift; sourceTree = "<group>"; };
+		1416D21D2B21FCE9009FDC56 /* CustomTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
 		141AD7482B173FB900D98D08 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		14360E8F2B146B30006AA532 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		143B405D2B20422700F6A02D /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
@@ -125,6 +140,7 @@
 		146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewModel.swift; sourceTree = "<group>"; };
 		146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewModel.swift; sourceTree = "<group>"; };
+		1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActiveButton.swift; sourceTree = "<group>"; };
 		147CC55E2B03CF4800D7DA7C /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
 		147CC5602B03D0B800D7DA7C /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		149561F82B0216ED006CED34 /* LSLProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LSLProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +197,14 @@
 				14056EC82B1306BA00C8EDA2 /* ProfileImageView.swift */,
 				14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */,
 				143B405D2B20422700F6A02D /* DeleteButton.swift */,
+				1416D2112B21F06E009FDC56 /* MoreButton.swift */,
+				1416D2132B21F4C5009FDC56 /* NicknameLabel.swift */,
+				1416D2152B21F793009FDC56 /* UploadTimeLabel.swift */,
+				1416D2172B21F839009FDC56 /* MainTitle.swift */,
+				1416D2192B21FA6D009FDC56 /* MainImageView.swift */,
+				1416D21B2B21FB6A009FDC56 /* CustomLineBar.swift */,
+				1416D21D2B21FCE9009FDC56 /* CustomTextView.swift */,
+				1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -574,6 +598,7 @@
 			files = (
 				146B16E22B03AE5000073B91 /* APIManager.swift in Sources */,
 				14F8AB1C2B0B553500493AE1 /* NetworkRepository.swift in Sources */,
+				1416D2162B21F793009FDC56 /* UploadTimeLabel.swift in Sources */,
 				14056ED72B130EA100C8EDA2 /* UserViewController.swift in Sources */,
 				14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */,
 				141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */,
@@ -585,6 +610,7 @@
 				146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */,
 				146B16E02B0388EC00073B91 /* EmailAddressViewModel.swift in Sources */,
 				14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */,
+				1479BFF52B221A8F00C6A383 /* CustomActiveButton.swift in Sources */,
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
 				14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
@@ -592,16 +618,21 @@
 				143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */,
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
+				1416D2142B21F4C5009FDC56 /* NicknameLabel.swift in Sources */,
+				1416D2182B21F839009FDC56 /* MainTitle.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
 				14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */,
 				144B80AB2B09173600993347 /* HomeViewController.swift in Sources */,
 				14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */,
+				1416D21E2B21FCE9009FDC56 /* CustomTextView.swift in Sources */,
 				14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */,
+				1416D2122B21F06E009FDC56 /* MoreButton.swift in Sources */,
 				14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */,
 				1499057E2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift in Sources */,
 				1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */,
 				149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */,
 				14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */,
+				1416D21C2B21FB6A009FDC56 /* CustomLineBar.swift in Sources */,
 				147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */,
 				14056EDB2B13220B00C8EDA2 /* ViewModelType.swift in Sources */,
 				1440275D2B1209C40008CBC3 /* BaseTableViewCell.swift in Sources */,
@@ -613,6 +644,7 @@
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
 				14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */,
 				143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */,
+				1416D21A2B21FA6D009FDC56 /* MainImageView.swift in Sources */,
 				14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */,
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
