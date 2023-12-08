@@ -31,8 +31,14 @@ class PostTableViewCell: BaseTableViewCell {
     var profileImage = ProfileImageView(frame: .zero)
     var userNickname = NicknameLabel(frame: .zero)
     var uploadTime = UploadTimeLabel(frame: .zero)
-    private let moreButton = MoreButton(frame: .zero)
-    var mainText = MainTitle(frame: .zero)
+    
+    lazy var moreButton = {
+        let view = MoreButton(frame: .zero)
+        view.addTarget(self, action: #selector(self.moreButtonTapped), for: .touchUpInside)
+        return view
+    }()
+    
+    var mainText =  MainTitle(frame: .zero)
     var mainImage = MainImageView(frame: .zero)
     private let lineBar = CustomLineBar(frame: .zero)
     private let heartButton = CustomActiveButton(frame: .zero)
@@ -58,6 +64,8 @@ class PostTableViewCell: BaseTableViewCell {
     
     private let disposeBag = DisposeBag()
     
+    var buttonTapped: (() -> Void)?
+    
     var element: PostResponse?
     
     lazy var status = Observable.of(element)
@@ -67,7 +75,7 @@ class PostTableViewCell: BaseTableViewCell {
         
         // 재사용될 때의 상황을 고려해야함!
         mainText.text = nil
-        
+        buttonTapped = nil
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
@@ -123,6 +131,10 @@ class PostTableViewCell: BaseTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+    }
+    
+    @objc func moreButtonTapped() {
+        buttonTapped?()
     }
     
     func setCell(row: Int, element: PostResponse, completion: @escaping () -> ()) {

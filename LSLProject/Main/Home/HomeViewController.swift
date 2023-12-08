@@ -80,7 +80,10 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func bind() {
-        let input = HomeViewModel.Input(userID: BehaviorRelay(value: UserDefaultsManager.id), allPost: allPost, withdraw: withdrawButton.rx.tap)
+        let input = HomeViewModel.Input(userID: BehaviorRelay(value: UserDefaultsManager.id), 
+                                        allPost: allPost,
+                                        withdraw: withdrawButton.rx.tap)
+        
         let output = viewModel.transform(input: input)
         
         output.items
@@ -89,7 +92,9 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 self.model.next = value.1.nextCursor
                 return value.1.data
             }
-            .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { row, element, cell in
+            .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+                guard let self else { return }
+                
                 cell.setCell(row: row, element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
@@ -97,6 +102,21 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                     self.homeTableView.endUpdates()
                     UIView.setAnimationsEnabled(true)
                 }
+                
+                let input = HomeViewModel.CellButtonInput(postID: BehaviorRelay(value: element.id),
+                                                          moreButtonTap: cell.moreButton.rx.tap)
+                let output = self.viewModel.buttonTransform(input: input)
+                
+                output.postStatus
+                    .bind { value in
+                        if value {
+                            print("======================================내가 쓴 글입니다.")
+                            self.presentModalBtnTap()
+                        } else {
+                            print("======================================다른 유저가 쓴 글입니다.")
+                        }
+                    }
+                    .disposed(by: self.disposeBag)
             }
             .disposed(by: disposeBag)
         
@@ -121,6 +141,37 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
             }
             .disposed(by: disposeBag)
         
+    }
+    
+    private func presentModalBtnTap() {
+        
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemYellow
+        
+        vc.modalPresentationStyle = .pageSheet
+        
+        if let sheet = vc.sheetPresentationController {
+            
+            //지원할 크기 지정
+            sheet.detents = [
+                .custom { _ in
+                    return 300
+                }
+            ]
+            //크기 변하는거 감지
+            sheet.delegate = self
+            
+            //시트 상단에 그래버 표시 (기본 값은 false)
+            sheet.prefersGrabberVisible = true
+            
+            //처음 크기 지정 (기본 값은 가장 작은 크기)
+            //sheet.selectedDetentIdentifier = .large
+            
+            //뒤 배경 흐리게 제거 (기본 값은 모든 크기에서 배경 흐리게 됨)
+            //sheet.largestUndimmedDetentIdentifier = .medium
+        }
+        
+        present(vc, animated: true, completion: nil)
     }
     
     private func nextDetailViewController(item: PostResponse) {
@@ -168,4 +219,8 @@ extension HomeViewController: UITableViewDelegate {
         
         return header
     }
+}
+
+extension HomeViewController: UISheetPresentationControllerDelegate {
+    
 }

@@ -18,6 +18,8 @@
 		14056EE32B1323C300C8EDA2 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE22B1323C300C8EDA2 /* UserViewModel.swift */; };
 		14056EE52B13711100C8EDA2 /* HomeTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */; };
 		14056EE82B13716000C8EDA2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 14056EE72B13716000C8EDA2 /* RxDataSources */; };
+		14102F4E2B237676002D4A8B /* MyPostBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14102F4D2B237676002D4A8B /* MyPostBottomSheet.swift */; };
+		14102F502B237680002D4A8B /* UserPostBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14102F4F2B237680002D4A8B /* UserPostBottomSheet.swift */; };
 		1416D2122B21F06E009FDC56 /* MoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2112B21F06E009FDC56 /* MoreButton.swift */; };
 		1416D2142B21F4C5009FDC56 /* NicknameLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2132B21F4C5009FDC56 /* NicknameLabel.swift */; };
 		1416D2162B21F793009FDC56 /* UploadTimeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1416D2152B21F793009FDC56 /* UploadTimeLabel.swift */; };
@@ -103,6 +105,8 @@
 		14056EE02B1323B200C8EDA2 /* HeartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartViewModel.swift; sourceTree = "<group>"; };
 		14056EE22B1323C300C8EDA2 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		14056EE42B13711100C8EDA2 /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
+		14102F4D2B237676002D4A8B /* MyPostBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostBottomSheet.swift; sourceTree = "<group>"; };
+		14102F4F2B237680002D4A8B /* UserPostBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostBottomSheet.swift; sourceTree = "<group>"; };
 		1416D2112B21F06E009FDC56 /* MoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButton.swift; sourceTree = "<group>"; };
 		1416D2132B21F4C5009FDC56 /* NicknameLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameLabel.swift; sourceTree = "<group>"; };
 		1416D2152B21F793009FDC56 /* UploadTimeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTimeLabel.swift; sourceTree = "<group>"; };
@@ -231,6 +235,7 @@
 				1440275A2B1209880008CBC3 /* PostTableViewCell.swift */,
 				144B80AA2B09173600993347 /* HomeViewController.swift */,
 				14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */,
+				14102F4C2B23762B002D4A8B /* BottomSheet */,
 				14648C872B19F00600C3A9D2 /* Detail */,
 			);
 			path = Home;
@@ -274,6 +279,15 @@
 				14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */,
 			);
 			path = User;
+			sourceTree = "<group>";
+		};
+		14102F4C2B23762B002D4A8B /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				14102F4D2B237676002D4A8B /* MyPostBottomSheet.swift */,
+				14102F4F2B237680002D4A8B /* UserPostBottomSheet.swift */,
+			);
+			path = BottomSheet;
 			sourceTree = "<group>";
 		};
 		14360E8E2B146B15006AA532 /* TabBar */ = {
@@ -651,9 +665,11 @@
 				14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */,
 				14FCF9162B0F28D1002AE655 /* TokenCheckViewController.swift in Sources */,
 				149561FC2B0216ED006CED34 /* AppDelegate.swift in Sources */,
+				14102F4E2B237676002D4A8B /* MyPostBottomSheet.swift in Sources */,
 				14056EDD2B13239100C8EDA2 /* SearchViewModel.swift in Sources */,
 				14056EE32B1323C300C8EDA2 /* UserViewModel.swift in Sources */,
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
+				14102F502B237680002D4A8B /* UserPostBottomSheet.swift in Sources */,
 				145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */,
 				144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */,
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,

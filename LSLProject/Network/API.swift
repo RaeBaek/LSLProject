@@ -16,6 +16,7 @@ enum SeSACAPI {
     case withdraw
     case allPost(model: AllPost)
     case postAdd(model: PostAdd)
+    case postDel(model: PostID)
     case downloadImage(model: DownloadImage)
     case userPosts(model: UserID)
     case myProfile
@@ -42,6 +43,8 @@ extension SeSACAPI: TargetType {
             return "withdraw"
         case .allPost, .postAdd:
             return "post"
+        case .postDel(let model):
+            return "post/\(model.id)"
         case .downloadImage(let model):
             return model.path
         case .myProfile:
@@ -59,6 +62,8 @@ extension SeSACAPI: TargetType {
             return .post
         case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return .get
+        case .postDel:
+            return .delete
         }
     }
     
@@ -76,7 +81,7 @@ extension SeSACAPI: TargetType {
         case .commentAdd(let model, _):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel:
             return .requestPlain
             
         case .allPost(let model):
@@ -113,7 +118,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

@@ -63,6 +63,10 @@ struct UserID: Encodable {
     let id: String
 }
 
+struct PostID: Encodable {
+    let id: String?
+}
+
 struct CommentMessage: Encodable {
     let content: String
 }
@@ -177,5 +181,13 @@ struct Follow: Decodable {
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case nick, profile
+    }
+}
+
+struct PostDelete: Decodable {
+    let id: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
     }
 }

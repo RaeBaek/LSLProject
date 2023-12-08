@@ -17,9 +17,18 @@ final class HomeViewModel: ViewModelType {
         let withdraw: ControlEvent<Void>
     }
     
+    struct CellButtonInput {
+        let postID: BehaviorRelay<String>
+        let moreButtonTap: ControlEvent<Void>
+    }
+    
     struct Output {
         let items: PublishRelay<PostResponses>
         let check: PublishRelay<Bool>
+    }
+    
+    struct CellButtonOutput {
+        let postStatus: PublishRelay<Bool>
     }
     
     private let repository: NetworkRepository
@@ -58,6 +67,8 @@ final class HomeViewModel: ViewModelType {
             .disposed(by: disposeBag)
         
         
+        // 회원탈퇴에 관한 코드
+        // 추후 리팩토링 예정
         statusCode
             .skip(1)
             .compactMap { $0 }
@@ -107,6 +118,31 @@ final class HomeViewModel: ViewModelType {
             .disposed(by: disposeBag)
         
         return Output(items: items, check: check)
+    }
+    
+    func buttonTransform(input: CellButtonInput) -> CellButtonOutput {
+        
+        let postStatus = PublishRelay<Bool>()
+        
+        input.moreButtonTap
+            .flatMap {
+                self.repository.requestUserPosts(id: UserDefaultsManager.id)
+            }
+            .subscribe(onNext: { result in
+                switch result {
+                case .success(let data):
+                    postStatus.accept(data.data.map { $0.id }.contains(input.postID.value))
+                case .failure(let error):
+                    guard let userPostsError = UserPostsError(rawValue: error.rawValue) else {
+                        print("유저별 작성한 포스트 조회 실패.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 유저별 작성한 포스트 조회 에러 \(userPostsError.message)")
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        return CellButtonOutput(postStatus: postStatus)
     }
     
 }
