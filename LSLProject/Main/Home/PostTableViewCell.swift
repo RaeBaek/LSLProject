@@ -66,15 +66,79 @@ class PostTableViewCell: BaseTableViewCell {
         super.prepareForReuse()
         
         // 재사용될 때의 상황을 고려해야함!
+        
+        mainText.text = nil
+        
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
+        
+        profileImage.snp.remakeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(38)
+        }
+        
+        userNickname.snp.remakeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
+        }
+        
+        moreButton.snp.remakeConstraints {
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.size.equalTo(15)
+        }
+        
+        uploadTime.snp.remakeConstraints {
+            $0.centerY.equalTo(userNickname.snp.centerY)
+            $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
+        }
 
-        mainImage.snp.remakeConstraints {
-            $0.top.equalTo(mainText.snp.bottom).offset(12)
-            $0.leading.equalTo(mainText)
+        mainText.snp.remakeConstraints {
+            $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
-            $0.bottom.equalTo(heartButton.snp.top).offset(-12)
+        }
+        
+        mainImage.snp.remakeConstraints {
+            $0.leading.equalTo(userNickname)
+            $0.trailing.equalToSuperview().offset(-12)
+        }
+        
+        heartButton.snp.remakeConstraints {
+            $0.top.equalTo(userNickname.snp.bottom).offset(12)
+            $0.leading.equalTo(userNickname)
+            $0.size.equalTo(22)
+        }
+        
+        commentButton.snp.remakeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        repostButton.snp.remakeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        dmButton.snp.remakeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+        }
+        
+        statusLabel.snp.remakeConstraints {
+            $0.top.equalTo(heartButton.snp.bottom).offset(16)
+            $0.leading.equalTo(heartButton)
+            
+        }
+        
+        bottomLine.snp.remakeConstraints {
+            $0.top.equalTo(statusLabel.snp.bottom).offset(16)
+            $0.horizontalEdges.bottom.equalToSuperview()
+            $0.height.equalTo(0.5)
         }
         
     }
@@ -85,63 +149,193 @@ class PostTableViewCell: BaseTableViewCell {
     }
     
     func setCell(row: Int, element: PostResponse, completion: @escaping () -> ()) {
-    
-        let path = element.image.first ?? ""
         
         let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
         
-        // 프로필 이미지는 이미지의 data를 다루지 않기에 KingFisher를 이용하여 바로 호출
         profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
-        
-        // 반면 메인 이미지는 이미지의 크기별로 사이즈가 달라지기 때문에 data를 다뤄줘야함.
-        loadImage(path: path) { [weak self] data in
-            guard let self else { return }
-            
-            DispatchQueue.main.async {
-                self.setImage(data: data.value, completion: {
-                    completion()
-                })
-            }
-        }
         
         statusLabel.text = element.productID
         userNickname.text = element.creator.nick
-        mainText.text = element.title
         
         selectionStyle = .none
         
-    }
-    
-    private func setImage(data: Data?, completion: @escaping () -> ()) {
-        
-        mainImage.image = nil
-        
-        if let data = data {
-            // Set image using Data
-            mainImage.image = UIImage(data: data)
-            mainImage.contentMode = .scaleAspectFit
+        if element.title != "" {
+            mainText.text = element.title
             
-            if let image = mainImage.image {
-                let expectedHeight = mainImage.bounds.width * (image.size.height / image.size.width)
+            if let image = element.image.first {
+                loadImage(path: image) { [weak self] data in
+                    guard let self else { return }
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.mainImage.layer.borderWidth = 0.5
+                        self.mainImage.layer.borderColor = UIColor.lightGray.cgColor
+                        
+                        self.setImage(data: data.value) { data in
+                            
+                            self.mainText.snp.remakeConstraints {
+                                $0.top.equalTo(self.userNickname.snp.bottom).offset(6)
+                                $0.leading.equalTo(self.userNickname)
+                                $0.trailing.equalToSuperview().offset(-12)
+                            }
+                            
+                            self.mainImage.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainText.snp.bottom).offset(8)
+                                $0.leading.equalTo(self.userNickname)
+                                $0.trailing.equalToSuperview().offset(-12)
+                                $0.height.equalTo(data).priority(999)
+                            }
+                            
+                            self.heartButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainImage.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.mainImage)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.commentButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.heartButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.repostButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.commentButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.dmButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.repostButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.statusLabel.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton.snp.bottom).offset(16)
+                                $0.leading.equalTo(self.heartButton)
+                                
+                            }
+                            
+                            self.bottomLine.snp.remakeConstraints {
+                                $0.top.equalTo(self.statusLabel.snp.bottom).offset(16)
+                                $0.horizontalEdges.bottom.equalToSuperview()
+                                $0.height.equalTo(0.5)
+                            }
+                            completion()
+                        }
+                    }
+                }
+            } else {
+                mainText.snp.remakeConstraints {
+                    $0.top.equalTo(userNickname.snp.bottom).offset(6)
+                    $0.leading.equalTo(userNickname)
+                    $0.trailing.equalToSuperview().offset(-12)
+                }
                 
-                mainImage.layer.borderColor = UIColor.lightGray.cgColor
-                mainImage.layer.borderWidth = 0.5
-
-                mainImage.snp.remakeConstraints {
+                mainImage.snp.removeConstraints()
+                
+                heartButton.snp.remakeConstraints {
                     $0.top.equalTo(mainText.snp.bottom).offset(12)
                     $0.leading.equalTo(mainText)
-                    $0.trailing.equalToSuperview().offset(-12)
-                    $0.bottom.equalTo(heartButton.snp.top).offset(-12)
-                    $0.height.equalTo(expectedHeight).priority(999)
+                    $0.size.equalTo(22)
                 }
-                invalidateIntrinsicContentSize()
                 
+                commentButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                repostButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                dmButton.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton)
+                    $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+                    $0.size.equalTo(22)
+                }
+                
+                statusLabel.snp.remakeConstraints {
+                    $0.top.equalTo(heartButton.snp.bottom).offset(16)
+                    $0.leading.equalTo(heartButton)
+                    
+                }
+                
+                bottomLine.snp.remakeConstraints {
+                    $0.top.equalTo(statusLabel.snp.bottom).offset(16)
+                    $0.horizontalEdges.bottom.equalToSuperview()
+                    $0.height.equalTo(0.5)
+                }
+                completion()
+            }
+        } else {
+            if let image = element.image.first {
+                loadImage(path: image) { [weak self] data in
+                    guard let self else { return }
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.mainImage.layer.borderWidth = 0.5
+                        self.mainImage.layer.borderColor = UIColor.lightGray.cgColor
+                        
+                        self.setImage(data: data.value) { data in
+                            
+                            self.mainText.snp.removeConstraints()
+                            
+                            self.mainImage.snp.remakeConstraints {
+                                $0.top.equalTo(self.userNickname.snp.bottom).offset(8)
+                                $0.leading.equalTo(self.userNickname)
+                                $0.trailing.equalToSuperview().offset(-12)
+                                $0.height.equalTo(data).priority(999)
+                            }
+                            
+                            self.heartButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.mainImage.snp.bottom).offset(12)
+                                $0.leading.equalTo(self.mainImage)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.commentButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.heartButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.repostButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.commentButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.dmButton.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton)
+                                $0.leading.equalTo(self.repostButton.snp.trailing).offset(12)
+                                $0.size.equalTo(22)
+                            }
+                            
+                            self.statusLabel.snp.remakeConstraints {
+                                $0.top.equalTo(self.heartButton.snp.bottom).offset(16)
+                                $0.leading.equalTo(self.heartButton)
+                                
+                            }
+                            
+                            self.bottomLine.snp.remakeConstraints {
+                                $0.top.equalTo(self.statusLabel.snp.bottom).offset(16)
+                                $0.horizontalEdges.bottom.equalToSuperview()
+                                $0.height.equalTo(0.5)
+                            }
+                            completion()
+                        }
+                    }
+                }
             }
         }
-        completion()
     }
     
-    func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
+    private func loadImage(path: String, completion: @escaping (BehaviorRelay<Data>) -> Void) {
         
         let result = BehaviorRelay(value: Data())
         
@@ -161,6 +355,27 @@ class PostTableViewCell: BaseTableViewCell {
             })
             .disposed(by: disposeBag)
         
+    }
+    
+    private func setImage(data: Data?, completion: @escaping (CGFloat) -> ()) {
+        
+        mainImage.image = nil
+        
+        if let data = data {
+            // Set image using Data
+            mainImage.image = UIImage(data: data)
+            mainImage.contentMode = .scaleAspectFit
+            
+            if let image = mainImage.image {
+                let expectedHeight = mainImage.bounds.width * (image.size.height / image.size.width)
+                
+                mainImage.layer.borderColor = UIColor.lightGray.cgColor
+                mainImage.layer.borderWidth = 0.5
+
+                completion(expectedHeight)
+                
+            }
+        }
     }
     
     override func configureCell() {
@@ -195,68 +410,70 @@ class PostTableViewCell: BaseTableViewCell {
             $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
         }
         
-        lineBar.snp.makeConstraints {
-            $0.top.equalTo(profileImage.snp.bottom).offset(8)
-            $0.centerX.equalTo(profileImage)
-            $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
-            $0.width.equalTo(2)
-        }
+//        lineBar.snp.makeConstraints {
+//            $0.top.equalTo(profileImage.snp.bottom).offset(8)
+//            $0.centerX.equalTo(profileImage)
+//            $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
+//            $0.width.equalTo(2)
+//        }
         
         mainText.snp.makeConstraints {
-            $0.top.equalTo(userNickname.snp.bottom).offset(6)
-            $0.leading.equalTo(userNickname.snp.leading)
+//            $0.top.equalTo(userNickname.snp.bottom).offset(6)
+            $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
         }
         
         // postViewController과 같이 초기화시에는 image의 좌우만 걸어두자.
         mainImage.snp.makeConstraints {
-            $0.top.equalTo(mainText.snp.bottom).offset(8)
-            $0.leading.equalTo(mainText)
+//            $0.top.equalTo(mainText.snp.bottom).offset(8)
+            $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
-            $0.bottom.equalTo(heartButton.snp.top).offset(-12)
-            $0.height.equalTo(0).priority(999)
+//            $0.bottom.equalTo(heartButton.snp.top).offset(-12)
+//            $0.height.equalTo(0).priority(999)
+        }
+        
+        heartButton.snp.makeConstraints {
+            $0.top.equalTo(userNickname.snp.bottom).offset(12)
+            $0.leading.equalTo(userNickname)
+            $0.size.equalTo(22)
+//            $0.bottom.equalTo(statusLabel.snp.top).offset(-12)
+        }
+        
+        commentButton.snp.makeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+//            $0.bottom.equalTo(heartButton)
+        }
+        
+        repostButton.snp.makeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+//            $0.bottom.equalTo(heartButton)
+        }
+        
+        dmButton.snp.makeConstraints {
+            $0.top.equalTo(heartButton)
+            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
+            $0.size.equalTo(22)
+//            $0.bottom.equalTo(heartButton)
+        }
+        
+        statusLabel.snp.makeConstraints {
+//            $0.bottom.equalTo(bottomLine.snp.top).offset(-25)
+            $0.top.equalTo(heartButton.snp.bottom).offset(16)
+            $0.leading.equalTo(heartButton)
+//            $0.leading.equalTo(heartButton)
+            
         }
         
         bottomLine.snp.makeConstraints {
-//            $0.top.equalTo(statusLabel.snp.bottom).offset(25)
+            $0.top.equalTo(statusLabel.snp.bottom).offset(16)
             $0.horizontalEdges.bottom.equalToSuperview()
             $0.height.equalTo(0.5)
         }
         
-        statusLabel.snp.makeConstraints {
-            $0.bottom.equalTo(bottomLine.snp.top).offset(-25)
-//            $0.top.equalTo(heartButton.snp.bottom).offset(25)
-            $0.leading.equalTo(mainText)
-            
-        }
-        
-        heartButton.snp.makeConstraints {
-//            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(statusLabel)
-            $0.size.equalTo(22)
-            $0.bottom.equalTo(statusLabel.snp.top).offset(-12)
-        }
-        
-        commentButton.snp.makeConstraints {
-//            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
-            $0.size.equalTo(22)
-            $0.bottom.equalTo(heartButton)
-        }
-        
-        repostButton.snp.makeConstraints {
-//            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
-            $0.size.equalTo(22)
-            $0.bottom.equalTo(heartButton)
-        }
-        
-        dmButton.snp.makeConstraints {
-//            $0.top.equalTo(mainImage.snp.bottom).offset(12)
-            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
-            $0.size.equalTo(22)
-            $0.bottom.equalTo(heartButton)
-        }
     }
     
     override func setConstraints() {
