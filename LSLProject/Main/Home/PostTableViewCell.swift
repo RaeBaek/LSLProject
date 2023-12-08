@@ -66,34 +66,11 @@ class PostTableViewCell: BaseTableViewCell {
         super.prepareForReuse()
         
         // 재사용될 때의 상황을 고려해야함!
-        
         mainText.text = nil
         
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
-        
-        profileImage.snp.remakeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(12)
-            $0.size.equalTo(38)
-        }
-        
-        userNickname.snp.remakeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
-        }
-        
-        moreButton.snp.remakeConstraints {
-            $0.centerY.equalTo(userNickname.snp.centerY)
-            $0.trailing.equalToSuperview().inset(12)
-            $0.size.equalTo(15)
-        }
-        
-        uploadTime.snp.remakeConstraints {
-            $0.centerY.equalTo(userNickname.snp.centerY)
-            $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
-        }
 
         mainText.snp.remakeConstraints {
             $0.leading.equalTo(userNickname)
@@ -387,7 +364,9 @@ class PostTableViewCell: BaseTableViewCell {
         
     }
     
-    func constraints() {
+    override func setConstraints() {
+        super.setConstraints()
+        
         profileImage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
             $0.leading.equalToSuperview().offset(12)
@@ -410,62 +389,50 @@ class PostTableViewCell: BaseTableViewCell {
             $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
         }
         
-//        lineBar.snp.makeConstraints {
-//            $0.top.equalTo(profileImage.snp.bottom).offset(8)
-//            $0.centerX.equalTo(profileImage)
-//            $0.bottom.equalTo(bottomLine.snp.top).offset(-16)
-//            $0.width.equalTo(2)
-//        }
+        lineBar.snp.makeConstraints {
+            $0.top.equalTo(profileImage.snp.bottom).offset(8)
+            $0.centerX.equalTo(profileImage)
+            $0.bottom.equalTo(heartButton.snp.bottom).offset(6)
+            $0.width.equalTo(2)
+        }
         
         mainText.snp.makeConstraints {
-//            $0.top.equalTo(userNickname.snp.bottom).offset(6)
             $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
         }
         
-        // postViewController과 같이 초기화시에는 image의 좌우만 걸어두자.
         mainImage.snp.makeConstraints {
-//            $0.top.equalTo(mainText.snp.bottom).offset(8)
             $0.leading.equalTo(userNickname)
             $0.trailing.equalToSuperview().offset(-12)
-//            $0.bottom.equalTo(heartButton.snp.top).offset(-12)
-//            $0.height.equalTo(0).priority(999)
         }
         
         heartButton.snp.makeConstraints {
             $0.top.equalTo(userNickname.snp.bottom).offset(12)
             $0.leading.equalTo(userNickname)
             $0.size.equalTo(22)
-//            $0.bottom.equalTo(statusLabel.snp.top).offset(-12)
         }
         
         commentButton.snp.makeConstraints {
             $0.top.equalTo(heartButton)
             $0.leading.equalTo(heartButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
-//            $0.bottom.equalTo(heartButton)
         }
         
         repostButton.snp.makeConstraints {
             $0.top.equalTo(heartButton)
             $0.leading.equalTo(commentButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
-//            $0.bottom.equalTo(heartButton)
         }
         
         dmButton.snp.makeConstraints {
             $0.top.equalTo(heartButton)
             $0.leading.equalTo(repostButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
-//            $0.bottom.equalTo(heartButton)
         }
         
         statusLabel.snp.makeConstraints {
-//            $0.bottom.equalTo(bottomLine.snp.top).offset(-25)
             $0.top.equalTo(heartButton.snp.bottom).offset(16)
             $0.leading.equalTo(heartButton)
-//            $0.leading.equalTo(heartButton)
-            
         }
         
         bottomLine.snp.makeConstraints {
@@ -473,13 +440,6 @@ class PostTableViewCell: BaseTableViewCell {
             $0.horizontalEdges.bottom.equalToSuperview()
             $0.height.equalTo(0.5)
         }
-        
-    }
-    
-    override func setConstraints() {
-        super.setConstraints()
-        
-        constraints()
         
     }
     

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 import RxSwift
 import RxCocoa
 
@@ -170,8 +171,18 @@ final class CommentViewController: BaseViewController {
     func setView() {
         guard let post else { return }
         
-        if let title = post.title {
-            userTextLabel.text = title
+        let userProfileImageUrl = URL(string: APIKey.sesacURL + (post.creator.profile ?? ""))
+        
+        userProfileImage.kf.setImage(with: userProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        userNickname.text = post.creator.nick
+        
+        let myProfileImageUrl = URL(string: APIKey.sesacURL + UserDefaultsManager.id)
+        
+        myProfileImage.kf.setImage(with: myProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        myNickname.text = UserDefaultsManager.nickname
+        
+        if post.title != "" {
+            userTextLabel.text = post.title
             
             if let image = post.image.first {
                 loadImage(path: image) { [weak self] data in

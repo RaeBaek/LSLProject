@@ -90,7 +90,7 @@ final class PostViewModel: ViewModelType {
         input.textViewText
             .withUnretained(self)
             .map { owner, value in
-                if value == "" || value == StartMessage.post.placeholder {
+                if (value == "" && input.imageData.value == nil) || value == StartMessage.post.placeholder {
                     return false
                 } else {
                     return true

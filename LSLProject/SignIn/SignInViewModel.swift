@@ -12,6 +12,7 @@ import RxCocoa
 final class SignInViewModel: ViewModelType {
     
     struct Input {
+        let token: BehaviorRelay<String>
         let emailText: ControlProperty<String>
         let passwordText: ControlProperty<String>
         let signInButtonClicked: ControlEvent<Void>
@@ -38,7 +39,6 @@ final class SignInViewModel: ViewModelType {
         let textStatus = PublishRelay<Bool>()
         let borderStatus = PublishRelay<Bool>()
         let outputText = PublishRelay<String>()
-        let statusCode = PublishRelay<Int>()
         let loginStatus = PublishRelay<Bool>()
         let signUpStatus = PublishRelay<Void>()
         
@@ -56,12 +56,6 @@ final class SignInViewModel: ViewModelType {
                 return true
             }
             .bind(to: textStatus, borderStatus)
-            .disposed(by: disposeBag)
-        
-        statusCode
-            .map { $0 == 200 }
-            .filter { $0 }
-            .bind(to: loginStatus)
             .disposed(by: disposeBag)
         
         input.signInButtonClicked
@@ -82,28 +76,38 @@ final class SignInViewModel: ViewModelType {
                     UserDefaultsManager.refreshToken = data.refreshToken
                     UserDefaultsManager.id = data.id
                     
-                    print("Token: \(UserDefaultsManager.token)")
-                    print("Refresh Token: \(UserDefaultsManager.refreshToken)")
-                    print("id: \(UserDefaultsManager.id)")
-                    
-                    statusCode.accept(200)
+                    input.token.accept(UserDefaultsManager.token)
                     
                 case .failure(let error):
                     guard let loginError = LoginError(rawValue: error.rawValue) else {
                         print("=====", error.message)
                         print("-----", error.rawValue)
                         outputText.accept(error.message)
-                        statusCode.accept(error.rawValue)
                         textStatus.accept(false)
                         borderStatus.accept(false)
                         return
                     }
                     outputText.accept(loginError.message)
-                    statusCode.accept(loginError.rawValue)
                     textStatus.accept(false)
                     borderStatus.accept(false)
                 }
             })
+            .disposed(by: disposeBag)
+        
+        input.token
+            .flatMap { _ in
+                self.repository.requestMyProfile()
+            }
+            .subscribe { result in
+                switch result {
+                case .success(let data):
+                    UserDefaultsManager.nickname = data.nick ?? "이 값이 보인다면 닉네임 기입에 문제.."
+                    loginStatus.accept(true)
+                case .failure(let error):
+                    print("내 프로필 조회에 실패했습니다. (로그인 후 닉네임을 가져오는 경우!) \(error.message)")
+                    loginStatus.accept(false)
+                }
+            }
             .disposed(by: disposeBag)
         
         input.signUpButtonClicked

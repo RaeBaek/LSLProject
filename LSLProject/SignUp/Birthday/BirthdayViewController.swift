@@ -56,7 +56,11 @@ final class BirthdayViewController: MakeViewController {
         
         var signUpValues = value
         
-        let input = BirthdayViewModel.Input(signUpValues: Observable.of(signUpValues), inputText: datePicker.rx.value, nextButtonClicked: nextButton.rx.tap, skipButtonClicked: skipButton.rx.tap)
+        let input = BirthdayViewModel.Input(token: BehaviorRelay(value: UserDefaultsManager.token),
+                                            signUpValues: Observable.of(signUpValues),
+                                            inputText: datePicker.rx.value,
+                                            nextButtonClicked: nextButton.rx.tap,
+                                            skipButtonClicked: skipButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
@@ -88,11 +92,13 @@ final class BirthdayViewController: MakeViewController {
             }
             .disposed(by: disposeBag)
         
-        output.signUpStatus
+        output.loginStatus
             .withUnretained(self)
             .debug()
             .bind { owner, value in
-                owner.changeRootViewController()
+                if value {
+                    owner.changeRootViewController()
+                }
             }
             .disposed(by: disposeBag)
         

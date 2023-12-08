@@ -91,7 +91,11 @@ final class SignInViewController: BaseViewController {
     }
     
     private func bind() {
-        let input = SignInViewModel.Input(emailText: emailTextField.rx.text.orEmpty, passwordText: passwordTextField.rx.text.orEmpty, signInButtonClicked: signInButton.rx.tap, signUpButtonClicked: signUpButton.rx.tap)
+        let input = SignInViewModel.Input(token: BehaviorRelay(value: UserDefaultsManager.token), 
+                                          emailText: emailTextField.rx.text.orEmpty,
+                                          passwordText: passwordTextField.rx.text.orEmpty,
+                                          signInButtonClicked: signInButton.rx.tap,
+                                          signUpButtonClicked: signUpButton.rx.tap)
         
         let output = viewModel.transform(input: input)
         
@@ -123,8 +127,10 @@ final class SignInViewController: BaseViewController {
         output.loginStatus
             .debug("loginStatus")
             .withUnretained(self)
-            .bind { owner, _ in
-                owner.changeRootViewController()
+            .bind { owner, bool in
+                if bool {
+                    owner.changeRootViewController()
+                }
             }
             .disposed(by: disposeBag)
         

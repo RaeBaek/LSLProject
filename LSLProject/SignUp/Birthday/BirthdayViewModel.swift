@@ -12,6 +12,7 @@ import RxCocoa
 final class BirthdayViewModel: ViewModelType {
     
     struct Input {
+        let token: BehaviorRelay<String>
         let signUpValues: Observable<[String?]>
         let inputText: ControlProperty<Date>
         let nextButtonClicked: ControlEvent<Void>
@@ -24,7 +25,7 @@ final class BirthdayViewModel: ViewModelType {
         let statusText: BehaviorRelay<String>
         let textStatus: PublishRelay<Bool>
         let borderStatus: PublishRelay<Bool>
-        let signUpStatus: PublishRelay<Bool>
+        let loginStatus: PublishRelay<Bool>
     }
     
     private var repository: NetworkRepository
@@ -41,8 +42,8 @@ final class BirthdayViewModel: ViewModelType {
         let outputText = BehaviorRelay(value: dateFormat(date: Date()))
         let statusText = BehaviorRelay(value: "만 17세 미만은 가입할 수 업습니다.")
         let borderStatus = PublishRelay<Bool>()
-        let statusCode = PublishRelay<Int>()
         let signUpStatus = PublishRelay<Bool>()
+        let loginStatus = PublishRelay<Bool>()
         
         let inputText = input.inputText
                                    .share()
@@ -80,8 +81,7 @@ final class BirthdayViewModel: ViewModelType {
             }
             .disposed(by: disposeBag)
         
-        statusCode
-            .map { $0 == 200 }
+        signUpStatus
             .filter { $0 }
             .withLatestFrom(input.signUpValues, resultSelector: { bool, value in
                 textStatus.accept(bool)
@@ -93,29 +93,21 @@ final class BirthdayViewModel: ViewModelType {
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):
-                    
                     outputText.accept("정상적으로 로그인 처리되었습니다!")
                     
                     UserDefaultsManager.token = data.token
                     UserDefaultsManager.refreshToken = data.refreshToken
                     UserDefaultsManager.id = data.id
                     
-                    print("로그인 성공!")
-                    print("Token: \(UserDefaultsManager.token)")
-                    print("Refresh Token: \(UserDefaultsManager.refreshToken)")
-                    print("id: \(UserDefaultsManager.id)")
-                    
-                    signUpStatus.accept(true)
+                    input.token.accept(UserDefaultsManager.token)
                     
                 case .failure(let error):
                     guard let loginError = LoginError(rawValue: error.rawValue) else {
                         print("=====", error.message)
                         print("-----", error.rawValue)
                         outputText.accept(error.message)
-                        statusCode.accept(error.rawValue)
                         return
                     }
-//                    statusCode.accept(loginError.rawValue)
                     print("다음 오류가 발생할 확률은 거의 없지만...")
                     print(loginError.message)
                 }
@@ -143,16 +135,16 @@ final class BirthdayViewModel: ViewModelType {
                 switch value {
                 case .success:
                     print("회원가입 성공~~~")
-                    statusCode.accept(200)
+                    loginStatus.accept(true)
                 case .failure(let error):
                     guard let signUpError = SignUpError(rawValue: error.rawValue) else {
                         print("=====", error.message)
                         print("-----", error.rawValue)
                         outputText.accept(error.message)
-                        statusCode.accept(error.rawValue)
+                        loginStatus.accept(false)
                         return
                     }
-                    statusCode.accept(signUpError.rawValue)
+                    loginStatus.accept(false)
                     outputText.accept(signUpError.message)
                 }
             })
@@ -171,22 +163,44 @@ final class BirthdayViewModel: ViewModelType {
                 switch value {
                 case .success:
                     print("회원가입 성공~~~22")
-                    statusCode.accept(200)
+                    signUpStatus.accept(true)
                 case .failure(let error):
                     guard let signUpError = SignUpError(rawValue: error.rawValue) else {
                         print("=====", error.message)
                         print("-----", error.rawValue)
                         outputText.accept(error.message)
-                        statusCode.accept(error.rawValue)
+                        loginStatus.accept(false)
                         return
                     }
-                    statusCode.accept(signUpError.rawValue)
+                    signUpStatus.accept(false)
                     outputText.accept(signUpError.message)
                 }
             })
             .disposed(by: disposeBag)
         
-        return Output(sendText: sendText, outputText: outputText, statusText: statusText, textStatus: textStatus, borderStatus: borderStatus,  signUpStatus: signUpStatus)
+        input.token
+            .flatMap { _ in
+                self.repository.requestMyProfile()
+            }
+            .subscribe { result in
+                switch result {
+                case .success(let data):
+                    UserDefaultsManager.nickname = data.nick ?? "이 값이 보인다면 닉네임 기입에 문제.."
+                    loginStatus.accept(true)
+                case .failure(let error):
+                    print("내 프로필 조회에 실패했습니다. (로그인 후 닉네임을 가져오는 경우!) \(error.message)")
+                    loginStatus.accept(false)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        return Output(sendText: sendText,
+                      outputText: outputText,
+                      statusText: statusText,
+                      textStatus: textStatus,
+                      borderStatus: borderStatus,
+                      loginStatus: loginStatus)
+        
     }
     
     private func dateFormat(date: Date) -> String {
