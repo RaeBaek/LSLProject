@@ -73,8 +73,8 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         // 현재 서버에 올라가 있는 제목이 없는 것! 처럼 보이는 게시물들은
         // 제목이 빈값이 아닌 "" 이기때문에 없는 것 처럼 보이며
         // 로직을 수정해야함!!!!!!
-        if let title = item.title {
-            mainText.text = title
+        if item.title != "" {
+            mainText.text = item.title
             
             if let image = item.image.first {
                 loadImage(path: image) { [weak self] data in
@@ -177,7 +177,7 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
                             self.mainText.snp.removeConstraints()
                             
                             self.mainImage.snp.remakeConstraints {
-                                $0.top.equalTo(self.profileImage.snp.bottom).offset(-12)
+                                $0.top.equalTo(self.profileImage.snp.bottom).offset(12)
                                 $0.horizontalEdges.equalToSuperview().inset(12)
                                 $0.height.equalTo(data).priority(999)
                             }

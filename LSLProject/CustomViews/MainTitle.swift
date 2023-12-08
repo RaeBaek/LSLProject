@@ -12,7 +12,6 @@ final class MainTitle: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
     
-        self.text = "이 텍스트가 보이신다면 테스트 중 입니다."
         self.textColor = .black
         self.font = .systemFont(ofSize: 14, weight: .regular)
         self.textAlignment = .left

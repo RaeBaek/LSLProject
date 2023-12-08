@@ -163,7 +163,7 @@ final class PostViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mainTextView.text = StartMessage.comment.placeholder
+        mainTextView.text = StartMessage.post.placeholder
         
         setNavigationBar()
         bind()
@@ -228,7 +228,7 @@ final class PostViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, bool in
                 if bool {
-                    owner.mainTextView.text = owner.startMessage
+                    owner.mainTextView.text = StartMessage.post.placeholder
                     owner.mainTextView.textColor = .lightGray
                 }
             }

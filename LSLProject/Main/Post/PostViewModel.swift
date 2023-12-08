@@ -11,8 +11,6 @@ import RxCocoa
 
 final class PostViewModel: ViewModelType {
     
-    let startMessage = "스레드를 시작하세요..."
-    
     struct Input {
         let postButtonTap: ControlEvent<Void>
         let imageButtonTap: ControlEvent<Void>
@@ -92,7 +90,7 @@ final class PostViewModel: ViewModelType {
         input.textViewText
             .withUnretained(self)
             .map { owner, value in
-                if value == "" || value == owner.startMessage {
+                if value == "" || value == StartMessage.post.placeholder {
                     return false
                 } else {
                     return true
@@ -104,7 +102,7 @@ final class PostViewModel: ViewModelType {
         input.postButtonTap
             .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive))
             .withLatestFrom(input.textViewText) { _, text in
-                if text == "" || text == self.startMessage {
+                if text == "" || text == StartMessage.post.placeholder {
                     return ""
                 } else {
                     return text

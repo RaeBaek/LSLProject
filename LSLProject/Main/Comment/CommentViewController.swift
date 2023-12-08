@@ -45,8 +45,6 @@ final class CommentViewController: BaseViewController {
     
     var myNickname = NicknameLabel(frame: .zero)
     
-    let startMessage = "@@@@님에게 답글 남기기..."
-    
     lazy var myTextView = CustomTextView(frame: .zero, textContainer: .none)
     
     private let myLineBar = CustomLineBar(frame: .zero)
@@ -94,7 +92,7 @@ final class CommentViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        myTextView.text = StartMessage.post.placeholder
+        myTextView.text = StartMessage.comment.placeholder
         
         setNavigationBar()
         bind()
@@ -146,7 +144,7 @@ final class CommentViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, bool in
                 if bool {
-                    owner.myTextView.text = owner.startMessage
+                    owner.myTextView.text = StartMessage.comment.placeholder
                     owner.myTextView.textColor = .lightGray
                 }
             }

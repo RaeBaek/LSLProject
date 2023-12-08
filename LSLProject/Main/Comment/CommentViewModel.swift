@@ -31,8 +31,6 @@ final class CommentViewModel: ViewModelType {
     
     private let disposeBag = DisposeBag()
     
-    let startMessage = "@@@@님에게 답글 남기기..."
-    
     init(post: PostResponse, repository: NetworkRepository) {
         self.post = post
         self.repository = repository
@@ -59,7 +57,7 @@ final class CommentViewModel: ViewModelType {
         input.textViewText
             .withUnretained(self)
             .map { owner, value in
-                if value == "" || value == owner.startMessage {
+                if value == "" || value == StartMessage.comment.placeholder {
                     return false
                 } else {
                     return true

@@ -17,6 +17,10 @@ class PostTableViewCell: BaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: PostTableViewCell.identifier)
+        heartButton.setSymbolImage(image: "heart", size: 22)
+        commentButton.setSymbolImage(image: "message", size: 22)
+        repostButton.setSymbolImage(image: "repeat", size: 22)
+        dmButton.setSymbolImage(image: "paperplane", size: 22)
         
     }
     
@@ -25,59 +29,16 @@ class PostTableViewCell: BaseTableViewCell {
     }
     
     var profileImage = ProfileImageView(frame: .zero)
-    
     var userNickname = NicknameLabel(frame: .zero)
-    
     var uploadTime = UploadTimeLabel(frame: .zero)
-    
     private let moreButton = MoreButton(frame: .zero)
-    
     var mainText = MainTitle(frame: .zero)
-    
     var mainImage = MainImageView(frame: .zero)
-    
     private let lineBar = CustomLineBar(frame: .zero)
-    
-    private let heartButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "heart", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-//        view.setContentHuggingPriority(.init(rawValue: 251), for: .vertical)
-        return view
-    }()
-    
-    private let commentButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "message", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let repostButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "repeat", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    private let dmButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 22)
-        let image = UIImage(systemName: "paperplane", withConfiguration: imageConfig)
-        view.tintColor = .black
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    private let heartButton = CustomActiveButton(frame: .zero)
+    private let commentButton = CustomActiveButton(frame: .zero)
+    private let repostButton = CustomActiveButton(frame: .zero)
+    private let dmButton = CustomActiveButton(frame: .zero)
     
     var statusLabel = {
         let view = UILabel()
@@ -104,8 +65,8 @@ class PostTableViewCell: BaseTableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        // 재사용될 때의 상황을 고려해야함!
         mainImage.image = nil
-        mainImage.layer.cornerRadius = 10
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
 
