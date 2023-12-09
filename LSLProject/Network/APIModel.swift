@@ -71,6 +71,11 @@ struct CommentMessage: Encodable {
     let content: String
 }
 
+struct CommentDelete: Encodable {
+    let id: String
+    let commentID: String
+}
+
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String
@@ -144,12 +149,16 @@ struct PostResponse: Decodable {
 
 struct Comment: Decodable {
     let id, content, time: String?
-    let creator: Creator?
-
+    let creator: Creator
+    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case content, time, creator
     }
+}
+
+struct CommentDeleteResponse: Decodable {
+    let postID: String
 }
 
 struct Creator: Decodable {

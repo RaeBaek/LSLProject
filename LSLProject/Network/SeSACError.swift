@@ -251,3 +251,26 @@ enum PostDeleteError: Int, LoggableError {
         }
     }
 }
+
+enum CommentDeleteError: Int, LoggableError {
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case inValidRequest = 410
+    case expireAccessToken = 419
+    case noCreator = 445
+    
+    var message: String {
+        switch self {
+        case .inValidAccessToken:
+            "유효하지 않은 AccessToken으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .inValidRequest:
+            "삭제한 댓글을 찾을 수 없습니다."
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        case .noCreator:
+            "본인이 작성한 댓글에 대해서만 삭제 가능합니다."
+        }
+    }
+}

@@ -83,6 +83,16 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
         bind()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(recallAllCommentAPI(notification:)), name: Notification.Name("recallCommentAPI"), object: nil)
+        
+    }
+    
+    @objc func recallAllCommentAPI(notification: NSNotification) {
+        
+        if let data = notification.userInfo?["recallCommentAPI"] as? Data {
+            self.sendData = data
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,16 +122,58 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
         output.postResponse
             .map { $0.comments }
-            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { row, element, cell in
+            .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { [weak self] row, element, cell in
+                guard let self else { return }
+                
                 cell.setCell(element: element) {
                     cell.layoutIfNeeded()
                 }
+                
+                let input = HomeDetailViewModel.CellButtonInput(creatorID: BehaviorRelay(value: element.creator.id),
+                                                                moreButtonTap: cell.moreButton.rx.tap)
+                
+                let output = self.viewModel.buttonTransform(input: input)
+                
+                output.postStatus
+                    .bind { value in
+                        if value {
+                            self.presentCommentBottomSheet(value: value, postID: item.id, commentID: element.id)
+                        } else {
+                            self.presentCommentBottomSheet(value: value, postID: item.id, commentID: nil)
+                        }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
             }
             .disposed(by: disposeBag)
         
         detailTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
+    }
+    
+    private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?) {
+        
+        let vc = CommentBottomSheet()
+        
+        vc.modalPresentationStyle = .pageSheet
+        vc.value = value
+        vc.postID = postID
+        vc.deleteCommentID = commentID
+        
+        if let sheet = vc.sheetPresentationController {
+            
+            sheet.detents = [
+                .custom { _ in
+                    return 300
+                }
+            ]
+            
+            sheet.delegate = self
+            sheet.prefersGrabberVisible = true
+        }
+        
+        self.present(vc, animated: true)
     }
     
     private func setNavigationBar() {
@@ -239,5 +291,9 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
         }
         
     }
+    
+}
+
+extension HomeDetailViewController: UISheetPresentationControllerDelegate {
     
 }

@@ -75,5 +75,9 @@ class NetworkRepository: NetworkRepositoryType {
                            comment: String) -> Single<NetworkResult<Comment>> {
         APIManager.shared.request(target: .commentAdd(model: CommentMessage(content: comment), id: id))
     }
+
+    func requestCommentDelete(id: String, commentID: String) -> Single<NetworkResult<CommentDeleteResponse>> {
+        APIManager.shared.request(target: .commentDel(model: CommentDelete(id: id, commentID: commentID)))
+    }
     
 }

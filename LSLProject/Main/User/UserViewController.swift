@@ -72,7 +72,7 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
         output.userPosts
             .map { $0.data }
             .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { row, element, cell in
-                cell.setCell(row: row, element: element) {
+                cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.userTableView.beginUpdates()
                     cell.layoutIfNeeded()

@@ -22,6 +22,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
     
     override func prepareForReuse() {
         profileImage.image = nil
+        disposeBag = DisposeBag()
     }
     
     private let topLine = {
@@ -36,7 +37,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
     
     var uploadTime = UploadTimeLabel(frame: .zero)
     
-    private let moreButton = MoreButton(frame: .zero)
+    var moreButton = MoreButton(frame: .zero)
     
     var mainText = MainTitle(frame: .zero)
     
@@ -90,14 +91,14 @@ final class HomeDetailCommentCell: BaseTableViewCell {
     
     private let repository = NetworkRepository()
     
-    private let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     
     func setCell(element: Comment, completion: @escaping () -> ()) {
-        let url = URL(string: APIKey.sesacURL + (element.creator?.profile ?? ""))
+        let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
         
         profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
         
-        userNickname.text = element.creator?.nick
+        userNickname.text = element.creator.nick
         mainText.text = element.content
         
         completion()

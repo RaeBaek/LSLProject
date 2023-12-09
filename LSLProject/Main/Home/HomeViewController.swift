@@ -67,7 +67,7 @@ final class HomeViewController: BaseViewController {
     
     @objc func recallAllPostAPI(notification: NSNotification) {
         
-        if let data = notification.userInfo?["reset"] as? Data {
+        if let data = notification.userInfo?["recallPostAPI"] as? Data {
             self.sendData = data
         }
         
@@ -79,7 +79,6 @@ final class HomeViewController: BaseViewController {
         setNavigationBar()
         setTabBar()
         
-        print("홈뷰컨 뷰윌어피얼~")
     }
     
     private func setNavigationBar() {
@@ -114,10 +113,9 @@ final class HomeViewController: BaseViewController {
                 return value.data
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
-                
                 guard let self else { return }
                 
-                cell.setCell(row: row, element: element) {
+                cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
                     cell.layoutIfNeeded()

@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class PostDeleteViewModel: ViewModelType {
+final class PostDeleteViewModel {
     
     private let repository: NetworkRepository
     
@@ -19,22 +19,33 @@ final class PostDeleteViewModel: ViewModelType {
         self.repository = repository
     }
     
-    struct Input {
-        let deleteButtonTap: ControlEvent<Void>
+    struct PostInput {
+        let deletePostButtonTap: ControlEvent<Void>
         let deletePostID: BehaviorRelay<String>
-    }
-    
-    struct Output {
-        let deleteStatus: PublishRelay<Bool>
-    }
-    
-    func transform(input: Input) -> Output {
-        let deleteStatus = PublishRelay<Bool>()
         
-        let deleteButtonTap = input.deleteButtonTap
+    }
+    
+    struct CommentInput {
+        let deleteCommentButtonTap: ControlEvent<Void>
+        let deletePostID: BehaviorRelay<String>
+        let deleteCommentID: BehaviorRelay<String>
+    }
+    
+    struct PostOuput {
+        let deletePostStatus: PublishRelay<Bool>
+    }
+    
+    struct CommentOutput {
+        let deleteCommentStatus: PublishRelay<Bool>
+    }
+    
+    func postTransform(input: PostInput) -> PostOuput {
+        let deletePostStatus = PublishRelay<Bool>()
+        
+        let deletePostButtonTap = input.deletePostButtonTap
         let deletePostID = input.deletePostID
         
-        deleteButtonTap
+        deletePostButtonTap
             .withUnretained(self)
             .flatMap { owner, _ in
                 print("!!!!!!!!!!!!!!!!!", deletePostID.value)
@@ -44,21 +55,53 @@ final class PostDeleteViewModel: ViewModelType {
                 switch result {
                 case .success(_):
                     print("게시물 삭제 완료!")
-                    deleteStatus.accept(true)
+                    deletePostStatus.accept(true)
                 case .failure(let error):
                     guard let postDeleteError = PostDeleteError(rawValue: error.rawValue) else {
                         print("게시물 삭제 공통 에러입니다. \(error.message)")
-                        deleteStatus.accept(false)
+                        deletePostStatus.accept(false)
                         return
                     }
                     print("게시물 삭제 커스텀 에러입니다. \(postDeleteError.message)")
-                    deleteStatus.accept(false)
+                    deletePostStatus.accept(false)
                 }
             })
             .disposed(by: diposeBag)
         
-        return Output(deleteStatus: deleteStatus)
+        return PostOuput(deletePostStatus: deletePostStatus)
         
+    }
+    
+    func commentTransform(input: CommentInput) -> CommentOutput {
+        let deleteCommentStatus = PublishRelay<Bool>()
+        
+        let deletePostButtonTap = input.deleteCommentButtonTap
+        let deletePostID = input.deletePostID
+        let deleteCommentID = input.deleteCommentID
+        
+        deletePostButtonTap
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestCommentDelete(id: deletePostID.value, commentID: deleteCommentID.value)
+            }
+            .subscribe(onNext: { result in
+                switch result {
+                case .success(_):
+                    print("댓글 삭제 완료!")
+                    deleteCommentStatus.accept(true)
+                case .failure(let error):
+                    guard let commentDeleteError = CommentDeleteError(rawValue: error.rawValue) else {
+                        print("댓글 삭제 공통 에러입니다. \(error.message)")
+                        deleteCommentStatus.accept(false)
+                        return
+                    }
+                    print("댓글 삭제 커스텀 에러입니다. \(commentDeleteError.message)")
+                    deleteCommentStatus.accept(false)
+                }
+            })
+            .disposed(by: diposeBag)
+        
+        return CommentOutput(deleteCommentStatus: deleteCommentStatus)
     }
     
 }

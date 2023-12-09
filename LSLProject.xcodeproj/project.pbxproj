@@ -44,6 +44,7 @@
 		145659F22B2450380040A987 /* PostDeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145659F12B2450380040A987 /* PostDeleteViewController.swift */; };
 		145659F42B248B410040A987 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145659F32B248B410040A987 /* CustomButton.swift */; };
 		145659F62B2495F10040A987 /* PostDeleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145659F52B2495F10040A987 /* PostDeleteViewModel.swift */; };
+		145659F82B24BB010040A987 /* CommentBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145659F72B24BB010040A987 /* CommentBottomSheet.swift */; };
 		14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C852B19D29B00C3A9D2 /* HomeDetailViewController.swift */; };
 		14648C892B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C882B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift */; };
 		14648C8B2B19F07900C3A9D2 /* HomeDetailCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14648C8A2B19F07900C3A9D2 /* HomeDetailCommentCell.swift */; };
@@ -134,6 +135,7 @@
 		145659F12B2450380040A987 /* PostDeleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDeleteViewController.swift; sourceTree = "<group>"; };
 		145659F32B248B410040A987 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		145659F52B2495F10040A987 /* PostDeleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDeleteViewModel.swift; sourceTree = "<group>"; };
+		145659F72B24BB010040A987 /* CommentBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBottomSheet.swift; sourceTree = "<group>"; };
 		14648C852B19D29B00C3A9D2 /* HomeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewController.swift; sourceTree = "<group>"; };
 		14648C882B19F04300C3A9D2 /* HomeDetailPostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailPostHeaderView.swift; sourceTree = "<group>"; };
 		14648C8A2B19F07900C3A9D2 /* HomeDetailCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailCommentCell.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				14102F4D2B237676002D4A8B /* PostBottomSheet.swift */,
+				145659F72B24BB010040A987 /* CommentBottomSheet.swift */,
 				145659F12B2450380040A987 /* PostDeleteViewController.swift */,
 				145659F52B2495F10040A987 /* PostDeleteViewModel.swift */,
 			);
@@ -623,6 +626,7 @@
 				14F8AB1C2B0B553500493AE1 /* NetworkRepository.swift in Sources */,
 				1416D2162B21F793009FDC56 /* UploadTimeLabel.swift in Sources */,
 				14056ED72B130EA100C8EDA2 /* UserViewController.swift in Sources */,
+				145659F82B24BB010040A987 /* CommentBottomSheet.swift in Sources */,
 				14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */,
 				141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */,
 				146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */,

@@ -51,6 +51,7 @@ final class PostDeleteViewController: BaseViewController {
     let cancelButton = CustomButton(frame: .zero)
     
     var deletePostID: String?
+    var deleteCommentID: String?
     
     private let repository = NetworkRepository()
     
@@ -66,22 +67,46 @@ final class PostDeleteViewController: BaseViewController {
     }
     
     private func bind() {
-        guard let deletePostID else { return }
         
-        let input = PostDeleteViewModel.Input(deleteButtonTap: deleteButton.rx.tap,
-                                              deletePostID: BehaviorRelay(value: deletePostID))
-        
-        let output = viewModel.transform(input: input)
-        
-        output.deleteStatus
-            .withUnretained(self)
-            .bind { owner, value in
-                if value {
-                    NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["reset": Data()])
-                    owner.dismiss(animated: false)
-                }
+        // 게시물 삭제, 댓글 삭제 모두 게시글의 id는 필요하다.
+        if let deleteCommentID {
+            // 댓글은 댓글 id도 필요!
+            if let deletePostID {
+                let input = PostDeleteViewModel.CommentInput(deleteCommentButtonTap: deleteButton.rx.tap,
+                                                             deletePostID: BehaviorRelay(value: deletePostID),
+                                                             deleteCommentID: BehaviorRelay(value: deleteCommentID))
+                
+                let output = viewModel.commentTransform(input: input)
+                
+                output
+                    .deleteCommentStatus
+                    .withUnretained(self)
+                    .bind { owner, value in
+                        if value {
+                            NotificationCenter.default.post(name: Notification.Name("recallCommentAPI"), object: nil, userInfo: ["recallCommentAPI": Data()])
+                            owner.dismiss(animated: false)
+                        }
+                    }
+                    .disposed(by: diposeBag)
             }
-            .disposed(by: diposeBag)
+        } else {
+            if let deletePostID {
+                let input = PostDeleteViewModel.PostInput(deletePostButtonTap: deleteButton.rx.tap,
+                                                          deletePostID: BehaviorRelay(value: deletePostID))
+                
+                let output = viewModel.postTransform(input: input)
+                
+                output.deletePostStatus
+                    .withUnretained(self)
+                    .bind { owner, value in
+                        if value {
+                            NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
+                            owner.dismiss(animated: false)
+                        }
+                    }
+                    .disposed(by: diposeBag)
+            }
+        }
         
     }
     

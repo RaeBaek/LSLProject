@@ -17,9 +17,18 @@ final class HomeDetailViewModel: ViewModelType {
         let commentButtonTap: ControlEvent<Void>
     }
     
+    struct CellButtonInput {
+        let creatorID: BehaviorRelay<String>
+        let moreButtonTap: ControlEvent<Void>
+    }
+    
     struct Output {
         let commentButtonTap: PublishRelay<Void>
         let postResponse: PublishRelay<PostResponse>
+    }
+    
+    struct CellButtonOutput {
+        let postStatus: PublishRelay<Bool>
     }
     
     let repository: NetworkRepository
@@ -69,4 +78,28 @@ final class HomeDetailViewModel: ViewModelType {
         return Output(commentButtonTap: commentButtonTap,
                       postResponse: postResponse)
     }
+    
+    func buttonTransform(input: CellButtonInput) -> CellButtonOutput {
+        
+        let postStatus = PublishRelay<Bool>()
+        
+        input.moreButtonTap
+            .withLatestFrom(input.creatorID, resultSelector: { _, id in
+                print("확인1 \(Date()), \(input.creatorID.value)")
+                print("확인2 \(Date()), \(UserDefaultsManager.id)")
+                
+                if input.creatorID.value == UserDefaultsManager.id {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            .debug("확인")
+            .bind(to: postStatus)
+            .disposed(by: disposeBag)
+        
+        return CellButtonOutput(postStatus: postStatus)
+        
+    }
+    
 }

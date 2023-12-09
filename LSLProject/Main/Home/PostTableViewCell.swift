@@ -32,11 +32,7 @@ class PostTableViewCell: BaseTableViewCell {
     var userNickname = NicknameLabel(frame: .zero)
     var uploadTime = UploadTimeLabel(frame: .zero)
     
-    lazy var moreButton = {
-        let view = MoreButton(frame: .zero)
-        view.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
-        return view
-    }()
+    lazy var moreButton = MoreButton(frame: .zero)
     
     var mainText =  MainTitle(frame: .zero)
     var mainImage = MainImageView(frame: .zero)
@@ -134,11 +130,7 @@ class PostTableViewCell: BaseTableViewCell {
         
     }
     
-    @objc func moreButtonTapped() {
-        buttonTapped?()
-    }
-    
-    func setCell(row: Int, element: PostResponse, completion: @escaping () -> ()) {
+    func setCell(element: PostResponse, completion: @escaping () -> ()) {
         
         let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
         

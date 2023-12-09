@@ -21,6 +21,7 @@ enum SeSACAPI {
     case userPosts(model: UserID)
     case myProfile
     case commentAdd(model: CommentMessage, id: String)
+    case commentDel(model: CommentDelete)
     
 }
 
@@ -53,6 +54,8 @@ extension SeSACAPI: TargetType {
             return "post/user/\(model.id)"
         case .commentAdd(_, let id):
             return "post/\(id)/comment"
+        case .commentDel(let model):
+            return "post/\(model.id)/comment/\(model.commentID)"
         }
     }
     
@@ -62,7 +65,7 @@ extension SeSACAPI: TargetType {
             return .post
         case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return .get
-        case .postDel:
+        case .postDel, .commentDel:
             return .delete
         }
     }
@@ -79,6 +82,9 @@ extension SeSACAPI: TargetType {
             return .requestJSONEncodable(model)
             
         case .commentAdd(let model, _):
+            return .requestJSONEncodable(model)
+            
+        case .commentDel(let model):
             return .requestJSONEncodable(model)
             
         case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel:
@@ -118,7 +124,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
