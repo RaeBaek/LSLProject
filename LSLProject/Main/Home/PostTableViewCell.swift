@@ -34,7 +34,7 @@ class PostTableViewCell: BaseTableViewCell {
     
     lazy var moreButton = {
         let view = MoreButton(frame: .zero)
-        view.addTarget(self, action: #selector(self.moreButtonTapped), for: .touchUpInside)
+        view.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
         return view
     }()
     
@@ -60,9 +60,9 @@ class PostTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    private let repository = NetworkRepository()
+    let repository = NetworkRepository()
     
-    private let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     
     var buttonTapped: (() -> Void)?
     
@@ -79,6 +79,7 @@ class PostTableViewCell: BaseTableViewCell {
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
+        disposeBag = DisposeBag()
 
         mainText.snp.remakeConstraints {
             $0.leading.equalTo(userNickname)

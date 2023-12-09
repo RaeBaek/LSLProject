@@ -18,7 +18,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     struct CellButtonInput {
-        let postID: BehaviorRelay<String>
+        let creatorID: BehaviorRelay<String>
         let moreButtonTap: ControlEvent<Void>
     }
     
@@ -125,22 +125,45 @@ final class HomeViewModel: ViewModelType {
         let postStatus = PublishRelay<Bool>()
         
         input.moreButtonTap
-            .flatMap {
-                self.repository.requestUserPosts(id: UserDefaultsManager.id)
-            }
-            .subscribe(onNext: { result in
-                switch result {
-                case .success(let data):
-                    postStatus.accept(data.data.map { $0.id }.contains(input.postID.value))
-                case .failure(let error):
-                    guard let userPostsError = UserPostsError(rawValue: error.rawValue) else {
-                        print("유저별 작성한 포스트 조회 실패.. \(error.message)")
-                        return
-                    }
-                    print("커스텀 유저별 작성한 포스트 조회 에러 \(userPostsError.message)")
+            .withLatestFrom(input.creatorID, resultSelector: { _, id in
+                print("확인1 \(Date()), \(input.creatorID.value)")
+                print("확인2 \(Date()), \(UserDefaultsManager.id)")
+                
+                if input.creatorID.value == UserDefaultsManager.id {
+                    return true
+                } else {
+                    return false
                 }
             })
+            .debug("확인")
+            .bind(to: postStatus)
             .disposed(by: disposeBag)
+        
+        
+        
+//            .flatMap { _ in
+//                //여기서 유저별 작성한 API 말고 내 프로필 확인하면 되는디?
+//                return self.repository.requestMyProfile()
+//            }
+//            .subscribe(onNext: { result in
+//                switch result {
+//                case .success(_):
+//                    print("((((((((((((((((((((( \(input.creatorID.value)")
+//                    if input.creatorID.value == UserDefaultsManager.id {
+//                        postStatus.accept(true)
+//                    } else {
+//                        postStatus.accept(false)
+//                    }
+////                    postStatus.accept(data.posts.map { $0 }.contains(input.creatorID.value))
+//                case .failure(let error):
+//                    guard let userPostsError = UserPostsError(rawValue: error.rawValue) else {
+//                        print("유저별 작성한 포스트 조회 실패.. \(error.message)")
+//                        return
+//                    }
+//                    print("커스텀 유저별 작성한 포스트 조회 에러 \(userPostsError.message)")
+//                }
+//            })
+//            .disposed(by: disposeBag)
         
         return CellButtonOutput(postStatus: postStatus)
     }

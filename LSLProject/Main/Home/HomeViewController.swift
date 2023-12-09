@@ -88,11 +88,12 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
         output.items
             .withUnretained(self)
-            .map { value in
-                self.model.next = value.1.nextCursor
-                return value.1.data
+            .map { owner, value in
+                owner.model.next = value.nextCursor
+                return value.data
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+                
                 guard let self else { return }
                 
                 cell.setCell(row: row, element: element) {
@@ -103,20 +104,26 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                     UIView.setAnimationsEnabled(true)
                 }
                 
-                let input = HomeViewModel.CellButtonInput(postID: BehaviorRelay(value: element.id),
+                let input = HomeViewModel.CellButtonInput(creatorID: BehaviorRelay(value: element.creator.id),
                                                           moreButtonTap: cell.moreButton.rx.tap)
+                
+                // 아래와 같이 전역변수 viewModel의 메서드를 사용하면 cell들이 모두 viewModel을 참조하게 되는 현상..?
+                // CellViewModel을 만들어 버튼 tap event를 바인드하는 방법이 있다고는 하는데
+                // 추후 시간이 있다면 개발해보자..
+                // (viewModel 쪽에서 print 문이 여러번 출력되는 문제말고는 동작은 정상적으로 수행됨)
                 let output = self.viewModel.buttonTransform(input: input)
+//                let cellViewModel = HomeViewModel(repository: cell.repository)
                 
                 output.postStatus
                     .bind { value in
                         if value {
-                            print("======================================내가 쓴 글입니다.")
-                            self.presentModalBtnTap()
+                            self.presentModalBtnTap(value: value)
                         } else {
-                            print("======================================다른 유저가 쓴 글입니다.")
+                            self.presentModalBtnTap(value: value)
                         }
                     }
-                    .disposed(by: self.disposeBag)
+                    .disposed(by: cell.disposeBag)
+                
             }
             .disposed(by: disposeBag)
         
@@ -143,35 +150,26 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
     }
     
-    private func presentModalBtnTap() {
+    private func presentModalBtnTap(value: Bool) {
         
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemYellow
+        let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
+        vc.value = value
         
         if let sheet = vc.sheetPresentationController {
             
-            //지원할 크기 지정
             sheet.detents = [
                 .custom { _ in
                     return 300
                 }
             ]
-            //크기 변하는거 감지
+            
             sheet.delegate = self
-            
-            //시트 상단에 그래버 표시 (기본 값은 false)
             sheet.prefersGrabberVisible = true
-            
-            //처음 크기 지정 (기본 값은 가장 작은 크기)
-            //sheet.selectedDetentIdentifier = .large
-            
-            //뒤 배경 흐리게 제거 (기본 값은 모든 크기에서 배경 흐리게 됨)
-            //sheet.largestUndimmedDetentIdentifier = .medium
         }
         
-        present(vc, animated: true, completion: nil)
+        self.present(vc, animated: true)
     }
     
     private func nextDetailViewController(item: PostResponse) {
