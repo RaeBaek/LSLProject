@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-final class HomeViewController: BaseViewController, UIScrollViewDelegate {
+final class HomeViewController: BaseViewController {
     
     private let homeTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -42,6 +42,14 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     
     private lazy var allPost = BehaviorRelay<AllPost>(value: model)
     
+    var sendData: Data? {
+        didSet(newValue) {
+            observeData.accept(newValue)
+        }
+    }
+    
+    lazy var observeData = BehaviorRelay(value: sendData)
+    
     private let repository = NetworkRepository()
     
     private lazy var viewModel = HomeViewModel(repository: repository)
@@ -53,6 +61,16 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
         bind()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(recallAllPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
+        
+    }
+    
+    @objc func recallAllPostAPI(notification: NSNotification) {
+        
+        if let data = notification.userInfo?["reset"] as? Data {
+            self.sendData = data
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +78,8 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
         setNavigationBar()
         setTabBar()
+        
+        print("홈뷰컨 뷰윌어피얼~")
     }
     
     private func setNavigationBar() {
@@ -80,7 +100,8 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func bind() {
-        let input = HomeViewModel.Input(userID: BehaviorRelay(value: UserDefaultsManager.id), 
+        let input = HomeViewModel.Input(sendData: observeData,
+                                        userID: BehaviorRelay(value: UserDefaultsManager.id),
                                         allPost: allPost,
                                         withdraw: withdrawButton.rx.tap)
         
@@ -117,9 +138,9 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
                 output.postStatus
                     .bind { value in
                         if value {
-                            self.presentModalBtnTap(value: value)
+                            self.presentPostBottomSheet(value: value, id: element.id)
                         } else {
-                            self.presentModalBtnTap(value: value)
+                            self.presentPostBottomSheet(value: value, id: element.id)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -150,12 +171,13 @@ final class HomeViewController: BaseViewController, UIScrollViewDelegate {
         
     }
     
-    private func presentModalBtnTap(value: Bool) {
+    private func presentPostBottomSheet(value: Bool, id: String) {
         
         let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
         vc.value = value
+        vc.deletePostID = id
         
         if let sheet = vc.sheetPresentationController {
             

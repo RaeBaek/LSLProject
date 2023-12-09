@@ -3,4 +3,182 @@
    uuid = "E7106B33-B0D3-4BD1-BEEE-BCAC81A592C3"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FF6C0FE4-8F74-4F80-84F4-27D8AFAA9F78"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/Detail/HomeDetailViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "sendData(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1C88EC75-75BF-466D-9F68-A68BE869BC17"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Comment/CommentViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "dismissViewController()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1C88EC75-75BF-466D-9F68-A68BE869BC17 - 32973942f018fd81"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.CommentViewController.dismissViewController() -&gt; ()"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Comment/CommentViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "105"
+                  endingLineNumber = "105"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  uuid = "1C88EC75-75BF-466D-9F68-A68BE869BC17 - 32973942f018fd81"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.CommentViewController.dismissViewController() -&gt; ()"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Comment/CommentViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "105"
+                  endingLineNumber = "105"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A21DA824-A851-4B75-A519-D8C82CE73713"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "model"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "A21DA824-A851-4B75-A519-D8C82CE73713 - 459f2fc4e21250a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; LSLProject.HomeViewController"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "272">
+               </Location>
+               <Location
+                  uuid = "A21DA824-A851-4B75-A519-D8C82CE73713 - 83c52169ce287965"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;LSLProject.HomeViewController&gt;"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "240">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CC74D908-680E-4506-9A28-A7545205A81A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "sendData"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "27853C90-9BB0-4CE8-AC4A-52F3CDC81920"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/Detail/HomeDetailViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "commentViewController(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7F6A8788-CAF9-4C23-AAA7-BD6F89355FB2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/Detail/HomeDetailViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "commentViewController(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "16A0EB68-4386-4230-B8B5-5D68549B19C4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/Detail/HomeDetailViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "sendData(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

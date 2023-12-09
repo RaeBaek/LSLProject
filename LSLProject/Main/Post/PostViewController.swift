@@ -43,9 +43,6 @@ final class PostViewController: BaseViewController {
     
     var userNickname = NicknameLabel(frame: .zero)
     
-    let startMessage = "스레드를 시작하세요..."
-    
-    
     //확인!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     lazy var mainTextView = CustomTextView(frame: .zero)
     

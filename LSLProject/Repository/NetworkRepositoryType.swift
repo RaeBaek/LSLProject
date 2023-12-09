@@ -26,13 +26,17 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestWithdraw() -> Single<NetworkResult<WithdrawResponse>>
     
-    func requestAllPost(next: String, limit: String, productID: String) -> Single<NetworkResult<PostResponses>>
+    func requestAllPost(next: String,
+                        limit: String,
+                        productID: String) -> Single<NetworkResult<PostResponses>>
     
-    func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>>
+    func requestPostAdd(title: String?,
+                        file: Data?,
+                        productID: String?) -> Single<NetworkResult<PostResponse>>
     
-    func requestPostDelete(id: String?) -> Single<NetworkResult<PostDelete>>
+    func requestPostDelete(id: String) -> Single<NetworkResult<PostDelete>>
     
-    func requestImage(path: String) -> Single<NetworkResult<Data>>//Result<DownloadImageResponse, MoyaError>
+    func requestImage(path: String) -> Single<NetworkResult<Data>>
     
     func requestMyProfile() -> Single<NetworkResult<MyProfile>>
     

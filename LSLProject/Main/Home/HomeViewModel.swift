@@ -12,6 +12,7 @@ import RxCocoa
 final class HomeViewModel: ViewModelType {
     
     struct Input {
+        let sendData: BehaviorRelay<Data?>
         let userID: BehaviorRelay<String>
         let allPost: BehaviorRelay<AllPost>
         let withdraw: ControlEvent<Void>
@@ -44,7 +45,8 @@ final class HomeViewModel: ViewModelType {
         let check = PublishRelay<Bool>()
         let items = PublishRelay<PostResponses>()
         
-        input.userID
+        input.sendData
+            .withUnretained(self)
             .withLatestFrom(input.allPost, resultSelector: { _, value in
                 return value
             })

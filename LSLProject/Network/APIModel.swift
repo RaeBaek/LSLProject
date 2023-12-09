@@ -64,7 +64,7 @@ struct UserID: Encodable {
 }
 
 struct PostID: Encodable {
-    let id: String?
+    let id: String
 }
 
 struct CommentMessage: Encodable {

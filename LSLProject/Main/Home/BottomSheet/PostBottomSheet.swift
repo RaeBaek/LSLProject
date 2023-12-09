@@ -51,7 +51,11 @@ final class PostBottomSheet: BaseViewController {
     lazy var myPosts = BehaviorRelay<[Header]>(value: myPost)
     lazy var userPosts = BehaviorRelay<[Header]>(value: userPost)
     
+    let repository = NetworkRepository()
+    
     let disposeBag = DisposeBag()
+    
+    var deletePostID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,15 +86,39 @@ final class PostBottomSheet: BaseViewController {
             myPosts
                 .bind(to: tableView.rx.items(dataSource: dataSource))
                 .disposed(by: disposeBag)
+            
         } else {
             userPosts
                 .bind(to: tableView.rx.items(dataSource: dataSource))
                 .disposed(by: disposeBag)
         }
         
+        tableView.rx.modelSelected(Bottom.self)
+            .filter { $0.title == "삭제" }
+            .withUnretained(self)
+            .bind { owner, _ in
+                print("모델 셀렉티드")
+                owner.dismissViewController(id: owner.deletePostID!)
+            }
+            .disposed(by: disposeBag)
+        
         tableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
+    }
+    
+    func dismissViewController(id: String) {
+        
+        let vc = PostDeleteViewController()
+        
+        guard let presentingViewController = self.presentingViewController else { return }
+        
+        vc.modalPresentationStyle = .overFullScreen
+        vc.deletePostID = id
+
+        self.dismiss(animated: true) {
+            presentingViewController.present(vc, animated: false)
+        }
     }
     
     override func configureView() {
@@ -115,13 +143,6 @@ final class PostBottomSheet: BaseViewController {
 }
 
 extension PostBottomSheet: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        return UIView()
-//    }
-//    
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return .leastNormalMagnitude
-//    }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()

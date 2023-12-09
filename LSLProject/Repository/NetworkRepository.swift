@@ -29,7 +29,8 @@ class NetworkRepository: NetworkRepositoryType {
         
     }
     
-    func requestLogin(email: String?, password: String?) -> Single<NetworkResult<LoginResponse>> {
+    func requestLogin(email: String?,
+                      password: String?) -> Single<NetworkResult<LoginResponse>> {
         APIManager.shared.request(target: .login(model: Login(email: email,
                                                               password: password)))
     }
@@ -42,15 +43,19 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .withdraw)
     }
     
-    func requestAllPost(next: String, limit: String, productID: String) -> Single<NetworkResult<PostResponses>> {
+    func requestAllPost(next: String,
+                        limit: String,
+                        productID: String) -> Single<NetworkResult<PostResponses>> {
         APIManager.shared.request(target: .allPost(model: AllPost(next: next, limit: limit, productID: productID)))
     }
     
-    func requestPostAdd(title: String?, file: Data?, productID: String?) -> Single<NetworkResult<PostResponse>> {
+    func requestPostAdd(title: String?,
+                        file: Data?,
+                        productID: String?) -> Single<NetworkResult<PostResponse>> {
         APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
     }
     
-    func requestPostDelete(id: String?) -> Single<NetworkResult<PostDelete>> {
+    func requestPostDelete(id: String) -> Single<NetworkResult<PostDelete>> {
         APIManager.shared.request(target: .postDel(model: PostID(id: id)))
     }
     
@@ -66,7 +71,8 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .userPosts(model: UserID(id: id)))
     }
     
-    func requestCommentAdd(id: String, comment: String) -> Single<NetworkResult<Comment>> {
+    func requestCommentAdd(id: String,
+                           comment: String) -> Single<NetworkResult<Comment>> {
         APIManager.shared.request(target: .commentAdd(model: CommentMessage(content: comment), id: id))
     }
     

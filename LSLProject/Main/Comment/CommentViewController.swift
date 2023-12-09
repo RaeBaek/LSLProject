@@ -82,7 +82,7 @@ final class CommentViewController: BaseViewController {
     
     var post: PostResponse?
     
-    var sendDelegate: SendData? 
+    var sendDelegate: SendData?
     
     private let repository = NetworkRepository()
     
@@ -102,8 +102,8 @@ final class CommentViewController: BaseViewController {
     }
     
     @objc func dismissViewController() {
-        self.dismiss(animated: true)
         sendDelegate?.sendData(data: Data())
+        self.dismiss(animated: true)
         
     }
     
