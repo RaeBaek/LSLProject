@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class UserViewModel: ViewModelType {
+final class MyProfileViewModel: ViewModelType {
     
     struct Input {
         let sendData: BehaviorRelay<Data?>

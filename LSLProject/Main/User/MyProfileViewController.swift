@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class UserViewController: BaseViewController, SendData {
+final class MyProfileViewController: BaseViewController, SendData {
     
     private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -27,7 +27,7 @@ final class UserViewController: BaseViewController, SendData {
     
     let repository = NetworkRepository()
     
-    private lazy var viewModel = UserViewModel(reposity: repository)
+    private lazy var viewModel = MyProfileViewModel(reposity: repository)
     
     private let disposeBag = DisposeBag()
     
@@ -59,7 +59,7 @@ final class UserViewController: BaseViewController, SendData {
     
     private func bind() {
         
-        let input = UserViewModel.Input(sendData: observeData)
+        let input = MyProfileViewModel.Input(sendData: observeData)
         let output = viewModel.transform(input: input)
         
         
@@ -134,7 +134,7 @@ final class UserViewController: BaseViewController, SendData {
 
 }
 
-extension UserViewController: UITableViewDelegate {
+extension MyProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserTableHeaderView.identifier) as? UserTableHeaderView else { return UIView() }
         

@@ -123,6 +123,7 @@ final class HomeViewController: BaseViewController {
                 }
                 
                 let input = HomeViewModel.CellButtonInput(creatorID: BehaviorRelay(value: element.creator.id),
+                                                          profileButtonTapped: cell.profileImageButton.rx.tap,
                                                           moreButtonTap: cell.moreButton.rx.tap)
                 
                 // 아래와 같이 전역변수 viewModel의 메서드를 사용하면 cell들이 모두 viewModel을 참조하게 되는 현상..?
@@ -133,12 +134,22 @@ final class HomeViewController: BaseViewController {
 //                let cellViewModel = HomeViewModel(repository: cell.repository)
                 
                 output.postStatus
-                    .bind { value in
+                    .withUnretained(self)
+                    .bind { owner, value in
                         if value {
-                            self.presentPostBottomSheet(value: value, id: element.id)
+                            owner.presentPostBottomSheet(value: value, id: element.id)
                         } else {
-                            self.presentPostBottomSheet(value: value, id: element.id)
+                            owner.presentPostBottomSheet(value: value, id: element.id)
                         }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                output.pushStatus
+                    .withUnretained(self)
+                    .bind { owner, value in
+                        if value {
+                            owner.presentUserProfileViewController()
+                        } else { return }
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -189,6 +200,12 @@ final class HomeViewController: BaseViewController {
         }
         
         self.present(vc, animated: true)
+    }
+    
+    private func presentUserProfileViewController() {
+        let vc = UserProfileViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func nextDetailViewController(item: PostResponse) {

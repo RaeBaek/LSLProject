@@ -29,6 +29,7 @@ class PostTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let profileImageButton = DeleteButton(frame: .zero)
     var profileImage = ProfileImageView(frame: .zero)
     var userNickname = NicknameLabel(frame: .zero)
     var uploadTime = UploadTimeLabel(frame: .zero)
@@ -61,8 +62,6 @@ class PostTableViewCell: BaseTableViewCell {
     
     var disposeBag = DisposeBag()
     
-    var buttonTapped: (() -> Void)?
-    
     var element: PostResponse?
     
     lazy var status = Observable.of(element)
@@ -72,7 +71,6 @@ class PostTableViewCell: BaseTableViewCell {
         
         // 재사용될 때의 상황을 고려해야함!
         mainText.text = nil
-        buttonTapped = nil
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
@@ -365,7 +363,7 @@ class PostTableViewCell: BaseTableViewCell {
     override func configureCell() {
         super.configureCell()
         
-        [profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
+        [profileImageButton, profileImage, userNickname, lineBar, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel, bottomLine].forEach {
             contentView.addSubview($0)
         }
         
@@ -373,6 +371,12 @@ class PostTableViewCell: BaseTableViewCell {
     
     override func setConstraints() {
         super.setConstraints()
+        
+        profileImageButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(12)
+            $0.size.equalTo(38)
+        }
         
         profileImage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)

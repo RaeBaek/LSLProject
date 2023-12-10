@@ -35,7 +35,7 @@ class MainTabBarController: UITabBarController {
         let searchVC = UINavigationController(rootViewController: SearchViewController())
         let postVC = UINavigationController(rootViewController: PostViewController())
         let heartVC = UINavigationController(rootViewController: HeartViewController())
-        let userVC = UINavigationController(rootViewController: UserViewController())
+        let userVC = UINavigationController(rootViewController: MyProfileViewController())
         
         self.setViewControllers([homeVC, searchVC, postVC, heartVC, userVC], animated: true)
         
