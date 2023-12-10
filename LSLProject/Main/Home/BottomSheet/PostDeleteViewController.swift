@@ -101,6 +101,7 @@ final class PostDeleteViewController: BaseViewController {
                     .bind { owner, value in
                         if value {
                             NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
+                            NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": Data()])
                             owner.dismiss(animated: false)
                         }
                     }

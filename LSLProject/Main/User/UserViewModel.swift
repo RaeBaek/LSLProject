@@ -13,8 +13,6 @@ final class UserViewModel: ViewModelType {
     
     struct Input {
         let sendData: BehaviorRelay<Data?>
-        let userToken: BehaviorRelay<String>
-        let userID: BehaviorRelay<String>
     }
     
     struct Output {
@@ -54,7 +52,7 @@ final class UserViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        input.userID
+        input.sendData
             .flatMap { value in
                 self.repository.requestUserPosts(id: UserDefaultsManager.id)
             }

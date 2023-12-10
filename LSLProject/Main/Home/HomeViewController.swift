@@ -66,7 +66,6 @@ final class HomeViewController: BaseViewController {
     }
     
     @objc func recallAllPostAPI(notification: NSNotification) {
-        
         if let data = notification.userInfo?["recallPostAPI"] as? Data {
             self.sendData = data
         }

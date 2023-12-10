@@ -46,14 +46,20 @@ final class UserViewController: BaseViewController, SendData {
         
         bind()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallMyPostAPI"), object: nil)
+        
+    }
+    
+    @objc func recallMyPostAPI(notification: NSNotification) {
+        if let data = notification.userInfo?["recallMyPostAPI"] as? Data {
+            self.sendData = data
+        }
+        
     }
     
     private func bind() {
         
-        let input = UserViewModel.Input(sendData: observeData,
-                                        userToken: BehaviorRelay(value: UserDefaultsManager.token),
-                                        userID: BehaviorRelay(value: UserDefaultsManager.id))
-        
+        let input = UserViewModel.Input(sendData: observeData)
         let output = viewModel.transform(input: input)
         
         

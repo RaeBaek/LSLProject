@@ -127,9 +127,11 @@ final class PostViewModel: ViewModelType {
                 case .failure(let error):
                     guard let postAddError = PostAddError(rawValue: error.rawValue) else {
                         print("기본 에러: \(error.message)")
+                        postResult.accept(false)
                         return
                     }
                     print("게시글 작성 커스텀 에러: \(postAddError.message)")
+                    postResult.accept(false)
                     
                 }
             })

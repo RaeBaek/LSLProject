@@ -199,7 +199,11 @@ final class PostViewController: BaseViewController {
         output.postResult
             .withUnretained(self)
             .bind { owner, value in
-                owner.dismissViewController()
+                if value {
+                    NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
+                    NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": Data()])
+                    owner.dismissViewController()
+                }
             }
             .disposed(by: disposeBag)
         
