@@ -46,4 +46,9 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestCommentDelete(id: String, commentID: String) -> Single<NetworkResult<CommentDeleteResponse>>
     
+    func requestProfileEdit(profile: Data?,
+                            nick: String,
+                            phoneNum: String?,
+                            birthDay: String?) -> Single<NetworkResult<MyProfile>>
+    
 }

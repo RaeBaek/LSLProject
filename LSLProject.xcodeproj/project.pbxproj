@@ -91,6 +91,10 @@
 		14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */; };
 		14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */; };
 		14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */; };
+		14DA42722B25838C00F6E272 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DA42712B25838C00F6E272 /* ProfileEditViewController.swift */; };
+		14DA42742B25881900F6E272 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DA42732B25881900F6E272 /* CustomTextField.swift */; };
+		14DA42762B25A01200F6E272 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DA42752B25A01200F6E272 /* ProfileEditViewModel.swift */; };
+		14DA42782B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DA42772B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift */; };
 		14F5FC572B066E0800A0C6E5 /* MapAndFlatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */; };
 		14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB182B0B479000493AE1 /* SeSACError.swift */; };
 		14F8AB1C2B0B553500493AE1 /* NetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F8AB1B2B0B553500493AE1 /* NetworkRepository.swift */; };
@@ -178,6 +182,10 @@
 		14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIImage.swift"; sourceTree = "<group>"; };
 		14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBackView.swift; sourceTree = "<group>"; };
 		14D9F1832B04CEE800E4025F /* PasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewModel.swift; sourceTree = "<group>"; };
+		14DA42712B25838C00F6E272 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
+		14DA42732B25881900F6E272 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		14DA42752B25A01200F6E272 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
+		14DA42772B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewHeaderFotterView.swift; sourceTree = "<group>"; };
 		14F5FC562B066E0800A0C6E5 /* MapAndFlatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAndFlatMap.swift; sourceTree = "<group>"; };
 		14F8AB182B0B479000493AE1 /* SeSACError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeSACError.swift; sourceTree = "<group>"; };
 		14F8AB1B2B0B553500493AE1 /* NetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRepository.swift; sourceTree = "<group>"; };
@@ -218,6 +226,7 @@
 				1416D21D2B21FCE9009FDC56 /* CustomTextView.swift */,
 				1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */,
 				145659F32B248B410040A987 /* CustomButton.swift */,
+				14DA42732B25881900F6E272 /* CustomTextField.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -287,6 +296,8 @@
 				14056EE22B1323C300C8EDA2 /* UserViewModel.swift */,
 				14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */,
 				14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */,
+				14DA42712B25838C00F6E272 /* ProfileEditViewController.swift */,
+				14DA42752B25A01200F6E272 /* ProfileEditViewModel.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -478,6 +489,7 @@
 			children = (
 				1440275C2B1209C40008CBC3 /* BaseTableViewCell.swift */,
 				149562222B024DA6006CED34 /* BaseViewController.swift */,
+				14DA42772B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -649,6 +661,7 @@
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
 				1416D2142B21F4C5009FDC56 /* NicknameLabel.swift in Sources */,
 				1416D2182B21F839009FDC56 /* MainTitle.swift in Sources */,
+				14DA42722B25838C00F6E272 /* ProfileEditViewController.swift in Sources */,
 				149562252B0250B8006CED34 /* APIKey.swift in Sources */,
 				14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */,
 				144B80AB2B09173600993347 /* HomeViewController.swift in Sources */,
@@ -670,13 +683,16 @@
 				14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */,
 				144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */,
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
+				14DA42742B25881900F6E272 /* CustomTextField.swift in Sources */,
 				143B40612B20766100F6A02D /* CommentViewController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
 				14056ED52B130E7F00C8EDA2 /* HeartViewController.swift in Sources */,
+				14DA42762B25A01200F6E272 /* ProfileEditViewModel.swift in Sources */,
 				14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */,
 				143B405E2B20422700F6A02D /* DeleteButton.swift in Sources */,
 				1416D21A2B21FA6D009FDC56 /* MainImageView.swift in Sources */,
 				14648C8D2B19F5C200C3A9D2 /* HomeDetailViewModel.swift in Sources */,
+				14DA42782B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift in Sources */,
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
 				14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */,

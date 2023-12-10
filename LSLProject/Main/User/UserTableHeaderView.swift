@@ -11,11 +11,13 @@ import Kingfisher
 import RxSwift
 import RxCocoa
 
-final class UserTableHeaderView: UITableViewHeaderFooterView {
+final class UserTableHeaderView: BaseTableViewHeaderFotterView {
+    
+    var lockBarbutton = CustomActiveButton(frame: .zero)
+    var settingBarbutton = CustomActiveButton(frame: .zero)
     
     let emailLabel = {
         let view = UILabel()
-        view.text = "raebaek@naver.com"
         view.textColor = .black
         view.font = .systemFont(ofSize: 20, weight: .bold)
         return view
@@ -23,7 +25,6 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     
     let nickNameLabel = {
         let view = UILabel()
-        view.text = "100_r_h"
         view.textColor = .black
         view.font = .systemFont(ofSize: 13, weight: .regular)
         return view
@@ -46,7 +47,6 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     
     let followerLabel = {
         let view = UILabel()
-        view.text = "팔로우 111명"
         view.textColor = .lightGray
         view.font = .systemFont(ofSize: 14, weight: .regular)
         return view
@@ -109,6 +109,7 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        
         configureView()
         setConstraints()
         
@@ -123,16 +124,10 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         profile
             .withUnretained(self)
             .bind { owner, value in
-                let url = URL(string: APIKey.sesacURL + (value.profile ?? ""))
-                
-                let imageDownloadRequest = AnyModifier { request in
-                    var requestBody = request
-                    requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
-                    requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
-                    return requestBody
+                if let profileURL = value.profile {
+                    let url = URL(string: APIKey.sesacURL + profileURL)
+                    owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(owner.imageDownloadRequest)])
                 }
-                
-                owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
                 
                 owner.emailLabel.text = value.email
                 owner.nickNameLabel.text = value.nick
@@ -143,9 +138,12 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     }
     
     func configureView() {
-        [emailLabel, nickNameLabel, threadsNetButton, followerLabel, profileStackView, profileImageView].forEach {
+        [lockBarbutton, settingBarbutton, emailLabel, nickNameLabel, threadsNetButton, followerLabel, profileStackView, profileImageView].forEach {
             contentView.addSubview($0)
         }
+        
+        lockBarbutton.setSymbolImage(image: "lock", size: 25, color: .black)
+        settingBarbutton.setSymbolImage(image: "gearshape", size: 25, color: .black)
         
         [profileEditButton, profileShareButton].forEach {
             profileStackView.addArrangedSubview($0)
@@ -155,8 +153,20 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
     
     func setConstraints() {
         
+        lockBarbutton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(16)
+            $0.size.equalTo(25)
+        }
+        
+        settingBarbutton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(10)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.size.equalTo(25)
+        }
+        
         emailLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
+            $0.top.equalTo(lockBarbutton.snp.bottom).offset(25)
             $0.leading.equalToSuperview().offset(16)
         }
         
@@ -184,11 +194,10 @@ final class UserTableHeaderView: UITableViewHeaderFooterView {
         }
         
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
-            $0.trailing.equalToSuperview().offset(-12)
-            $0.size.equalTo(70)
+            $0.top.equalTo(settingBarbutton.snp.bottom).offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.size.equalTo(60)
         }
-        
         
     }
     

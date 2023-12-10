@@ -76,6 +76,12 @@ struct CommentDelete: Encodable {
     let commentID: String
 }
 
+struct ProfileEdit: Encodable {
+    let nick: String
+    let phoneNum, birthDay: String?
+    let profile: Data?
+}
+
 //MARK: - Decodable {
 struct EmailValidationResponse: Decodable {
     let message: String
@@ -174,8 +180,8 @@ struct Creator: Decodable {
 struct MyProfile: Decodable {
     let posts: [String]
     let followers, following: [Follow]
-    let id, email, nick, phoneNum: String?
-    let birthDay, profile: String?
+    let id, email, nick: String
+    let phoneNum, birthDay, profile: String?
 
     enum CodingKeys: String, CodingKey {
         case posts, followers, following

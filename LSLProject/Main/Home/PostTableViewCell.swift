@@ -17,10 +17,11 @@ class PostTableViewCell: BaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: PostTableViewCell.identifier)
-        heartButton.setSymbolImage(image: "heart", size: 22)
-        commentButton.setSymbolImage(image: "message", size: 22)
-        repostButton.setSymbolImage(image: "repeat", size: 22)
-        dmButton.setSymbolImage(image: "paperplane", size: 22)
+        
+        heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+        commentButton.setSymbolImage(image: "message", size: 22, color: .black)
+        repostButton.setSymbolImage(image: "repeat", size: 22, color: .black)
+        dmButton.setSymbolImage(image: "paperplane", size: 22, color: .black)
         
     }
     
@@ -132,9 +133,10 @@ class PostTableViewCell: BaseTableViewCell {
     
     func setCell(element: PostResponse, completion: @escaping () -> ()) {
         
-        let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
-        
-        profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        if let profileURL = element.creator.profile {
+            let url = URL(string: APIKey.sesacURL + profileURL)
+            profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        }
         
         statusLabel.text = element.productID
         userNickname.text = element.creator.nick

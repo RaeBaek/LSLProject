@@ -162,7 +162,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
         vc.deleteCommentID = commentID
         
         if let sheet = vc.sheetPresentationController {
-            
             sheet.detents = [
                 .custom { _ in
                     return 300

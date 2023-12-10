@@ -75,45 +75,10 @@ final class PostViewController: BaseViewController {
         return view
     }()
     
-    let albumButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
-        let image = UIImage(systemName: "photo.on.rectangle.angled", withConfiguration: imageConfig)
-        view.tintColor = .lightGray
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    let gifButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
-        let image = UIImage(systemName: "book.pages", withConfiguration: imageConfig)
-        view.tintColor = .lightGray
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    let recordButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
-        let image = UIImage(systemName: "mic", withConfiguration: imageConfig)
-        view.tintColor = .lightGray
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
-    
-    let voteButton = {
-        let view = UIButton()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 25)
-        let image = UIImage(systemName: "line.3.horizontal.decrease", withConfiguration: imageConfig)
-        view.tintColor = .lightGray
-        view.setImage(image, for: .normal)
-        view.imageView?.contentMode = .scaleAspectFit
-        return view
-    }()
+    let albumButton = CustomActiveButton(frame: .zero)
+    let gifButton = CustomActiveButton(frame: .zero)
+    let recordButton = CustomActiveButton(frame: .zero)
+    let voteButton = CustomActiveButton(frame: .zero)
     
     let toolView = {
         let view = UIView()
@@ -273,7 +238,6 @@ final class PostViewController: BaseViewController {
     }
     
     private func presentPicker() {
-        
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         configuration.filter = .images
@@ -335,6 +299,10 @@ final class PostViewController: BaseViewController {
             buttonStackView.addArrangedSubview($0)
         }
         
+        albumButton.setSymbolImage(image: "photo.on.rectangle.angled", size: 25, color: .lightGray)
+        gifButton.setSymbolImage(image: "book.pages", size: 25, color: .lightGray)
+        recordButton.setSymbolImage(image: "mic", size: 25, color: .lightGray)
+        voteButton.setSymbolImage(image: "line.3.horizontal.decrease", size: 25, color: .lightGray)
         
     }
     

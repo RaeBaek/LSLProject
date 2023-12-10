@@ -135,16 +135,21 @@ final class BirthdayViewModel: ViewModelType {
                 switch value {
                 case .success:
                     print("회원가입 성공~~~")
-                    loginStatus.accept(true)
+                    
+                    signUpStatus.accept(true)
+//                    loginStatus.accept(true)
+                    
                 case .failure(let error):
                     guard let signUpError = SignUpError(rawValue: error.rawValue) else {
                         print("=====", error.message)
                         print("-----", error.rawValue)
                         outputText.accept(error.message)
-                        loginStatus.accept(false)
+                        signUpStatus.accept(false)
+//                        loginStatus.accept(false)
                         return
                     }
-                    loginStatus.accept(false)
+                    signUpStatus.accept(false)
+//                    loginStatus.accept(false)
                     outputText.accept(signUpError.message)
                 }
             })
@@ -185,8 +190,12 @@ final class BirthdayViewModel: ViewModelType {
             .subscribe { result in
                 switch result {
                 case .success(let data):
-                    UserDefaultsManager.nickname = data.nick ?? "이 값이 보인다면 닉네임 기입에 문제.."
+                    UserDefaultsManager.nickname = data.nick 
+                    UserDefaultsManager.phoneNum = data.phoneNum ?? UserDefaultsManagerDefaultValue.phoneNum.rawValue
+                    UserDefaultsManager.birthDay = data.birthDay ?? UserDefaultsManagerDefaultValue.birthDay.rawValue
+                    
                     loginStatus.accept(true)
+                    
                 case .failure(let error):
                     print("내 프로필 조회에 실패했습니다. (로그인 후 닉네임을 가져오는 경우!) \(error.message)")
                     loginStatus.accept(false)

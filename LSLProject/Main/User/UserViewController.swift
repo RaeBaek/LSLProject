@@ -9,19 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class UserViewController: BaseViewController, UIScrollViewDelegate {
-
-    lazy var lockBarbutton = {
-        let view = UIBarButtonItem(image: UIImage(systemName: "lock"), style: .plain, target: self, action: nil)
-        view.tintColor = .black
-        return view
-    }()
-    
-    lazy var settingBarbutton = {
-        let view = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: nil)
-        view.tintColor = .black
-        return view
-    }()
+final class UserViewController: BaseViewController, SendData {
     
     private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -43,6 +31,14 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
     
     private let disposeBag = DisposeBag()
     
+    var sendData: Data? {
+        didSet(newValue) {
+            observeData.accept(newValue)
+        }
+    }
+    
+    lazy var observeData = BehaviorRelay(value: sendData)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -54,7 +50,10 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
     
     private func bind() {
         
-        let input = UserViewModel.Input(userToken: BehaviorRelay(value: UserDefaultsManager.token), userID: BehaviorRelay(value: UserDefaultsManager.id))
+        let input = UserViewModel.Input(sendData: observeData,
+                                        userToken: BehaviorRelay(value: UserDefaultsManager.token),
+                                        userID: BehaviorRelay(value: UserDefaultsManager.id))
+        
         let output = viewModel.transform(input: input)
         
         
@@ -86,6 +85,11 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
             .disposed(by: disposeBag)
     }
     
+    func sendData(data: Data) {
+        sendData = data
+        
+    }
+    
     override func configureView() {
         super.configureView()
         
@@ -96,8 +100,7 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
-        self.navigationItem.leftBarButtonItem = lockBarbutton
-        self.navigationItem.rightBarButtonItem = settingBarbutton
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func setConstraints() {
@@ -112,6 +115,16 @@ final class UserViewController: BaseViewController, UIScrollViewDelegate {
         }
         
     }
+    
+    private func presentProfileEdit() {
+        let vc = ProfileEditViewController()
+        
+        vc.sendDelegate = self
+        
+        let nav = UINavigationController(rootViewController: vc)
+        
+        self.present(nav, animated: true)
+    }
 
 }
 
@@ -120,6 +133,13 @@ extension UserViewController: UITableViewDelegate {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserTableHeaderView.identifier) as? UserTableHeaderView else { return UIView() }
         
         header.setHeaderView(profile: profile)
+        
+        header.profileEditButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.presentProfileEdit()
+            }
+            .disposed(by: disposeBag)
         
         return header
     }

@@ -80,4 +80,14 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .commentDel(model: CommentDelete(id: id, commentID: commentID)))
     }
     
+    func requestProfileEdit(profile: Data?, 
+                            nick: String,
+                            phoneNum: String?,
+                            birthDay: String?) -> Single<NetworkResult<MyProfile>> {
+        APIManager.shared.request(target: .profileEdit(model: ProfileEdit(nick: nick,
+                                                                          phoneNum: phoneNum,
+                                                                          birthDay: birthDay,
+                                                                          profile: profile)))
+    }
+    
 }

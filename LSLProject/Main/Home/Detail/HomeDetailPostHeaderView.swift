@@ -64,9 +64,10 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
     
     func setHeaderView(item: PostResponse, completion: @escaping () -> ()) {
         
-        let url = URL(string: APIKey.sesacURL + (item.creator.profile ?? ""))
-        
-        profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        if let profileURL = item.creator.profile {
+            let url = URL(string: APIKey.sesacURL + profileURL)
+            profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        }
         
         userNickname.text = item.creator.nick
         
@@ -266,10 +267,10 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
             contentView.addSubview($0)
         }
         
-        heartButton.setSymbolImage(image: "heart", size: 22)
-        commentButton.setSymbolImage(image: "message", size: 22)
-        repostButton.setSymbolImage(image: "repeat", size: 22)
-        dmButton.setSymbolImage(image: "paperplane", size: 22)
+        heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+        commentButton.setSymbolImage(image: "message", size: 22, color: .black)
+        repostButton.setSymbolImage(image: "repeat", size: 22, color: .black)
+        dmButton.setSymbolImage(image: "paperplane", size: 22, color: .black)
         
     }
     

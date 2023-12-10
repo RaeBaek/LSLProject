@@ -20,6 +20,7 @@ enum SeSACAPI {
     case downloadImage(model: DownloadImage)
     case userPosts(model: UserID)
     case myProfile
+    case profileEdit(model: ProfileEdit)
     case commentAdd(model: CommentMessage, id: String)
     case commentDel(model: CommentDelete)
     
@@ -34,39 +35,57 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp:
             return "join"
+            
         case .emailValidation:
             return "validation/email"
+            
         case .login:
             return "login"
+            
         case .accessToken:
             return "refresh"
+            
         case .withdraw:
             return "withdraw"
+            
         case .allPost, .postAdd:
             return "post"
+            
         case .postDel(let model):
             return "post/\(model.id)"
+            
         case .downloadImage(let model):
             return model.path
-        case .myProfile:
+            
+        case .myProfile, .profileEdit:
             return "profile/me"
+            
         case .userPosts(let model):
             return "post/user/\(model.id)"
+            
         case .commentAdd(_, let id):
             return "post/\(id)/comment"
+            
         case .commentDel(let model):
             return "post/\(model.id)/comment/\(model.commentID)"
+            
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .signUp, .emailValidation, .login, .postAdd, .commentAdd:
-            return .post
         case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
             return .get
+            
+        case .signUp, .emailValidation, .login, .postAdd, .commentAdd:
+            return .post
+            
+        case .profileEdit:
+            return .put
+        
         case .postDel, .commentDel:
             return .delete
+            
         }
     }
     
@@ -94,7 +113,6 @@ extension SeSACAPI: TargetType {
             return .requestParameters(parameters: ["next": model.next, "limit": model.limit, "product_id": model.productID], encoding: URLEncoding.queryString)
             
         case .postAdd(let model):
-            
             if let file = model.file {
                 let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
                 let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!) ?? Data()), name: "title")
@@ -107,6 +125,22 @@ extension SeSACAPI: TargetType {
                 let productId = MultipartFormData(provider: .data((model.productID?.data(using: .utf8)!)!), name: "product_id")
                 
                 return .uploadMultipart([title, productId])
+            }
+            
+        case .profileEdit(let model):
+            if let file = model.profile {
+                let imageData = MultipartFormData(provider: .data(file), name: "profile", fileName: "profileImage.jpg", mimeType: "profileImage/jpg")
+                let nick = MultipartFormData(provider: .data((model.nick.data(using: .utf8) ?? Data())), name: "nick")
+                let phoneNum = MultipartFormData(provider: .data((model.phoneNum?.data(using: .utf8) ?? Data())), name: "phoneNum")
+                let birthDay = MultipartFormData(provider: .data((model.birthDay?.data(using: .utf8) ?? Data())), name: "birthDay")
+                
+                return .uploadMultipart([imageData, nick, phoneNum, birthDay])
+            } else {
+                let nick = MultipartFormData(provider: .data((model.nick.data(using: .utf8) ?? Data())), name: "nick")
+                let phoneNum = MultipartFormData(provider: .data((model.phoneNum?.data(using: .utf8) ?? Data())), name: "phoneNum")
+                let birthDay = MultipartFormData(provider: .data((model.birthDay?.data(using: .utf8) ?? Data())), name: "birthDay")
+                
+                return .uploadMultipart([nick, phoneNum, birthDay])
             }
         }
     }
@@ -126,7 +160,7 @@ extension SeSACAPI: TargetType {
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
         case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel:
             return ["Authorization": token, "SesacKey": key]
-        case .postAdd:
+        case .postAdd, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
         }
         

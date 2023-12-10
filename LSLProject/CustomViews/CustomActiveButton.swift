@@ -11,7 +11,6 @@ final class CustomActiveButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.tintColor = .black
         self.imageView?.contentMode = .scaleAspectFit
         
     }
@@ -25,10 +24,11 @@ final class CustomActiveButton: UIButton {
         
     }
     
-    func setSymbolImage(image: String, size: CGFloat) {
+    func setSymbolImage(image: String, size: CGFloat, color: UIColor) {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: size)
         let image = UIImage(systemName: image, withConfiguration: imageConfig)
         self.setImage(image, for: .normal)
+        self.tintColor = color
     }
     
 }

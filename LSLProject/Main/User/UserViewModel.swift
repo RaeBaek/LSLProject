@@ -12,6 +12,7 @@ import RxCocoa
 final class UserViewModel: ViewModelType {
     
     struct Input {
+        let sendData: BehaviorRelay<Data?>
         let userToken: BehaviorRelay<String>
         let userID: BehaviorRelay<String>
     }
@@ -34,7 +35,7 @@ final class UserViewModel: ViewModelType {
         let profile = PublishRelay<MyProfile>()
         let userPosts = PublishRelay<PostResponses>()
         
-        input.userToken
+        input.sendData
             .flatMap { _ in
                 self.repository.requestMyProfile()
             }

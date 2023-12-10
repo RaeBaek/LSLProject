@@ -81,7 +81,7 @@ final class BirthdayViewController: MakeViewController {
         output.outputText
             .withUnretained(self)
             .bind { owner, value in
-                owner.customTextField.text = value
+//                owner.customTextField.text = value
             }
             .disposed(by: disposeBag)
         

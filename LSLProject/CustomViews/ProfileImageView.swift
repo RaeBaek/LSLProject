@@ -12,7 +12,7 @@ final class ProfileImageView: UIImageView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.image = UIImage(systemName: "person")
+        self.image = UIImage(named: "basicUser")
         
     }
     
