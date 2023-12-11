@@ -12,6 +12,7 @@ enum UserDefaultsManagerDefaultValue: String {
     case password = "비밀번호 없음"
     case id = "아이디 없음"
     case nickname = "닉네임 없음"
+    case profile = "프로필 없음"
     case phoneNum, birthDay = ""
     case token = "토큰 없음"
     case refreshToken = "리프레시 토큰 없음"
@@ -38,6 +39,7 @@ enum UserDefaultsManager {
         case email
         case password
         case id
+        case profile
         case nickname
         case phoneNum
         case birthDay
@@ -54,6 +56,9 @@ enum UserDefaultsManager {
     
     @RBDefaults(key: Key.id.rawValue, defaultValue: UserDefaultsManagerDefaultValue.id.rawValue)
     static var id
+    
+    @RBDefaults(key: Key.id.rawValue, defaultValue: UserDefaultsManagerDefaultValue.profile.rawValue)
+    static var profile
     
     @RBDefaults(key: Key.nickname.rawValue, defaultValue: UserDefaultsManagerDefaultValue.nickname.rawValue)
     static var nickname

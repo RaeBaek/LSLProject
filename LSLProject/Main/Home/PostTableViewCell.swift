@@ -74,6 +74,7 @@ class PostTableViewCell: BaseTableViewCell {
         mainImage.image = nil
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
+        profileImage.image = UIImage(named: "basicUser")
         disposeBag = DisposeBag()
 
         mainText.snp.remakeConstraints {
@@ -359,20 +360,6 @@ class PostTableViewCell: BaseTableViewCell {
             }
         }
     }
-    
-//    func moreButtonTapped(id: String) {
-//        moreButton.rx.tap
-//            .withLatestFrom(id, resultSelector: { _, id in
-//                <#code#>
-//            })
-//            .withUnretained(self)
-//            .map {
-//            }
-//            .bind { owner, _ in
-//                <#code#>
-//            }
-//            .disposed(by: disposeBag)
-//    }
     
     override func configureCell() {
         super.configureCell()

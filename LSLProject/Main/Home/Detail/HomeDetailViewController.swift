@@ -17,6 +17,10 @@ protocol SendData {
 
 final class HomeDetailViewController: BaseViewController, SendData {
     
+    deinit {
+        print("HomeDetailViewController Deinit!!!!")
+    }
+    
     private let detailTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.register(HomeDetailPostHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeDetailPostHeaderView.identifier)
@@ -24,7 +28,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
         view.backgroundColor = .systemBackground
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
-        view.tableFooterView = UIView(frame: .zero)
         return view
     }()
     
@@ -56,9 +59,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
         return view
     }()
     
-    private let repository = NetworkRepository()
-    
-    private lazy var viewModel = HomeDetailViewModel(repository: repository)
+    private lazy var viewModel = HomeDetailViewModel(repository: NetworkRepository())
     
     private let disposeBag = DisposeBag()
     
@@ -91,6 +92,8 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
         if let data = notification.userInfo?["recallCommentAPI"] as? Data {
             self.sendData = data
+            // 스크롤!
+            self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         
     }
@@ -101,8 +104,9 @@ final class HomeDetailViewController: BaseViewController, SendData {
     }
     
     func sendData(data: Data) {
-        sendData = data
-//        detailTableView.reloadData()
+        self.sendData = data
+        // 스크롤!
+        self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
     
     private func bind() {
@@ -125,6 +129,8 @@ final class HomeDetailViewController: BaseViewController, SendData {
             .bind(to: detailTableView.rx.items(cellIdentifier: HomeDetailCommentCell.identifier, cellType: HomeDetailCommentCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
                 
+                cell.selectionStyle = .none
+                
                 cell.setCell(element: element) {
                     cell.layoutIfNeeded()
                 }
@@ -135,11 +141,12 @@ final class HomeDetailViewController: BaseViewController, SendData {
                 let output = self.viewModel.buttonTransform(input: input)
                 
                 output.postStatus
-                    .bind { value in
+                    .withUnretained(self)
+                    .bind { owner, value in
                         if value {
-                            self.presentCommentBottomSheet(value: value, postID: item.id, commentID: element.id)
+                            owner.presentCommentBottomSheet(value: value, postID: item.id, commentID: element.id)
                         } else {
-                            self.presentCommentBottomSheet(value: value, postID: item.id, commentID: nil)
+                            owner.presentCommentBottomSheet(value: value, postID: item.id, commentID: nil)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -262,20 +269,20 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
             UIView.setAnimationsEnabled(false)
             self.detailTableView.beginUpdates()
             header.layoutIfNeeded()
+//            header.disposeBag = DisposeBag()
             self.detailTableView.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
+        
+        // homeVC에서 cell 내의 버튼을 bind 구문에서 setCell과 같이 다루었듯이
+        // homeDetailVC의 header 내의 버튼은 여기서 다루어보자!
+        // homeViewModel에 있는 input, output과 transform 메서드는 삭제하도록!
         
         return header
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
-        let view = UIView()
-        view.backgroundColor = .clear
-        
-        return view
-        
+        return UIView()
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

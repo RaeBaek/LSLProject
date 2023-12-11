@@ -44,6 +44,12 @@ final class ProfileEditViewModel: ViewModelType {
         let outputPhoneNum = BehaviorRelay<String>(value: UserDefaultsManager.phoneNum)
         let outputBirthDay = BehaviorRelay<String>(value: UserDefaultsManager.birthDay)
         
+        // 현재까지는 빈 값에 대한 처리를 현재 UserDefaultsManager 값들을 넣어주고 있다.
+        // why?
+        // 텍스트 필드를 건드리지 않으면 기본적으로 빈 값이 들어가기 때문에
+        // 빈 값일 경우 기본 값 처리를 해주었고
+        // 이 경우 임의로 텍스트 필드를 빈 값으로 수정하면 동일하게 기본 값이 들어가게 된다.
+        // 추후 리팩토링 예정이다.
         input.nickname
             .distinctUntilChanged()
             .bind { text in

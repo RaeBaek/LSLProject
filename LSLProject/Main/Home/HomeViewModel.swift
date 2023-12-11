@@ -37,12 +37,12 @@ final class HomeViewModel: ViewModelType {
         let items = PublishRelay<PostResponses>()
         
         input.sendData
-            .withUnretained(self)
             .withLatestFrom(input.allPost, resultSelector: { _, value in
                 return value
             })
-            .flatMap { value in
-                self.repository.requestAllPost(next: value.next, limit: value.limit, productID: value.productID)
+            .withUnretained(self)
+            .flatMap { owner, value in
+                owner.repository.requestAllPost(next: value.next, limit: value.limit, productID: value.productID)
             }
             .subscribe(onNext: { value in
                 switch value {

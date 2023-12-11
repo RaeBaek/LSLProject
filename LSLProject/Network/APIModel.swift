@@ -180,8 +180,8 @@ struct Creator: Decodable {
 struct MyProfile: Decodable {
     let posts: [String]
     let followers, following: [Follow]
-    let id, email, nick: String
-    let phoneNum, birthDay, profile: String?
+    let id, nick: String
+    let email, phoneNum, birthDay, profile: String?
 
     enum CodingKeys: String, CodingKey {
         case posts, followers, following
@@ -196,6 +196,16 @@ struct Follow: Decodable {
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case nick, profile
+    }
+}
+
+struct FollowResponse: Decodable {
+    let user, following: String
+    let followingStatus: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case user, following
+        case followingStatus = "following_status"
     }
 }
 

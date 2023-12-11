@@ -67,6 +67,10 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .myProfile)
     }
     
+    func requestUserProfile(id: String) -> Single<NetworkResult<MyProfile>> {
+        APIManager.shared.request(target: .userProfile(model: UserID(id: id)))
+    }
+    
     func requestUserPosts(id: String) -> Single<NetworkResult<PostResponses>> {
         APIManager.shared.request(target: .userPosts(model: UserID(id: id)))
     }
@@ -88,6 +92,14 @@ class NetworkRepository: NetworkRepositoryType {
                                                                           phoneNum: phoneNum,
                                                                           birthDay: birthDay,
                                                                           profile: profile)))
+    }
+    
+    func requestFollow(id: String) -> Single<NetworkResult<FollowResponse>> {
+        APIManager.shared.request(target: .follow(model: UserID(id: id)))
+    }
+    
+    func requestUnFollow(id: String) -> Single<NetworkResult<FollowResponse>> {
+        APIManager.shared.request(target: .unfollow(model: UserID(id: id)))
     }
     
 }

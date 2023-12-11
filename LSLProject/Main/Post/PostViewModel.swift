@@ -56,10 +56,13 @@ final class PostViewModel: ViewModelType {
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):
-                    let url = URL(string: APIKey.sesacURL + (data.profile ?? ""))
                     
-                    userNickame.accept(data.nick ?? "닉네임 확인 필요")
-                    profileImageURL.accept(url!)
+                    if let profile = data.profile {
+                        let url = URL(string: APIKey.sesacURL + profile)
+                        profileImageURL.accept(url!)
+                    }
+                    
+                    userNickame.accept(data.nick)
                     
                 case .failure(let error):
                     guard let allPostError = MyProfileError(rawValue: error.rawValue) else {

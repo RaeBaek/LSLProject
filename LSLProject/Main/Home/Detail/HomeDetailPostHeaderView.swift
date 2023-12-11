@@ -51,7 +51,7 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         return view
     }()
     
-    private let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     
     private let repository = NetworkRepository()
     

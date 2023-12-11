@@ -102,7 +102,6 @@ final class CommentViewController: BaseViewController {
     }
     
     @objc func dismissViewController() {
-        sendDelegate?.sendData(data: Data())
         self.dismiss(animated: true)
         
     }
@@ -162,6 +161,7 @@ final class CommentViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, bool in
                 if bool {
+                    owner.sendDelegate?.sendData(data: Data())
                     owner.dismissViewController()
                 }
             }
@@ -171,12 +171,14 @@ final class CommentViewController: BaseViewController {
     func setView() {
         guard let post else { return }
         
-        let userProfileImageUrl = URL(string: APIKey.sesacURL + (post.creator.profile ?? ""))
+        if let profile = post.creator.profile {
+            let userProfileImageUrl = URL(string: APIKey.sesacURL + profile)
+            userProfileImage.kf.setImage(with: userProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        }
         
-        userProfileImage.kf.setImage(with: userProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
         userNickname.text = post.creator.nick
         
-        let myProfileImageUrl = URL(string: APIKey.sesacURL + UserDefaultsManager.id)
+        let myProfileImageUrl = URL(string: APIKey.sesacURL + UserDefaultsManager.profile)
         
         myProfileImage.kf.setImage(with: myProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
         myNickname.text = UserDefaultsManager.nickname
@@ -360,7 +362,10 @@ final class CommentViewController: BaseViewController {
         
         Observable.of(())
             .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
-            .flatMap { self.repository.requestImage(path: path) }
+            .withUnretained(self)
+            .flatMap { owner, value in
+                owner.repository.requestImage(path: path)
+            }
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):

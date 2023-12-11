@@ -20,9 +20,12 @@ enum SeSACAPI {
     case downloadImage(model: DownloadImage)
     case userPosts(model: UserID)
     case myProfile
+    case userProfile(model: UserID)
     case profileEdit(model: ProfileEdit)
     case commentAdd(model: CommentMessage, id: String)
     case commentDel(model: CommentDelete)
+    case follow(model: UserID)
+    case unfollow(model: UserID)
     
 }
 
@@ -60,6 +63,9 @@ extension SeSACAPI: TargetType {
         case .myProfile, .profileEdit:
             return "profile/me"
             
+        case .userProfile(let model):
+            return "profile/\(model.id)"
+            
         case .userPosts(let model):
             return "post/user/\(model.id)"
             
@@ -69,21 +75,27 @@ extension SeSACAPI: TargetType {
         case .commentDel(let model):
             return "post/\(model.id)/comment/\(model.commentID)"
             
+        case .follow(let model):
+            return "follow/\(model.id)"
+            
+        case .unfollow(let model):
+            return "follow/\(model.id)"
+            
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts:
+        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile:
             return .get
             
-        case .signUp, .emailValidation, .login, .postAdd, .commentAdd:
+        case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow:
             return .post
             
         case .profileEdit:
             return .put
         
-        case .postDel, .commentDel:
+        case .postDel, .commentDel, .unfollow:
             return .delete
             
         }
@@ -106,7 +118,7 @@ extension SeSACAPI: TargetType {
         case .commentDel(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow:
             return .requestPlain
             
         case .allPost(let model):
@@ -158,7 +170,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

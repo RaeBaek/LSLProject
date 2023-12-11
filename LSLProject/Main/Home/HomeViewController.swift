@@ -68,6 +68,8 @@ final class HomeViewController: BaseViewController {
     @objc func recallAllPostAPI(notification: NSNotification) {
         if let data = notification.userInfo?["recallPostAPI"] as? Data {
             self.sendData = data
+            // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
+            self.homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         
     }
@@ -113,7 +115,7 @@ final class HomeViewController: BaseViewController {
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
-                
+//                self.homeTableView.scrollToRow(at: [0, 0], at: .top, animated: true)
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
@@ -146,7 +148,7 @@ final class HomeViewController: BaseViewController {
                         if element.creator.id == UserDefaultsManager.id {
                             return
                         } else {
-                            owner.presentUserProfileViewController()
+                            owner.presentUserProfileViewController(id: element.creator.id)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -200,8 +202,9 @@ final class HomeViewController: BaseViewController {
         self.present(vc, animated: true)
     }
     
-    private func presentUserProfileViewController() {
+    private func presentUserProfileViewController(id: String) {
         let vc = UserProfileViewController()
+        vc.userID = id
         
         self.navigationController?.pushViewController(vc, animated: true)
     }

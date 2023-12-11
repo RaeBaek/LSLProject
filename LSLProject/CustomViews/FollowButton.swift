@@ -1,13 +1,13 @@
 //
-//  CustomButton.swift
+//  FollowButton.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 12/9/23.
+//  Created by 백래훈 on 12/11/23.
 //
 
 import UIKit
 
-final class CustomButton: UIButton {
+final class FollowButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,7 +22,9 @@ final class CustomButton: UIButton {
         super.layoutSubviews()
         
         self.layer.cornerRadius = 10
+        self.layer.cornerCurve = .continuous
         self.clipsToBounds = true
+        
     }
     
     func buttonSetting(title: String, backgroundColor: UIColor, fontColor: UIColor, fontSize: CGFloat, fontWeight: UIFont.Weight) {

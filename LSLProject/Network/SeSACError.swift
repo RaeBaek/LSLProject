@@ -186,6 +186,23 @@ enum MyProfileError: Int, LoggableError {
     }
 }
 
+enum UserProfileError: Int, LoggableError {
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidAccessToken:
+            "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        }
+    }
+}
+
 enum UserPostsError: Int, LoggableError {
     case inValidRequest = 400
     case inValidAccessToken = 401
@@ -289,6 +306,55 @@ enum ProfileEditError: Int, LoggableError {
             "유효하지 않은 AccessToken으로 요청하였습니다."
         case .noAuthority:
             "Forbidden"
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        }
+    }
+}
+
+enum FollowError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case alreadyFollowing = 409
+    case unknownAccount = 410
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            "유효하지 않은 요청입니다."
+        case .inValidAccessToken:
+            "유효하지 않은 AccessToken으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .alreadyFollowing:
+            "이미 팔로윙 되어있는 계정입니다."
+        case .unknownAccount:
+            "알 수 없는 계정입니다."
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        }
+    }
+}
+
+enum UnFollowError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case unknownAccount = 410
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            "유효하지 않은 요청입니다."
+        case .inValidAccessToken:
+            "유효하지 않은 AccessToken으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .unknownAccount:
+            "알 수 없는 계정입니다."
         case .expireAccessToken:
             "Access Token이 만료되었습니다."
         }

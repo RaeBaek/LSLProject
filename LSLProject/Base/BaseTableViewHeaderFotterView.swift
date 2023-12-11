@@ -17,4 +17,24 @@ class BaseTableViewHeaderFotterView: UITableViewHeaderFooterView {
         return requestBody
     }
     
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        
+        configureView()
+        setConstraints()
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureView() {
+        
+    }
+    
+    func setConstraints() {
+        
+    }
+    
 }

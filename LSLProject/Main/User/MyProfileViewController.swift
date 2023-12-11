@@ -13,7 +13,7 @@ final class MyProfileViewController: BaseViewController, SendData {
     
     private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.register(UserTableHeaderView.self, forHeaderFooterViewReuseIdentifier: UserTableHeaderView.identifier)
+        view.register(MyProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: MyProfileTableHeaderView.identifier)
         view.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
@@ -27,7 +27,7 @@ final class MyProfileViewController: BaseViewController, SendData {
     
     let repository = NetworkRepository()
     
-    private lazy var viewModel = MyProfileViewModel(reposity: repository)
+    private lazy var viewModel = MyProfileViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
     
@@ -112,9 +112,9 @@ final class MyProfileViewController: BaseViewController, SendData {
     override func setConstraints() {
         super.setConstraints()
         
-        userTableView.tableHeaderView?.snp.makeConstraints {
-            $0.height.equalTo(200)
-        }
+//        userTableView.tableHeaderView?.snp.makeConstraints {
+//            $0.height.equalTo(200)
+//        }
         
         userTableView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
@@ -136,7 +136,7 @@ final class MyProfileViewController: BaseViewController, SendData {
 
 extension MyProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserTableHeaderView.identifier) as? UserTableHeaderView else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyProfileTableHeaderView.identifier) as? MyProfileTableHeaderView else { return UIView() }
         
         header.setHeaderView(profile: profile)
         

@@ -11,7 +11,7 @@ import Kingfisher
 import RxSwift
 import RxCocoa
 
-final class UserTableHeaderView: BaseTableViewHeaderFotterView {
+final class MyProfileTableHeaderView: BaseTableViewHeaderFotterView {
     
     var lockBarbutton = CustomActiveButton(frame: .zero)
     var settingBarbutton = CustomActiveButton(frame: .zero)
@@ -63,61 +63,12 @@ final class UserTableHeaderView: BaseTableViewHeaderFotterView {
         return view
     }()
     
-    let profileEditButton = {
-        let view = UIButton()
-        
-        var config = UIButton.Configuration.plain() //apple system button
-        var titleAttr = AttributedString.init("프로필 편집")
-        titleAttr.font = .systemFont(ofSize: 13, weight: .semibold)
-        
-        config.baseForegroundColor = .black
-        config.baseBackgroundColor = .white
-        config.attributedTitle = titleAttr
-        
-        view.layer.borderColor = UIColor.systemGray5.cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 10
-        view.layer.cornerCurve = .continuous
-        
-        view.configuration = config
-        return view
-    }()
-    
-    let profileShareButton = {
-        let view = UIButton()
-        
-        var config = UIButton.Configuration.plain() //apple system button
-        var titleAttr = AttributedString.init("프로필 공유")
-        titleAttr.font = .systemFont(ofSize: 13, weight: .semibold)
-        
-        config.baseForegroundColor = .black
-        config.baseBackgroundColor = .white
-        config.attributedTitle = titleAttr
-        
-        view.layer.borderColor = UIColor.systemGray5.cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 10
-        view.layer.cornerCurve = .continuous
-        
-        view.configuration = config
-        return view
-    }()
+    let profileEditButton = FollowButton(frame: .zero)
+    let profileShareButton = FollowButton(frame: .zero)
     
     private let repository = NetworkRepository()
     
     private let disposeBag = DisposeBag()
-    
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        
-        configureView()
-        setConstraints()
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     func setHeaderView(profile: PublishRelay<MyProfile>) {
         
@@ -137,7 +88,9 @@ final class UserTableHeaderView: BaseTableViewHeaderFotterView {
         
     }
     
-    func configureView() {
+    override func configureView() {
+        super.configureView()
+        
         [lockBarbutton, settingBarbutton, emailLabel, nickNameLabel, threadsNetButton, followerLabel, profileStackView, profileImageView].forEach {
             contentView.addSubview($0)
         }
@@ -149,9 +102,18 @@ final class UserTableHeaderView: BaseTableViewHeaderFotterView {
             profileStackView.addArrangedSubview($0)
         }
         
+        profileEditButton.buttonSetting(title: "프로필 편집", backgroundColor: .white, fontColor: .black, fontSize: 13, fontWeight: .semibold)
+        profileEditButton.layer.borderColor = UIColor.systemGray5.cgColor
+        profileEditButton.layer.borderWidth = 1
+        
+        profileShareButton.buttonSetting(title: "프로필 공유", backgroundColor: .white, fontColor: .black, fontSize: 13, fontWeight: .semibold)
+        profileShareButton.layer.borderColor = UIColor.systemGray5.cgColor
+        profileShareButton.layer.borderWidth = 1
+        
     }
     
-    func setConstraints() {
+    override func setConstraints() {
+        super.setConstraints()
         
         lockBarbutton.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)

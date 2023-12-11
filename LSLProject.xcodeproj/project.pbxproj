@@ -82,11 +82,14 @@
 		149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* EmailAddressViewController.swift */; };
 		1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */; };
 		1499057E2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */; };
+		14A3B3912B26EE8700B2F270 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */; };
+		14A3B3932B26F5DC00B2F270 /* UserProfileTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3B3922B26F5DC00B2F270 /* UserProfileTableHeaderView.swift */; };
+		14A3B3952B26FD8100B2F270 /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3B3942B26FD8100B2F270 /* FollowButton.swift */; };
 		14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B02EBC2B0C965F0052DE07 /* NetworkRepositoryType.swift */; };
 		14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */; };
 		14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */; };
 		14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */; };
-		14B709532B1E0582005DDE2D /* UserTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */; };
+		14B709532B1E0582005DDE2D /* MyProfileTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709522B1E0582005DDE2D /* MyProfileTableHeaderView.swift */; };
 		14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */; };
 		14BBD6A32B1C44FB00CEF094 /* Extension + UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */; };
 		14BBD6A52B1C4BF100CEF094 /* CommentBackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */; };
@@ -174,11 +177,14 @@
 		149562282B0253B9006CED34 /* EmailAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewController.swift; sourceTree = "<group>"; };
 		1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeaderView.swift; sourceTree = "<group>"; };
 		1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewHeaderFooterView.swift"; sourceTree = "<group>"; };
+		14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
+		14A3B3922B26F5DC00B2F270 /* UserProfileTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTableHeaderView.swift; sourceTree = "<group>"; };
+		14A3B3942B26FD8100B2F270 /* FollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowButton.swift; sourceTree = "<group>"; };
 		14B02EBC2B0C965F0052DE07 /* NetworkRepositoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRepositoryType.swift; sourceTree = "<group>"; };
 		14B41FB32B0DD9E600E7DA4F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		14B41FB62B0DDC6F00E7DA4F /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		14B41FB82B0DEA5E00E7DA4F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
-		14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableHeaderView.swift; sourceTree = "<group>"; };
+		14B709522B1E0582005DDE2D /* MyProfileTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileTableHeaderView.swift; sourceTree = "<group>"; };
 		14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		14BBD6A22B1C44FA00CEF094 /* Extension + UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIImage.swift"; sourceTree = "<group>"; };
 		14BBD6A42B1C4BF100CEF094 /* CommentBackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBackView.swift; sourceTree = "<group>"; };
@@ -228,6 +234,7 @@
 				1416D21D2B21FCE9009FDC56 /* CustomTextView.swift */,
 				1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */,
 				145659F32B248B410040A987 /* CustomButton.swift */,
+				14A3B3942B26FD8100B2F270 /* FollowButton.swift */,
 				14DA42732B25881900F6E272 /* CustomTextField.swift */,
 			);
 			path = CustomViews;
@@ -297,7 +304,9 @@
 				14056ED62B130EA100C8EDA2 /* MyProfileViewController.swift */,
 				14056EE22B1323C300C8EDA2 /* MyProfileViewModel.swift */,
 				14DA427A2B26040800F6E272 /* UserProfileViewController.swift */,
-				14B709522B1E0582005DDE2D /* UserTableHeaderView.swift */,
+				14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */,
+				14A3B3922B26F5DC00B2F270 /* UserProfileTableHeaderView.swift */,
+				14B709522B1E0582005DDE2D /* MyProfileTableHeaderView.swift */,
 				14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */,
 				14DA42712B25838C00F6E272 /* ProfileEditViewController.swift */,
 				14DA42752B25A01200F6E272 /* ProfileEditViewModel.swift */,
@@ -654,6 +663,7 @@
 				14B709552B1E0FB2005DDE2D /* UserTableViewCell.swift in Sources */,
 				1479BFF52B221A8F00C6A383 /* CustomActiveButton.swift in Sources */,
 				149562102B02176D006CED34 /* SignInViewController.swift in Sources */,
+				14A3B3912B26EE8700B2F270 /* UserProfileViewModel.swift in Sources */,
 				14648C862B19D29B00C3A9D2 /* HomeDetailViewController.swift in Sources */,
 				146B16D52B035A5500073B91 /* Extension + UITextFiled.swift in Sources */,
 				143B40632B20766B00F6A02D /* CommentViewModel.swift in Sources */,
@@ -686,6 +696,7 @@
 				14B41FB42B0DD9E600E7DA4F /* HomeViewModel.swift in Sources */,
 				144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */,
 				14360E902B146B30006AA532 /* MainTabBarController.swift in Sources */,
+				14A3B3932B26F5DC00B2F270 /* UserProfileTableHeaderView.swift in Sources */,
 				14DA42742B25881900F6E272 /* CustomTextField.swift in Sources */,
 				143B40612B20766100F6A02D /* CommentViewController.swift in Sources */,
 				14056EE12B1323B200C8EDA2 /* HeartViewModel.swift in Sources */,
@@ -707,11 +718,12 @@
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
 				14DA427B2B26040800F6E272 /* UserProfileViewController.swift in Sources */,
 				145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */,
+				14A3B3952B26FD8100B2F270 /* FollowButton.swift in Sources */,
 				144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */,
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
 				14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */,
 				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
-				14B709532B1E0582005DDE2D /* UserTableHeaderView.swift in Sources */,
+				14B709532B1E0582005DDE2D /* MyProfileTableHeaderView.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */,
 				145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */,

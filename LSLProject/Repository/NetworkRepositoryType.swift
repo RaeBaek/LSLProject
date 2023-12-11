@@ -40,6 +40,8 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestMyProfile() -> Single<NetworkResult<MyProfile>>
     
+    func requestUserProfile(id: String) -> Single<NetworkResult<MyProfile>>
+    
     func requestUserPosts(id: String) -> Single<NetworkResult<PostResponses>>
     
     func requestCommentAdd(id: String, comment: String) -> Single<NetworkResult<Comment>>
@@ -50,5 +52,9 @@ protocol NetworkRepositoryType: AnyObject {
                             nick: String,
                             phoneNum: String?,
                             birthDay: String?) -> Single<NetworkResult<MyProfile>>
+    
+    func requestFollow(id: String) -> Single<NetworkResult<FollowResponse>>
+    
+    func requestUnFollow(id: String) -> Single<NetworkResult<FollowResponse>>
     
 }
