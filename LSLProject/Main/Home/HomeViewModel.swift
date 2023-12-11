@@ -18,23 +18,9 @@ final class HomeViewModel: ViewModelType {
         let withdraw: ControlEvent<Void>
     }
     
-    // 유저 프로필 버튼 클릭 이벤트 추가해야함!
-    // 유저 프로필 버튼 클릭 이벤트 추가해야함!
-    // 유저 프로필 버튼 클릭 이벤트 추가해야함!
-    struct CellButtonInput {
-        let creatorID: BehaviorRelay<String>
-        let profileButtonTapped: ControlEvent<Void>
-        let moreButtonTap: ControlEvent<Void>
-    }
-    
     struct Output {
         let items: PublishRelay<PostResponses>
         let check: PublishRelay<Bool>
-    }
-    
-    struct CellButtonOutput {
-        let postStatus: PublishRelay<Bool>
-        let pushStatus: PublishRelay<Bool>
     }
     
     private let repository: NetworkRepository
@@ -125,39 +111,6 @@ final class HomeViewModel: ViewModelType {
             .disposed(by: disposeBag)
         
         return Output(items: items, check: check)
-    }
-    
-    func buttonTransform(input: CellButtonInput) -> CellButtonOutput {
-        
-        let postStatus = PublishRelay<Bool>()
-        let pushStatus = PublishRelay<Bool>()
-        
-        input.moreButtonTap
-            .withLatestFrom(input.creatorID, resultSelector: { _, id in
-                print("확인1 \(Date()), \(input.creatorID.value)")
-                print("확인2 \(Date()), \(UserDefaultsManager.id)")
-                if input.creatorID.value == UserDefaultsManager.id {
-                    return true
-                } else {
-                    return false
-                }
-            })
-            .bind(to: postStatus)
-            .disposed(by: disposeBag)
-        
-        input.profileButtonTapped
-            .withLatestFrom(input.creatorID, resultSelector: { _, id in
-                if input.creatorID.value == UserDefaultsManager.id {
-                    return false
-                } else {
-                    return true
-                }
-            })
-            .bind(to: pushStatus)
-            .disposed(by: disposeBag)
-        
-        return CellButtonOutput(postStatus: postStatus, 
-                                pushStatus: pushStatus)
     }
     
 }

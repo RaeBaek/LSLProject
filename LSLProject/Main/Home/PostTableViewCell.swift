@@ -360,6 +360,20 @@ class PostTableViewCell: BaseTableViewCell {
         }
     }
     
+//    func moreButtonTapped(id: String) {
+//        moreButton.rx.tap
+//            .withLatestFrom(id, resultSelector: { _, id in
+//                <#code#>
+//            })
+//            .withUnretained(self)
+//            .map {
+//            }
+//            .bind { owner, _ in
+//                <#code#>
+//            }
+//            .disposed(by: disposeBag)
+//    }
+    
     override func configureCell() {
         super.configureCell()
         

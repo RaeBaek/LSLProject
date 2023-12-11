@@ -122,34 +122,32 @@ final class HomeViewController: BaseViewController {
                     UIView.setAnimationsEnabled(true)
                 }
                 
-                let input = HomeViewModel.CellButtonInput(creatorID: BehaviorRelay(value: element.creator.id),
-                                                          profileButtonTapped: cell.profileImageButton.rx.tap,
-                                                          moreButtonTap: cell.moreButton.rx.tap)
-                
-                // 아래와 같이 전역변수 viewModel의 메서드를 사용하면 cell들이 모두 viewModel을 참조하게 되는 현상..?
-                // CellViewModel을 만들어 버튼 tap event를 바인드하는 방법이 있다고는 하는데
-                // 추후 시간이 있다면 개발해보자..
-                // (viewModel 쪽에서 print 문이 여러번 출력되는 문제말고는 동작은 정상적으로 수행됨)
-                let output = self.viewModel.buttonTransform(input: input)
-//                let cellViewModel = HomeViewModel(repository: cell.repository)
-                
-                output.postStatus
+                // setCell과 같이 먼저 cell 내부에 메서드를 만들어보자.
+                // 현재는 로직을 viewModel에 넣어야겠다는 강박때문인지
+                // cell의 로직을 homeViewModel에 넣고 있으니 로직이 꼬이는 것 같다.
+                cell.moreButton.rx.tap
                     .withUnretained(self)
-                    .bind { owner, value in
-                        if value {
-                            owner.presentPostBottomSheet(value: value, id: element.id)
+                    .bind { owner, _ in
+                        print("확인1 \(Date()), \(element.creator.id)")
+                        print("확인2 \(Date()), \(UserDefaultsManager.id)")
+                        if element.creator.id == UserDefaultsManager.id {
+                            owner.presentPostBottomSheet(value: true, id: element.id)
                         } else {
-                            owner.presentPostBottomSheet(value: value, id: element.id)
+                            owner.presentPostBottomSheet(value: false, id: element.id)
                         }
                     }
                     .disposed(by: cell.disposeBag)
                 
-                output.pushStatus
+                cell.profileImageButton.rx.tap
                     .withUnretained(self)
-                    .bind { owner, value in
-                        if value {
+                    .bind { owner, _ in
+                        print("확인1 \(Date()), \(element.creator.id)")
+                        print("확인2 \(Date()), \(UserDefaultsManager.id)")
+                        if element.creator.id == UserDefaultsManager.id {
+                            return
+                        } else {
                             owner.presentUserProfileViewController()
-                        } else { return }
+                        }
                     }
                     .disposed(by: cell.disposeBag)
                 

@@ -162,6 +162,14 @@ final class ProfileEditViewController: BaseViewController {
     
     @objc private func dismissViewController() {
         sendDelegate?.sendData(data: Data())
+        
+        // 내 프로필 수정 후 홈화면에 노티 발송
+        // 1. 내가 아닌 다른 유저 프로필 화면 구성해야함!
+        // 2. 포스트 좋아요 / 취소 기능 추가 필요
+        // 3. 팔로우 / 언팔로우 기능 추가 필요
+        // 댓글 및 포스트 수정은 추후 시간 남으면 진행!
+        NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
+        
         self.dismiss(animated: true)
         
     }
