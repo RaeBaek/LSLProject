@@ -11,6 +11,10 @@ import Moya
 
 class NetworkRepository: NetworkRepositoryType {
     
+//    static let shared = NetworkRepository()
+    
+//    private init() { }
+    
     func requestEmailValidation(email: String) -> Single<NetworkResult<EmailValidationResponse>> {
         APIManager.shared.request(target: .emailValidation(model: EmailValidation(email: email)))
         

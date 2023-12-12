@@ -30,7 +30,7 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
     
     var uploadTime = UploadTimeLabel(frame: .zero)
     
-    private let moreButton = MoreButton(frame: .zero)
+    let moreButton = MoreButton(frame: .zero)
     
     var mainText = MainTitle(frame: .zero)
     
@@ -60,6 +60,11 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
         requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
         return requestBody
+    }
+    
+    override func prepareForReuse() {
+        disposeBag = DisposeBag()
+        
     }
     
     func setHeaderView(item: PostResponse, completion: @escaping () -> ()) {

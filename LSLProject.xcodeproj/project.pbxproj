@@ -303,10 +303,10 @@
 			children = (
 				14056ED62B130EA100C8EDA2 /* MyProfileViewController.swift */,
 				14056EE22B1323C300C8EDA2 /* MyProfileViewModel.swift */,
+				14B709522B1E0582005DDE2D /* MyProfileTableHeaderView.swift */,
 				14DA427A2B26040800F6E272 /* UserProfileViewController.swift */,
 				14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */,
 				14A3B3922B26F5DC00B2F270 /* UserProfileTableHeaderView.swift */,
-				14B709522B1E0582005DDE2D /* MyProfileTableHeaderView.swift */,
 				14B709542B1E0FB1005DDE2D /* UserTableViewCell.swift */,
 				14DA42712B25838C00F6E272 /* ProfileEditViewController.swift */,
 				14DA42752B25A01200F6E272 /* ProfileEditViewModel.swift */,

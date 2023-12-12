@@ -278,6 +278,15 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
         // homeDetailVC의 header 내의 버튼은 여기서 다루어보자!
         // homeViewModel에 있는 input, output과 transform 메서드는 삭제하도록!
         
+        header.moreButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, value in
+                
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
         return header
     }
     

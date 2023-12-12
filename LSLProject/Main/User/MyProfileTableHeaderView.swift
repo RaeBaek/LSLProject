@@ -52,7 +52,6 @@ final class MyProfileTableHeaderView: BaseTableViewHeaderFotterView {
         return view
     }()
     
-    
     let profileImageView = ProfileImageView(frame: .zero)
     
     let profileStackView = {
@@ -66,24 +65,71 @@ final class MyProfileTableHeaderView: BaseTableViewHeaderFotterView {
     let profileEditButton = FollowButton(frame: .zero)
     let profileShareButton = FollowButton(frame: .zero)
     
-    private let repository = NetworkRepository()
+    let repository = NetworkRepository()
+    var disposeBag = DisposeBag()
     
-    private let disposeBag = DisposeBag()
-    
-    func setHeaderView(profile: PublishRelay<MyProfile>) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
         
-        profile
-            .withUnretained(self)
-            .bind { owner, value in
-                if let profileURL = value.profile {
+//        emailLabel.text = nil
+//        nickNameLabel.text = nil
+//        followerLabel.text = nil
+//        profileImageView.image = nil
+        
+        disposeBag = DisposeBag()
+        
+    }
+    
+    func test(_ viewModel: MyProfileViewModel) {
+        viewModel.myProfile
+            .bind(with: self) { owner, myProfile in
+                owner.emailLabel.text = myProfile.email
+                owner.nickNameLabel.text = myProfile.nick
+                owner.followerLabel.text = "팔로워 \(myProfile.followers.count)명"
+                
+                if let profileURL = myProfile.profile {
                     let url = URL(string: APIKey.sesacURL + profileURL)
                     owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(owner.imageDownloadRequest)])
                 }
-                
-                owner.emailLabel.text = value.email
-                owner.nickNameLabel.text = value.nick
-                owner.followerLabel.text = "팔로워 \(value.followers.count)명"
             }
+            .disposed(by: disposeBag)
+    }
+    
+    
+    func setHeaderView(sendData: PublishRelay<Data>) {
+        
+        sendData
+            .withUnretained(self)
+            .flatMapLatest { owner, value in
+                print("제발! \(value)")
+                return owner.repository.requestMyProfile()
+            }
+            .withUnretained(self)
+            .debug("sendData")
+            .subscribe(onNext: { owner, value in
+                switch value {
+                case .success(let data):
+                    print("내 프로필 조회 성공!")
+                    
+                    UserDefaultsManager.profile =  data.profile ?? "basicUser"
+                    print("data------------------------", data)
+                    owner.emailLabel.text = data.email
+                    owner.nickNameLabel.text = data.nick
+                    owner.followerLabel.text = "팔로워 \(data.followers.count)명"
+                    
+                    if let profileURL = data.profile {
+                        let url = URL(string: APIKey.sesacURL + profileURL)
+                        owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(owner.imageDownloadRequest)])
+                    }
+                    
+                case .failure(let error):
+                    guard let myProfileError = MyProfileError(rawValue: error.rawValue) else {
+                        print("내 프로필 조회 실패.. \(error.message)")
+                        return
+                    }
+                    print("내 프로필 조회 에러 \(myProfileError.message)")
+                }
+            })
             .disposed(by: disposeBag)
         
     }

@@ -36,27 +36,27 @@ final class UserProfileViewController: BaseViewController {
     
     var userID: String?
     
-    var profile: MyProfile?
-    
     let repository = NetworkRepository()
     
     private lazy var viewModel = UserProfileViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
     
-    var sendData: Data? {
+    var followButtonStatus = Data() {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: sendData)
+    var observeData = PublishRelay<Data>()//BehaviorRelay(value: followButtonStatus)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setNavigationBar()
         bind()
+        
+        followButtonStatus = Data()
         
     }
     
@@ -67,13 +67,6 @@ final class UserProfileViewController: BaseViewController {
                                                userID: BehaviorRelay(value: userID))
         
         let output = viewModel.transform(input: input)
-        
-        output.profile
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.profile = value
-            }
-            .disposed(by: disposeBag)
         
         output.userPosts
             .map { $0.data }
@@ -121,9 +114,11 @@ final class UserProfileViewController: BaseViewController {
 
 extension UserProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserProfileTableHeaderView.identifier) as? UserProfileTableHeaderView, let profile else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserProfileTableHeaderView.identifier) as? UserProfileTableHeaderView, let userID else { return UIView() }
         
-        header.setHeaderView(profile: profile)
+        header.test(viewModel)
+        
+//        header.setHeaderView(sendData: observeData, userID: BehaviorRelay(value: userID))
         
         let followButton = header.followButton
         
@@ -131,14 +126,14 @@ extension UserProfileViewController: UITableViewDelegate {
             .filter { followButton.configuration?.baseBackgroundColor == .black }
             .withUnretained(self)
             .flatMap { owner, _ in
-                owner.repository.requestFollow(id: profile.id)
+                owner.repository.requestFollow(id: userID)
             }
             .withUnretained(self)
             .subscribe(onNext: { owner, result in
                 switch result {
                 case .success(_):
                     print("팔로우 성공!")
-                    owner.sendData = Data()
+                    owner.followButtonStatus = Data()
                 case .failure(let error):
                     guard let followError = FollowError(rawValue: error.rawValue) else {
                         print("팔로우 공통 에러입니다. \(error.message)")
@@ -153,14 +148,14 @@ extension UserProfileViewController: UITableViewDelegate {
             .filter { followButton.configuration?.baseBackgroundColor == .white }
             .withUnretained(self)
             .flatMap { owner, _ in
-                owner.repository.requestUnFollow(id: profile.id)
+                owner.repository.requestUnFollow(id: userID)
             }
             .withUnretained(self)
             .subscribe(onNext: { owner, result in
                 switch result {
                 case .success(_):
                     print("언팔로우 성공!")
-                    owner.sendData = Data()
+                    owner.followButtonStatus = Data()
                 case .failure(let error):
                     guard let unfollowError = UnFollowError(rawValue: error.rawValue) else {
                         print("언팔로우 공통 에러입니다. \(error.message)")

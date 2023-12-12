@@ -57,7 +57,7 @@ enum UserDefaultsManager {
     @RBDefaults(key: Key.id.rawValue, defaultValue: UserDefaultsManagerDefaultValue.id.rawValue)
     static var id
     
-    @RBDefaults(key: Key.id.rawValue, defaultValue: UserDefaultsManagerDefaultValue.profile.rawValue)
+    @RBDefaults(key: Key.profile.rawValue, defaultValue: UserDefaultsManagerDefaultValue.profile.rawValue)
     static var profile
     
     @RBDefaults(key: Key.nickname.rawValue, defaultValue: UserDefaultsManagerDefaultValue.nickname.rawValue)

@@ -23,21 +23,19 @@ final class MyProfileViewController: BaseViewController, SendData {
         return view
     }()
     
-    var profile = PublishRelay<MyProfile>()
-    
     let repository = NetworkRepository()
     
-    private lazy var viewModel = MyProfileViewModel(repository: repository)
+    lazy var viewModel = MyProfileViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
     
-    var sendData: Data? {
+    var sendData = Data() {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: sendData)
+    var observeData = PublishRelay<Data>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,37 +44,29 @@ final class MyProfileViewController: BaseViewController, SendData {
         
         bind()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallMyPostAPI"), object: nil)
+        // 한 번 호출 필요
+        sendData = Data()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
     }
     
     @objc func recallMyPostAPI(notification: NSNotification) {
-        if let data = notification.userInfo?["recallMyPostAPI"] as? Data {
+        if let data = notification.userInfo?["recallPostAPI"] as? Data {
             self.sendData = data
         }
         
     }
     
     private func bind() {
-        
         let input = MyProfileViewModel.Input(sendData: observeData)
         let output = viewModel.transform(input: input)
-        
-        
-        // 내 프로필 화면에서
-        // 쓰레드같은 경우에는 이름, 아이디, 팔로워, 프로필 이미지 등을 보여주고 있음
-        // tableHeaderView에 삽입 그리고 <내 프로필 조회> API 사용
-        // 프로필 아래로 내가 작성한 포스트들을 보여주고 있는데
-        // 유저별 작성한 포스트 조회 API 사용해야 할듯 (본인 포함)
-        // headerView에는 내 프로필 조회를
-        // cell 에서는 포스트 조회 API를 사용해야할 듯 함.
-        output.profile
-            .bind(to: profile)
-            .disposed(by: disposeBag)
             
         output.userPosts
+            .debug("userPosts")
             .map { $0.data }
-            .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { row, element, cell in
+            .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+                guard let self else { return }
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.userTableView.beginUpdates()
@@ -84,6 +74,7 @@ final class MyProfileViewController: BaseViewController, SendData {
                     self.userTableView.endUpdates()
                     UIView.setAnimationsEnabled(true)
                 }
+                
             }
             .disposed(by: disposeBag)
         
@@ -124,9 +115,6 @@ final class MyProfileViewController: BaseViewController, SendData {
     
     private func presentProfileEdit() {
         let vc = ProfileEditViewController()
-        
-        vc.sendDelegate = self
-        
         let nav = UINavigationController(rootViewController: vc)
         
         self.present(nav, animated: true)
@@ -137,16 +125,19 @@ final class MyProfileViewController: BaseViewController, SendData {
 extension MyProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyProfileTableHeaderView.identifier) as? MyProfileTableHeaderView else { return UIView() }
-        
-        header.setHeaderView(profile: profile)
+                
+        // 헤더 쪽에서 viewModel에 바로 접근할 수 없다보니
+        // 인스턴스를 넣어준다.
+        header.test(viewModel)
         
         header.profileEditButton.rx.tap
             .withUnretained(self)
             .bind { owner, _ in
                 owner.presentProfileEdit()
             }
-            .disposed(by: disposeBag)
+            .disposed(by: header.disposeBag)
         
         return header
     }
+    
 }

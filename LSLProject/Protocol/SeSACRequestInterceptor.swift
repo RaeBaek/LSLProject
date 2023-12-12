@@ -56,12 +56,13 @@ final class SeSACRequestInterceptor: RequestInterceptor {
         task
 //            .observe(on: ConcurrentDispatchQueueScheduler.init(qos: .background))
 //            .observe(on: CurrentThreadScheduler.instance)
-            .observe(on: SerialDispatchQueueScheduler.init(qos: .background))
+            .observe(on: SerialDispatchQueueScheduler.init(qos: .userInitiated))
             .do {
                 print("2hhh", Thread.isMainThread)
             }
-            .flatMap { _ in
-                self.repository.requestAccessToken()//requestRetryAccessToken()
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestAccessToken()//requestRetryAccessToken()
             }
             .do {
                 print("3hhh", Thread.isMainThread)
