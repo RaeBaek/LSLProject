@@ -21,6 +21,12 @@ final class MyProfileViewController: BaseViewController, SendData {
         return view
     }()
     
+    private lazy var backBarbutton = {
+        let view = UIBarButtonItem(title: "이전", style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
     let repository = NetworkRepository()
     
     lazy var viewModel = MyProfileViewModel(repository: repository)
@@ -39,18 +45,27 @@ final class MyProfileViewController: BaseViewController, SendData {
     // bind는 비동기로 처리가 되고 sendData는 동기로 처리가 되면서
     // 아주 가끔? senData가 값이 먼저 전달되면 프로필을 못 가져오는 것 같은 느낌??
     // 졸리다...
-    var observeData = BehaviorRelay(value: ()) //PublishRelay<Data>()
-//    var observeData = PublishRelay<Data>()
+    var observeData = BehaviorRelay(value: ())
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setNavigationBar()
         
         bind()
         
         NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNavigationBar()
+        
+    }
+    
+    private func setNavigationBar() {
+        self.navigationItem.backBarButtonItem = backBarbutton
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     @objc func recallMyPostAPI(notification: NSNotification) {
@@ -69,6 +84,7 @@ final class MyProfileViewController: BaseViewController, SendData {
             .map { $0.data }
             .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
+                
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.userTableView.beginUpdates()
@@ -77,11 +93,55 @@ final class MyProfileViewController: BaseViewController, SendData {
                     UIView.setAnimationsEnabled(true)
                 }
                 
+                cell.moreButton.rx.tap
+                    .withUnretained(self)
+                    .bind { owner, _ in
+                        owner.presentPostBottomSheet(value: true, id: element.id)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+            }
+            .disposed(by: disposeBag)
+        
+        userTableView.rx.modelSelected(PostResponse.self)
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.nextDetailViewController(item: value)
             }
             .disposed(by: disposeBag)
         
         userTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
+        
+    }
+    
+    private func presentPostBottomSheet(value: Bool, id: String) {
+        
+        let vc = PostBottomSheet()
+        
+        vc.modalPresentationStyle = .pageSheet
+        vc.value = value
+        vc.deletePostID = id
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [
+                .custom { _ in
+                    return 300
+                }
+            ]
+            
+            sheet.delegate = self
+            sheet.prefersGrabberVisible = true
+        }
+        
+        self.present(vc, animated: true)
+    }
+    
+    private func nextDetailViewController(item: PostResponse) {
+        let vc = HomeDetailViewController()
+        vc.item = item
+
+        self.navigationController?.pushViewController(vc, animated: true)
         
     }
     
@@ -97,10 +157,6 @@ final class MyProfileViewController: BaseViewController, SendData {
             view.addSubview($0)
         }
         
-    }
-    
-    private func setNavigationBar() {
-        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func setConstraints() {
@@ -150,5 +206,9 @@ extension MyProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
     }
+    
+}
+
+extension MyProfileViewController: UISheetPresentationControllerDelegate {
     
 }

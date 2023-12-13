@@ -59,4 +59,6 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestAPost(id: String) -> Single<NetworkResult<PostResponse>>
     
+    func requestLike(id: String) -> Single<NetworkResult<LikeResponse>>
+    
 }

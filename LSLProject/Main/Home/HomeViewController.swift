@@ -84,9 +84,9 @@ final class HomeViewController: BaseViewController {
     
     private func setNavigationBar() {
         self.navigationItem.backBarButtonItem = backBarbutton
-        navigationController?.navigationBar.isHidden = true
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
     }
     
@@ -115,7 +115,6 @@ final class HomeViewController: BaseViewController {
             }
             .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
-//                self.homeTableView.scrollToRow(at: [0, 0], at: .top, animated: true)
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
@@ -124,9 +123,6 @@ final class HomeViewController: BaseViewController {
                     UIView.setAnimationsEnabled(true)
                 }
                 
-                // setCell과 같이 먼저 cell 내부에 메서드를 만들어보자.
-                // 현재는 로직을 viewModel에 넣어야겠다는 강박때문인지
-                // cell의 로직을 homeViewModel에 넣고 있으니 로직이 꼬이는 것 같다.
                 cell.moreButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
@@ -154,14 +150,10 @@ final class HomeViewController: BaseViewController {
         
         homeTableView.rx.modelSelected(PostResponse.self)
             .withUnretained(self)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe { owner, value in
+            .bind { owner, value in
                 owner.nextDetailViewController(item: value)
             }
             .disposed(by: disposeBag)
-        
-//        output.items
-//            .bind(to: homeTableView.rx.itemSelected) -> //indexPath
         
         homeTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)

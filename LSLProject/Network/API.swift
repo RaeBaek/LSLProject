@@ -27,6 +27,7 @@ enum SeSACAPI {
     case commentDel(model: CommentDelete)
     case follow(model: UserID)
     case unfollow(model: UserID)
+    case like(model: UserID)
     
 }
 
@@ -85,6 +86,9 @@ extension SeSACAPI: TargetType {
         case .unfollow(let model):
             return "follow/\(model.id)"
             
+        case .like(let model):
+            return "post/like/\(model.id)"
+            
         }
     }
     
@@ -93,7 +97,7 @@ extension SeSACAPI: TargetType {
         case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile, .aPost:
             return .get
             
-        case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow:
+        case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow, .like:
             return .post
             
         case .profileEdit:
@@ -122,7 +126,7 @@ extension SeSACAPI: TargetType {
         case .commentDel(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow, .aPost:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow, .aPost, .like:
             return .requestPlain
             
         case .allPost(let model):
@@ -174,7 +178,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost, .like:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

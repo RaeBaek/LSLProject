@@ -11,10 +11,6 @@ import Moya
 
 class NetworkRepository: NetworkRepositoryType {
     
-//    static let shared = NetworkRepository()
-    
-//    private init() { }
-    
     func requestEmailValidation(email: String) -> Single<NetworkResult<EmailValidationResponse>> {
         APIManager.shared.request(target: .emailValidation(model: EmailValidation(email: email)))
         
@@ -108,6 +104,10 @@ class NetworkRepository: NetworkRepositoryType {
     
     func requestAPost(id: String) -> Single<NetworkResult<PostResponse>> {
         APIManager.shared.request(target: .aPost(model: PostID(id: id)))
+    }
+    
+    func requestLike(id: String) -> Single<NetworkResult<LikeResponse>> {
+        APIManager.shared.request(target: .like(model: UserID(id: id)))
     }
     
 }

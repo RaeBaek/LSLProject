@@ -216,3 +216,12 @@ struct PostDelete: Decodable {
         case id = "_id"
     }
 }
+
+struct LikeResponse: Decodable {
+    let likeStatus: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case likeStatus = "like_status"
+    }
+    
+}

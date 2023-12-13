@@ -360,3 +360,23 @@ enum UnFollowError: Int, LoggableError {
         }
     }
 }
+
+enum LikeError: Int, LoggableError {
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case unknownPost = 410
+    case expireAccessToken = 419
+    
+    var message: String {
+        switch self {
+        case .inValidAccessToken:
+            "유효하지 않은 AccessToken으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .unknownPost:
+            "게시글을 찾을 수 없습니다."
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        }
+    }
+}
