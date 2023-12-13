@@ -12,6 +12,7 @@ import RxCocoa
 final class MyProfileViewModel: ViewModelType {
     
     let myProfile = PublishRelay<MyProfile>()
+    
     private let repository: NetworkRepository
     private let disposeBag = DisposeBag()
     
@@ -20,7 +21,7 @@ final class MyProfileViewModel: ViewModelType {
     }
     
     struct Input {
-        let sendData: PublishRelay<Data>
+        let sendData: BehaviorRelay<Void>
     }
     
     struct Output {
@@ -38,6 +39,7 @@ final class MyProfileViewModel: ViewModelType {
                 return owner.repository.requestMyProfile()
             }
             .withUnretained(self)
+            .debug("'myProfile'")
             .bind { owner, response in
                 switch response {
                 case .success(let success):
@@ -53,8 +55,9 @@ final class MyProfileViewModel: ViewModelType {
             .withLatestFrom(id)
             .withUnretained(self)
             .flatMapLatest { owner, id in
-                return owner.repository.requestUserPosts(id: id)
+                owner.repository.requestUserPosts(id: id)
             }
+            .debug("'myPost'")
             .bind(with: self) { owner, response in
                 switch response {
                 case .success(let data):

@@ -14,6 +14,7 @@ enum SeSACAPI {
     case login(model: Login)
     case accessToken
     case withdraw
+    case aPost(model: PostID)
     case allPost(model: AllPost)
     case postAdd(model: PostAdd)
     case postDel(model: PostID)
@@ -51,6 +52,9 @@ extension SeSACAPI: TargetType {
         case .withdraw:
             return "withdraw"
             
+        case .aPost(let model):
+            return "post/\(model.id)"
+            
         case .allPost, .postAdd:
             return "post"
             
@@ -86,7 +90,7 @@ extension SeSACAPI: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile:
+        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile, .aPost:
             return .get
             
         case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow:
@@ -118,7 +122,7 @@ extension SeSACAPI: TargetType {
         case .commentDel(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow, .aPost:
             return .requestPlain
             
         case .allPost(let model):
@@ -170,7 +174,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]

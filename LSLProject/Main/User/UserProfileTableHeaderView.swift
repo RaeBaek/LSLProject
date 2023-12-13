@@ -126,129 +126,17 @@ final class UserProfileTableHeaderView: BaseTableViewHeaderFotterView {
                     
                 } else if value.0 == false && value.1 == true {
                     owner.followButton.buttonSetting(title: "맞팔로우 하기", backgroundColor: .black, fontColor: .white, fontSize: 13, fontWeight: .semibold)
+                    owner.followButton.layer.borderColor = nil
+                    owner.followButton.layer.borderWidth = 0
                     
                 } else if value.0 == false && value.1 == false {
                     owner.followButton.buttonSetting(title: "팔로우", backgroundColor: .black, fontColor: .white, fontSize: 13, fontWeight: .semibold)
+                    owner.followButton.layer.borderColor = nil
+                    owner.followButton.layer.borderWidth = 0
                     
                 }
             }
             .disposed(by: disposeBag)
-        
-    }
-    
-    func setHeaderView(sendData: BehaviorRelay<Data?>,
-                       userID: BehaviorRelay<String>) {
-        
-        // 모델이 아닌 id값을 받아서
-        // API 호출 후 보여주는 걸로
-        // 231212 14:12 수정완~
-//        Observable.just(id)
-//            .withUnretained(self)
-//            .flatMap { owner, id in
-//                owner.repository.requestUserProfile(id: id)
-//            }
-//            .withUnretained(self)
-//            .subscribe(onNext: { owner, value in
-//                switch value {
-//                case .success(let data):
-//                    print("다른 유저 프로필 조회 성공!")
-//                    
-//                    
-//                case .failure(let error):
-//                    guard let userProfileError = UserProfileError(rawValue: error.rawValue) else {
-//                        print("다른 유저 프로필 조회 실패.. \(error.message)")
-//                        return
-//                    }
-//                    print("다른 유저 프로플 조회 에러 \(userProfileError.message)")
-//                }
-//            })
-//            .disposed(by: disposeBag)
-        
-//            .withUnretained(self)
-//            .bind { owner, value in
-//                if let profileURL = value.profile {
-//                    let url = URL(string: APIKey.sesacURL + profileURL)
-//                    owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(owner.imageDownloadRequest)])
-//                }
-//                
-//                owner.emailLabel.text = value.nick
-//                owner.nickNameLabel.text = value.nick
-//                print("------------------- \(value.followers)")
-//                owner.followerLabel.text = "팔로워 \(value.followers.count)명"
-//            }
-//            .disposed(by: disposeBag)
-        
-        
-        
-//        sendData
-//            .withUnretained(self)
-//            .flatMapLatest { owner, _ in
-//                owner.repository.requestUserProfile(id: userID.value)
-//            }
-//            .withUnretained(self)
-//            .subscribe(onNext: { owner, value in
-//                switch value {
-//                case .success(let data):
-//                    print("다른 유저 프로필 조회 성공!")
-//                    
-//                    owner.emailLabel.text = data.nick
-//                    owner.nickNameLabel.text = data.nick
-//                    print("------------------- \(data.followers)")
-//                    owner.followerLabel.text = "팔로워 \(data.followers.count)명"
-//                    
-//                    if data.following.map({ $0.id }).contains(UserDefaultsManager.id) {
-//                        userProfile.accept(true)
-//                    } else {
-//                        userProfile.accept(false)
-//                    }
-//                    
-//                    if let profileURL = data.profile {
-//                        let url = URL(string: APIKey.sesacURL + profileURL)
-//                        owner.profileImageView.kf.setImage(with: url, options: [.requestModifier(owner.imageDownloadRequest)])
-//                    }
-//                    
-//                case .failure(let error):
-//                    guard let userProfileError = UserProfileError(rawValue: error.rawValue) else {
-//                        print("다른 유저 프로필 조회 실패.. \(error.message)")
-//                        return
-//                    }
-//                    print("다른 유저 프로필 조회 에러 \(userProfileError.message)")
-//                }
-//            })
-//            .disposed(by: disposeBag)
-//        
-//        
-//        
-//        
-//        
-//        sendData
-//            .withUnretained(self)
-//            .flatMapLatest { owner, _ in
-//                owner.repository.requestMyProfile()
-//            }
-//            .withUnretained(self)
-//            .subscribe(onNext: { owner, value in
-//                switch value {
-//                case .success(let data):
-//                    print("내 프로필 조회 성공!")
-//                    // 내가 이미 팔로우 한 사람이라면?
-//                    // 팔로잉 처리!
-//                    if data.following.map({ $0.id }).contains(userID.value) {
-//                        myProfile.accept(true)
-//                    } else {
-//                        myProfile.accept(false)
-//                    }
-//                case .failure(let error):
-//                    guard let myProfileError = MyProfileError(rawValue: error.rawValue) else {
-//                        print("내 프로필 조회 실패.. \(error.message)")
-//                        return
-//                    }
-//                    print("내 프로필 조회 에러 \(myProfileError.message)")
-//                }
-//            })
-//            .disposed(by: disposeBag)
-        
-        
         
     }
     
@@ -297,7 +185,7 @@ final class UserProfileTableHeaderView: BaseTableViewHeaderFotterView {
             $0.top.equalTo(followerLabel.snp.bottom).offset(20)
             $0.horizontalEdges.equalToSuperview().inset(12)
             $0.bottom.equalToSuperview().offset(-20)
-            $0.height.equalTo(30)
+            $0.height.equalTo(33)
         }
         
         profileImageView.snp.makeConstraints {

@@ -12,16 +12,16 @@ import RxCocoa
 
 final class HomeDetailCommentCell: BaseTableViewCell {
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: HomeDetailCommentCell.identifier)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+//        super.init(style: style, reuseIdentifier: HomeDetailCommentCell.identifier)
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     override func prepareForReuse() {
-        profileImage.image = nil
+        profileImage.image = UIImage(named: "basicUser")
         disposeBag = DisposeBag()
     }
     
@@ -94,9 +94,12 @@ final class HomeDetailCommentCell: BaseTableViewCell {
     var disposeBag = DisposeBag()
     
     func setCell(element: Comment, completion: @escaping () -> ()) {
-        let url = URL(string: APIKey.sesacURL + (element.creator.profile ?? ""))
         
-        profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        if let profile = element.creator.profile {
+            let profileImageUrl = URL(string: APIKey.sesacURL + profile)
+            profileImage.kf.setImage(with: profileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+            
+        }
         
         userNickname.text = element.creator.nick
         mainText.text = element.content
@@ -110,7 +113,10 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         
         Observable.of(())
             .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
-            .flatMap { self.repository.requestImage(path: path) }
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestImage(path: path)
+            }
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):

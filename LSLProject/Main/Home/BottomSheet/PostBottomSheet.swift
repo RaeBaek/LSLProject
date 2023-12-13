@@ -17,6 +17,7 @@ final class PostBottomSheet: BaseViewController {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         view.rowHeight = 50
+        view.isScrollEnabled = false
         return view
     }()
     

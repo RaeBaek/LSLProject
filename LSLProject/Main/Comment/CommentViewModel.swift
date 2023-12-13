@@ -12,6 +12,7 @@ import RxCocoa
 final class CommentViewModel: ViewModelType {
     
     struct Input {
+        let userNickname: BehaviorRelay<String>
         let textViewText: ControlProperty<String>
         let textViewBeginEditing: ControlEvent<Void>
         let textViewEndEditing: ControlEvent<Void>
@@ -57,11 +58,13 @@ final class CommentViewModel: ViewModelType {
         input.textViewText
             .withUnretained(self)
             .map { owner, value in
-                if value == "" || value == StartMessage.comment.placeholder {
+                if value == "" || value == "\(input.userNickname.value)\(StartMessage.comment.placeholder)" {
                     return false
                 } else {
                     return true
                 }
+                // 게시물 테스트 중이었고
+                // ho_o_on 계정 프로필 사진이랑 게시물 수정할 것
             }
             .bind(to: postButtonStatus)
             .disposed(by: disposeBag)

@@ -110,9 +110,6 @@ final class MyProfileTableHeaderView: BaseTableViewHeaderFotterView {
                 switch value {
                 case .success(let data):
                     print("내 프로필 조회 성공!")
-                    
-                    UserDefaultsManager.profile =  data.profile ?? "basicUser"
-                    print("data------------------------", data)
                     owner.emailLabel.text = data.email
                     owner.nickNameLabel.text = data.nick
                     owner.followerLabel.text = "팔로워 \(data.followers.count)명"
@@ -198,7 +195,7 @@ final class MyProfileTableHeaderView: BaseTableViewHeaderFotterView {
             $0.top.equalTo(followerLabel.snp.bottom).offset(20)
             $0.horizontalEdges.equalToSuperview().inset(12)
             $0.bottom.equalToSuperview().offset(-20)
-            $0.height.equalTo(30)
+            $0.height.equalTo(33)
         }
         
         profileImageView.snp.makeConstraints {

@@ -11,18 +11,7 @@ import Kingfisher
 import RxSwift
 import RxCocoa
 
-final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
-
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        configureView()
-        setConstraints()
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+final class HomeDetailPostHeaderView: BaseTableViewHeaderFotterView {
     
     lazy var profileImage = ProfileImageView(frame: .zero)
     
@@ -54,13 +43,6 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
     var disposeBag = DisposeBag()
     
     private let repository = NetworkRepository()
-    
-    private let imageDownloadRequest = AnyModifier { request in
-        var requestBody = request
-        requestBody.setValue(UserDefaultsManager.token, forHTTPHeaderField: "Authorization")
-        requestBody.setValue(APIKey.sesacKey, forHTTPHeaderField: "SesacKey")
-        return requestBody
-    }
     
     override func prepareForReuse() {
         disposeBag = DisposeBag()
@@ -266,7 +248,8 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         }
     }
     
-    private func configureView() {
+    override func configureView() {
+        super.configureView()
         
         [profileImage, userNickname, uploadTime, moreButton, mainText, mainImage, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
             contentView.addSubview($0)
@@ -279,7 +262,8 @@ final class HomeDetailPostHeaderView: UITableViewHeaderFooterView {
         
     }
     
-    private func setConstraints() {
+    override func setConstraints() {
+        super.setConstraints()
         
         profileImage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)

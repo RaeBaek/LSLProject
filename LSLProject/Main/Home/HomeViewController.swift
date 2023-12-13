@@ -42,13 +42,13 @@ final class HomeViewController: BaseViewController {
     
     private lazy var allPost = BehaviorRelay<AllPost>(value: model)
     
-    var sendData: Data? {
+    var sendData: Void = Void() {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: sendData)
+    lazy var observeData = BehaviorRelay(value: ())
     
     private let repository = NetworkRepository()
     
@@ -66,7 +66,7 @@ final class HomeViewController: BaseViewController {
     }
     
     @objc func recallAllPostAPI(notification: NSNotification) {
-        if let data = notification.userInfo?["recallPostAPI"] as? Data {
+        if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
             // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
             self.homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
@@ -130,8 +130,6 @@ final class HomeViewController: BaseViewController {
                 cell.moreButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
-                        print("확인1 \(Date()), \(element.creator.id)")
-                        print("확인2 \(Date()), \(UserDefaultsManager.id)")
                         if element.creator.id == UserDefaultsManager.id {
                             owner.presentPostBottomSheet(value: true, id: element.id)
                         } else {
@@ -143,8 +141,6 @@ final class HomeViewController: BaseViewController {
                 cell.profileImageButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
-                        print("확인1 \(Date()), \(element.creator.id)")
-                        print("확인2 \(Date()), \(UserDefaultsManager.id)")
                         if element.creator.id == UserDefaultsManager.id {
                             return
                         } else {

@@ -67,7 +67,6 @@ final class PostDeleteViewController: BaseViewController {
     }
     
     private func bind() {
-        
         // 게시물 삭제, 댓글 삭제 모두 게시글의 id는 필요하다.
         if let deleteCommentID {
             // 댓글은 댓글 id도 필요!
@@ -83,7 +82,7 @@ final class PostDeleteViewController: BaseViewController {
                     .withUnretained(self)
                     .bind { owner, value in
                         if value {
-                            NotificationCenter.default.post(name: Notification.Name("recallCommentAPI"), object: nil, userInfo: ["recallCommentAPI": Data()])
+                            NotificationCenter.default.post(name: Notification.Name("recallCommentAPI"), object: nil, userInfo: ["recallCommentAPI": ()])
                             owner.dismiss(animated: false)
                         }
                     }
@@ -100,8 +99,10 @@ final class PostDeleteViewController: BaseViewController {
                     .withUnretained(self)
                     .bind { owner, value in
                         if value {
-                            NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
-                            NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": Data()])
+                            NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": ()])
+                            NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": ()])
+                            NotificationCenter.default.post(name: Notification.Name("deleteDtailViewController"), object: nil, userInfo: ["deleteDtailViewController": ()])
+                            
                             owner.dismiss(animated: false)
                         }
                     }

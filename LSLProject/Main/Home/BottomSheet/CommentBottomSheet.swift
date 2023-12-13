@@ -17,6 +17,7 @@ final class CommentBottomSheet: BaseViewController {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         view.rowHeight = 50
+        view.isScrollEnabled = false
         return view
     }()
     
@@ -38,7 +39,6 @@ final class CommentBottomSheet: BaseViewController {
     var userComment = [
         Header(header: nil,
                items: [
-                Bottom(title: "답글 고정", color: .black),
                 Bottom(title: "팔로우 취소", color: .black),
                 Bottom(title: "업데이트 안 보기", color: .black)
         ]),

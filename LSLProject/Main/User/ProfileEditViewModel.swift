@@ -115,12 +115,15 @@ final class ProfileEditViewModel: ViewModelType {
             }
             .subscribe(onNext: { result in
                 switch result {
-                case .success(_):
+                case .success(let data):
                     print("프로필 수정 완료!")
-                    UserDefaultsManager.nickname = outputNickname.value
-                    UserDefaultsManager.phoneNum = outputPhoneNum.value
-                    UserDefaultsManager.birthDay = outputBirthDay.value
+                    UserDefaultsManager.nickname = data.nick
+                    UserDefaultsManager.profile = data.profile ?? "basicUser"
+                    UserDefaultsManager.phoneNum = data.phoneNum ?? ""
+                    UserDefaultsManager.birthDay = data.birthDay ?? ""
+                    
                     profileEditStatus.accept(true)
+                    
                 case .failure(let error):
                     guard let profileEditError = ProfileEditError(rawValue: error.rawValue) else {
                         print("프로필 수정 공통 에러입니다. \(error.message)")

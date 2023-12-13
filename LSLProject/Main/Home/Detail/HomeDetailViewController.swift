@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 protocol SendData {
-    func sendData(data: Data)
+    func sendData(data: Void)
 }
 
 final class HomeDetailViewController: BaseViewController, SendData {
@@ -28,6 +28,8 @@ final class HomeDetailViewController: BaseViewController, SendData {
         view.backgroundColor = .systemBackground
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
+        view.contentInset = .zero
+        view.contentInsetAdjustmentBehavior = .never
         return view
     }()
     
@@ -49,7 +51,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
         let view = UILabel()
         view.font = .systemFont(ofSize: 15, weight: .regular)
         view.textColor = .lightGray
-        view.text = "@@@님에게 답글 남기기"
         return view
     }()
     
@@ -63,37 +64,42 @@ final class HomeDetailViewController: BaseViewController, SendData {
     
     private let disposeBag = DisposeBag()
     
-    var sendData: Data? {
+    var sendData: Void = () {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: sendData)
+    lazy var observeData = BehaviorRelay(value: ())
     
     var item: PostResponse?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        detailTableView.contentInset = .zero
-        detailTableView.contentInsetAdjustmentBehavior = .never
-        
         setNavigationBar()
         setTabBar()
+        setCommentWriteView()
         
         bind()
         
         NotificationCenter.default.addObserver(self, selector: #selector(recallAllCommentAPI(notification:)), name: Notification.Name("recallCommentAPI"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteDtailViewController(notification:)), name: Notification.Name("deleteDtailViewController"), object: nil)
+        
+    }
+    
+    @objc func deleteDtailViewController(notification: NSNotification) {
+        self.navigationController?.popViewController(animated: true)
         
     }
     
     @objc func recallAllCommentAPI(notification: NSNotification) {
-        
-        if let data = notification.userInfo?["recallCommentAPI"] as? Data {
+        if let data = notification.userInfo?["recallCommentAPI"] as? Void {
             self.sendData = data
             // 스크롤!
-            self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+                self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            }
         }
         
     }
@@ -103,10 +109,29 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-    func sendData(data: Data) {
+    func sendData(data: Void) {
         self.sendData = data
         // 스크롤!
-        self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+        
+        
+    }
+    
+    private func setCommentWriteView() {
+        guard let item else { return }
+        commentTitle.text = "\(item.creator.nick)님에게 답글 남기기..."
+        
+        let myProfile = UserDefaultsManager.profile
+        
+        if myProfile != "basicUser" {
+            let myProfileImageUrl = URL(string: APIKey.sesacURL + myProfile)
+            myProfileImage.kf.setImage(with: myProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        } else {
+            myProfileImage.image = UIImage(named: myProfile)
+        }
+        
     }
     
     private func bind() {
@@ -135,18 +160,16 @@ final class HomeDetailViewController: BaseViewController, SendData {
                     cell.layoutIfNeeded()
                 }
                 
-                let input = HomeDetailViewModel.CellButtonInput(creatorID: BehaviorRelay(value: element.creator.id),
-                                                                moreButtonTap: cell.moreButton.rx.tap)
-                
-                let output = self.viewModel.buttonTransform(input: input)
-                
-                output.postStatus
+                cell.moreButton.rx.tap
+                    .withLatestFrom(BehaviorRelay(value: element.creator.id), resultSelector: { _, id in
+                        return id
+                    })
                     .withUnretained(self)
                     .bind { owner, value in
-                        if value {
-                            owner.presentCommentBottomSheet(value: value, postID: item.id, commentID: element.id)
+                        if value == UserDefaultsManager.id {
+                            owner.presentCommentBottomSheet(value: true, postID: item.id, commentID: element.id)
                         } else {
-                            owner.presentCommentBottomSheet(value: value, postID: item.id, commentID: nil)
+                            owner.presentCommentBottomSheet(value: false, postID: item.id, commentID: nil)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -209,6 +232,29 @@ final class HomeDetailViewController: BaseViewController, SendData {
         self.present(nav, animated: true)
     }
     
+    private func presentPostBottomSheet(value: Bool, id: String) {
+        
+        let vc = PostBottomSheet()
+        
+        vc.modalPresentationStyle = .pageSheet
+        vc.value = value
+        vc.deletePostID = id
+        
+        if let sheet = vc.sheetPresentationController {
+            
+            sheet.detents = [
+                .custom { _ in
+                    return 300
+                }
+            ]
+            
+            sheet.delegate = self
+            sheet.prefersGrabberVisible = true
+        }
+        
+        self.present(vc, animated: true)
+    }
+    
     override func configureView() {
         super.configureView()
         
@@ -230,10 +276,11 @@ final class HomeDetailViewController: BaseViewController, SendData {
         super.setConstraints()
         
         detailTableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
         
         commentWriteView.snp.makeConstraints {
+            $0.top.equalTo(detailTableView.snp.bottom)
             $0.horizontalEdges.bottom.equalToSuperview()
             $0.height.equalTo(60)
         }
@@ -269,7 +316,6 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
             UIView.setAnimationsEnabled(false)
             self.detailTableView.beginUpdates()
             header.layoutIfNeeded()
-//            header.disposeBag = DisposeBag()
             self.detailTableView.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
@@ -281,11 +327,13 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
         header.moreButton.rx.tap
             .withUnretained(self)
             .bind { owner, value in
-                
+                if item.creator.id == UserDefaultsManager.id {
+                    owner.presentPostBottomSheet(value: true, id: item.id)
+                } else {
+                    owner.presentPostBottomSheet(value: false, id: item.id)
+                }
             }
-            .disposed(by: disposeBag)
-        
-        
+            .disposed(by: header.disposeBag)
         
         return header
     }
@@ -296,15 +344,6 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        detailTableView.snp.remakeConstraints {
-            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalTo(commentWriteView.snp.top)
-        }
-        
     }
     
 }

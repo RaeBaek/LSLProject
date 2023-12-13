@@ -93,11 +93,16 @@ final class CommentViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        myTextView.text = StartMessage.comment.placeholder
-        
         setNavigationBar()
+        
+        setView { [weak self] in
+            guard let self else { return }
+            self.myTextView.isScrollEnabled = false
+            self.myTextView.sizeToFit()
+            self.scrollView.contentSize = self.contentView.frame.size
+        }
+        
         bind()
-        setView()
         
     }
     
@@ -113,8 +118,10 @@ final class CommentViewController: BaseViewController {
     }
     
     private func bind() {
+        guard let post else { return }
         
-        let input = CommentViewModel.Input(textViewText: myTextView.rx.text.orEmpty,
+        let input = CommentViewModel.Input(userNickname: BehaviorRelay(value: post.creator.nick),
+                                           textViewText: myTextView.rx.text.orEmpty,
                                            textViewBeginEditing: myTextView.rx.didBeginEditing,
                                            textViewEndEditing: myTextView.rx.didEndEditing,
                                            postButtonTap: postButton.rx.tap)
@@ -161,26 +168,34 @@ final class CommentViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, bool in
                 if bool {
-                    owner.sendDelegate?.sendData(data: Data())
+                    owner.sendDelegate?.sendData(data: ())
                     owner.dismissViewController()
                 }
             }
             .disposed(by: disposeBag)
     }
     
-    func setView() {
+    func setView(completionHandler: @escaping () -> ()) {
         guard let post else { return }
         
-        if let profile = post.creator.profile {
-            let userProfileImageUrl = URL(string: APIKey.sesacURL + profile)
+        myTextView.text = "\(post.creator.nick)\(StartMessage.comment.placeholder)"
+        
+        if let userProfile = post.creator.profile {
+            let userProfileImageUrl = URL(string: APIKey.sesacURL + userProfile)
             userProfileImage.kf.setImage(with: userProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
         }
         
         userNickname.text = post.creator.nick
         
-        let myProfileImageUrl = URL(string: APIKey.sesacURL + UserDefaultsManager.profile)
+        let myProfile = UserDefaultsManager.profile
         
-        myProfileImage.kf.setImage(with: myProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        if myProfile != "basicUser" {
+            let myProfileImageUrl = URL(string: APIKey.sesacURL + myProfile)
+            myProfileImage.kf.setImage(with: myProfileImageUrl, options: [.requestModifier(imageDownloadRequest)])
+        } else {
+            myProfileImage.image = UIImage(named: myProfile)
+        }
+        
         myNickname.text = UserDefaultsManager.nickname
         
         if post.title != "" {
@@ -238,6 +253,7 @@ final class CommentViewController: BaseViewController {
                                 $0.width.equalTo(2)
                             }
                         }
+                        completionHandler()
                     }
                 }
             } else {
@@ -280,6 +296,7 @@ final class CommentViewController: BaseViewController {
                     $0.bottom.equalToSuperview().offset(-6)
                     $0.width.equalTo(2)
                 }
+                completionHandler()
             }
         } else {
             if let image = post.image.first {
@@ -331,6 +348,7 @@ final class CommentViewController: BaseViewController {
                                 $0.width.equalTo(2)
                             }
                         }
+                        completionHandler()
                     }
                 }
             }
@@ -403,10 +421,10 @@ final class CommentViewController: BaseViewController {
         
         scrollView.snp.makeConstraints {
             $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalTo(toolView.snp.top).offset(-12)
         }
         
         toolView.snp.makeConstraints {
+            $0.top.equalTo(scrollView.snp.bottom).offset(12)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
             $0.height.equalTo(48)

@@ -12,23 +12,14 @@ import RxCocoa
 final class HomeDetailViewModel: ViewModelType {
     
     struct Input {
-        let sendData: BehaviorRelay<Data?>
+        let sendData: BehaviorRelay<Void>
         let contentID: BehaviorRelay<String>
         let commentButtonTap: ControlEvent<Void>
-    }
-    
-    struct CellButtonInput {
-        let creatorID: BehaviorRelay<String>
-        let moreButtonTap: ControlEvent<Void>
     }
     
     struct Output {
         let commentButtonTap: PublishRelay<Void>
         let postResponse: PublishRelay<PostResponse>
-    }
-    
-    struct CellButtonOutput {
-        let postStatus: PublishRelay<Bool>
     }
     
     let repository: NetworkRepository
@@ -49,57 +40,31 @@ final class HomeDetailViewModel: ViewModelType {
             .disposed(by: disposeBag)
         
         input.sendData
-            .withUnretained(self)
-            .flatMap { owner, _ in
-                owner.repository.requestAllPost(next: "0", limit: "10", productID: "hihi")}
-            .withLatestFrom(input.contentID) { result, id in
-                return (result, id)
+            .withLatestFrom(input.contentID) { _, id in
+                return id
             }
-            .subscribe { result, id in
+            .withUnretained(self)
+            .flatMap { owner, id in
+                owner.repository.requestAPost(id: id)
+            }
+            .withUnretained(self)
+            .subscribe { owner, result in
                 switch result {
                 case .success(let data):
-                    for i in 0..<data.data.count {
-                        if data.data[i].id == id {
-                            postResponse.accept(data.data[i])
-                        } else {
-                            print("일치하는 데이터가 없습니다. 요청을 확인해주세요.")
-                        }
-                    }
+                    print("해당 게시물 조회 성공!")
+                    postResponse.accept(data)
                 case .failure(let error):
                     guard let allPostError = AllPostError(rawValue: error.rawValue) else {
-                        print("포스트 조회 실패.. \(error.message)")
+                        print("해당 게시물 조회 실패.. \(error.message)")
                         return
                     }
-                    print("커스텀 포스트 에러 \(allPostError.message)")
+                    print("커스텀 해당 게시물 에러 \(allPostError.message)")
                 }
             }
             .disposed(by: disposeBag)
         
         return Output(commentButtonTap: commentButtonTap,
                       postResponse: postResponse)
-    }
-    
-    func buttonTransform(input: CellButtonInput) -> CellButtonOutput {
-        
-        let postStatus = PublishRelay<Bool>()
-        
-        input.moreButtonTap
-            .withLatestFrom(input.creatorID, resultSelector: { _, id in
-                print("확인1 \(Date()), \(input.creatorID.value)")
-                print("확인2 \(Date()), \(UserDefaultsManager.id)")
-                
-                if input.creatorID.value == UserDefaultsManager.id {
-                    return true
-                } else {
-                    return false
-                }
-            })
-            .debug("확인")
-            .bind(to: postStatus)
-            .disposed(by: disposeBag)
-        
-        return CellButtonOutput(postStatus: postStatus)
-        
     }
     
 }

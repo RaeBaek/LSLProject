@@ -106,4 +106,8 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .unfollow(model: UserID(id: id)))
     }
     
+    func requestAPost(id: String) -> Single<NetworkResult<PostResponse>> {
+        APIManager.shared.request(target: .aPost(model: PostID(id: id)))
+    }
+    
 }

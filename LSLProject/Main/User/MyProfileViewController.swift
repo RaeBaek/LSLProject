@@ -18,8 +18,6 @@ final class MyProfileViewController: BaseViewController, SendData {
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
-        view.tableFooterView = UIView(frame: .zero)
-        view.sectionFooterHeight = 0
         return view
     }()
     
@@ -29,13 +27,20 @@ final class MyProfileViewController: BaseViewController, SendData {
     
     private let disposeBag = DisposeBag()
     
-    var sendData = Data() {
+    var sendData: Void = () {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    var observeData = PublishRelay<Data>()
+    // 231213 (수) 01:24
+    // observeData를 PublishRelay로 선언해두면
+    // bind() 이후에 sendData로 값을 한 번 넘겨야하는데
+    // bind는 비동기로 처리가 되고 sendData는 동기로 처리가 되면서
+    // 아주 가끔? senData가 값이 먼저 전달되면 프로필을 못 가져오는 것 같은 느낌??
+    // 졸리다...
+    var observeData = BehaviorRelay(value: ()) //PublishRelay<Data>()
+//    var observeData = PublishRelay<Data>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,15 +49,12 @@ final class MyProfileViewController: BaseViewController, SendData {
         
         bind()
         
-        // 한 번 호출 필요
-        sendData = Data()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
     }
     
     @objc func recallMyPostAPI(notification: NSNotification) {
-        if let data = notification.userInfo?["recallPostAPI"] as? Data {
+        if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
         }
         
@@ -80,9 +82,10 @@ final class MyProfileViewController: BaseViewController, SendData {
         
         userTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
+        
     }
     
-    func sendData(data: Data) {
+    func sendData(data: Void) {
         sendData = data
         
     }
@@ -138,6 +141,14 @@ extension MyProfileViewController: UITableViewDelegate {
             .disposed(by: header.disposeBag)
         
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
     }
     
 }

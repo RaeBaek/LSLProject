@@ -12,7 +12,7 @@ import RxCocoa
 final class HomeViewModel: ViewModelType {
     
     struct Input {
-        let sendData: BehaviorRelay<Data?>
+        let sendData: BehaviorRelay<Void>
         let userID: BehaviorRelay<String>
         let allPost: BehaviorRelay<AllPost>
         let withdraw: ControlEvent<Void>

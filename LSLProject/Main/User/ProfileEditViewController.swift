@@ -123,6 +123,7 @@ final class ProfileEditViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
+                    NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": ()])
                     owner.dismissViewController()
                 }
             }
@@ -159,9 +160,6 @@ final class ProfileEditViewController: BaseViewController {
     }
     
     @objc private func dismissViewController() {
-        
-        NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
-        
         self.dismiss(animated: true)
         
     }

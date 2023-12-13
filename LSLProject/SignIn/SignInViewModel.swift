@@ -101,8 +101,12 @@ final class SignInViewModel: ViewModelType {
             .subscribe { result in
                 switch result {
                 case .success(let data):
-                    UserDefaultsManager.nickname = data.nick ?? "이 값이 보인다면 닉네임 기입에 문제.."
+                    UserDefaultsManager.profile = data.profile ?? "basicUser"
+                    UserDefaultsManager.nickname = data.nick
+                    UserDefaultsManager.phoneNum = data.phoneNum ?? UserDefaultsManagerDefaultValue.phoneNum.rawValue
+                    UserDefaultsManager.birthDay = data.birthDay ?? UserDefaultsManagerDefaultValue.birthDay.rawValue
                     loginStatus.accept(true)
+                    
                 case .failure(let error):
                     print("내 프로필 조회에 실패했습니다. (로그인 후 닉네임을 가져오는 경우!) \(error.message)")
                     loginStatus.accept(false)

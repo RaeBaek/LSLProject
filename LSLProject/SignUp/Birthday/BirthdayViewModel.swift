@@ -190,7 +190,9 @@ final class BirthdayViewModel: ViewModelType {
             .subscribe { result in
                 switch result {
                 case .success(let data):
-                    UserDefaultsManager.nickname = data.nick 
+                    print("내 프로필 조회 성공!")
+                    UserDefaultsManager.profile = data.profile ?? "basicUser"
+                    UserDefaultsManager.nickname = data.nick
                     UserDefaultsManager.phoneNum = data.phoneNum ?? UserDefaultsManagerDefaultValue.phoneNum.rawValue
                     UserDefaultsManager.birthDay = data.birthDay ?? UserDefaultsManagerDefaultValue.birthDay.rawValue
                     

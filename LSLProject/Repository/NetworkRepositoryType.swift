@@ -57,4 +57,6 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestUnFollow(id: String) -> Single<NetworkResult<FollowResponse>>
     
+    func requestAPost(id: String) -> Single<NetworkResult<PostResponse>>
+    
 }

@@ -200,8 +200,8 @@ final class PostViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
-                    NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": Data()])
-                    NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": Data()])
+                    NotificationCenter.default.post(name: Notification.Name("recallPostAPI"), object: nil, userInfo: ["recallPostAPI": ()])
+                    NotificationCenter.default.post(name: Notification.Name("recallMyPostAPI"), object: nil, userInfo: ["recallMyPostAPI": ()])
                     owner.dismissViewController()
                 }
             }

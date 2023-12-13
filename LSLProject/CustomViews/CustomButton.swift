@@ -21,7 +21,7 @@ final class CustomButton: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = 15
         self.clipsToBounds = true
     }
     

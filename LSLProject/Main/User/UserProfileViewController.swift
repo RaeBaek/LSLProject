@@ -29,8 +29,8 @@ final class UserProfileViewController: BaseViewController {
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
         view.separatorStyle = .none
-        view.tableFooterView = UIView(frame: .zero)
-        view.sectionFooterHeight = 0
+//        view.tableFooterView = UIView(frame: .zero)
+//        view.sectionFooterHeight = 0
         return view
     }()
     
@@ -168,4 +168,13 @@ extension UserProfileViewController: UITableViewDelegate {
         
         return header
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
 }

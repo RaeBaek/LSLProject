@@ -16,7 +16,7 @@ enum StartMessage: String, CaseIterable {
         case .post:
             "스레드를 시작하세요..."
         case .comment:
-            "@@@@님에게 답글 남기기..."
+            "님에게 답글 남기기..."
         }
     }
 }
