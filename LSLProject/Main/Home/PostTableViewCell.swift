@@ -39,8 +39,8 @@ class PostTableViewCell: BaseTableViewCell {
     var mainText =  MainTitle(frame: .zero)
     var mainImage = MainImageView(frame: .zero)
     private let lineBar = CustomLineBar(frame: .zero)
-    private let heartButton = CustomActiveButton(frame: .zero)
-    private let commentButton = CustomActiveButton(frame: .zero)
+    let heartButton = CustomActiveButton(frame: .zero)
+    let commentButton = CustomActiveButton(frame: .zero)
     private let repostButton = CustomActiveButton(frame: .zero)
     private let dmButton = CustomActiveButton(frame: .zero)
     
@@ -75,6 +75,8 @@ class PostTableViewCell: BaseTableViewCell {
         mainImage.layer.borderWidth = 0
         mainImage.layer.borderColor = nil
         profileImage.image = UIImage(named: "basicUser")
+        heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+        
         disposeBag = DisposeBag()
 
         mainText.snp.remakeConstraints {
@@ -135,6 +137,10 @@ class PostTableViewCell: BaseTableViewCell {
         if let profileURL = element.creator.profile {
             let url = URL(string: APIKey.sesacURL + profileURL)
             profileImage.kf.setImage(with: url, options: [.requestModifier(imageDownloadRequest)])
+        }
+        
+        if element.likes.contains(UserDefaultsManager.id) {
+            heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
         }
         
         statusLabel.text = element.productID

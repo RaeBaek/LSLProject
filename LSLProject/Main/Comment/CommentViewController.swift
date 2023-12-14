@@ -95,14 +95,17 @@ final class CommentViewController: BaseViewController {
         
         setNavigationBar()
         
+        bind()
+        
         setView { [weak self] in
             guard let self else { return }
-            self.myTextView.isScrollEnabled = false
-            self.myTextView.sizeToFit()
+            
+            // completionHandler를 사용하여 이미지가 모두 그려지는 시점을 확인하고
+            // view.layoutIfNeeded 메서드 호출 후
+            // self.scrollView.contentSize = self.contentView.frame.size 처리해준다.
+            self.view.layoutIfNeeded()
             self.scrollView.contentSize = self.contentView.frame.size
         }
-        
-        bind()
         
     }
     
@@ -129,6 +132,15 @@ final class CommentViewController: BaseViewController {
         let output = viewModel.transform(input: input)
         
         myTextView.rx.didChange
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.myTextView.sizeToFit()
+                // UIScrollView의 contentSize 업데이트
+                owner.scrollView.contentSize = owner.contentView.frame.size
+            }
+            .disposed(by: disposeBag)
+        
+        myTextView.rx.didBeginEditing
             .withUnretained(self)
             .bind { owner, _ in
                 owner.myTextView.sizeToFit()
@@ -252,8 +264,8 @@ final class CommentViewController: BaseViewController {
                                 $0.bottom.equalToSuperview().offset(-6)
                                 $0.width.equalTo(2)
                             }
+                            completionHandler()
                         }
-                        completionHandler()
                     }
                 }
             } else {
@@ -347,8 +359,8 @@ final class CommentViewController: BaseViewController {
                                 $0.bottom.equalToSuperview().offset(-6)
                                 $0.width.equalTo(2)
                             }
+//                            completionHandler()
                         }
-                        completionHandler()
                     }
                 }
             }

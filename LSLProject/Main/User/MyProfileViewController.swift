@@ -79,7 +79,10 @@ final class MyProfileViewController: BaseViewController, SendData {
         let input = MyProfileViewModel.Input(sendData: observeData)
         let output = viewModel.transform(input: input)
             
-        output.userPosts
+        
+        let userPosts = output.userPosts
+        
+        userPosts
             .debug("userPosts")
             .map { $0.data }
             .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
@@ -98,6 +101,36 @@ final class MyProfileViewController: BaseViewController, SendData {
                     .bind { owner, _ in
                         owner.presentPostBottomSheet(value: true, id: element.id)
                     }
+                    .disposed(by: cell.disposeBag)
+                
+                // 좋아요 테스트중!!!!!!!!!!!!
+                // 내 프로필 쪽 먼저 테스트 중!!!!!!!
+                // cell prepare 쪽에서 heart nil 처리 추가!!!
+                cell.heartButton.rx.tap
+                    .withUnretained(self)
+                    .flatMap { owner, _ in
+                        owner.repository.requestLike(id: element.id)
+                    }
+                    .withUnretained(self)
+                    .subscribe(onNext: { owner, result in
+                        switch result {
+                        case .success(let data):
+                            print("좋아요 상태 \(data.likeStatus)")
+                            
+                            if data.likeStatus {
+                                cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
+                            } else {
+                                cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+                            }
+                            
+                        case .failure(let error):
+                            guard let likeError = LikeError(rawValue: error.rawValue) else {
+                                print("좋아요 실패.. \(error.message)")
+                                return
+                            }
+                            print("커스텀 좋아요 에러 \(likeError.message)")
+                        }
+                    })
                     .disposed(by: cell.disposeBag)
                 
             }
