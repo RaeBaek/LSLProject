@@ -17,12 +17,6 @@ final class SearchViewController: BaseViewController {
         return view
     }()
     
-    private lazy var searchBar = {
-        let view = UISearchBar()
-        view.delegate = self
-        return view
-    }()
-    
     private var searchTableView = {
         let view = UITableView()
         view.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.identifier)
@@ -39,6 +33,13 @@ final class SearchViewController: BaseViewController {
         super.viewDidLoad()
         
         bind()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNavigationBar()
         
     }
     
@@ -65,12 +66,9 @@ final class SearchViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
-        
     }
     
-    override func configureView() {
-        super.configureView()
-        
+    private func setNavigationBar() {
         searchController.searchBar.placeholder = "검색"
         searchController.searchBar.tintColor = .black
         searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
@@ -85,8 +83,12 @@ final class SearchViewController: BaseViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
         self.navigationItem.largeTitleDisplayMode = .inline
+    }
+    
+    override func configureView() {
+        super.configureView()
         
-        [searchTableView, searchBar].forEach {
+        [searchTableView].forEach {
             view.addSubview($0)
         }
         

@@ -110,4 +110,8 @@ class NetworkRepository: NetworkRepositoryType {
         APIManager.shared.request(target: .like(model: UserID(id: id)))
     }
     
+    func requestLikes() -> Single<NetworkResult<PostResponses>> {
+        APIManager.shared.request(target: .likes)
+    }
+    
 }

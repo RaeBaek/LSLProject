@@ -98,7 +98,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
             self.sendData = data
             // 스크롤!
             if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
-                self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             }
         }
         

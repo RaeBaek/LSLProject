@@ -1,20 +1,36 @@
 //
-//  HomeViewController.swift
+//  UserProfileViewController.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/19/23.
+//  Created by 백래훈 on 12/10/23.
 //
 
 import UIKit
+import SnapKit
 import RxSwift
 import RxCocoa
-import RxDataSources
 
-final class HomeViewController: BaseViewController {
+final class UserProfileViewController: BaseViewController {
     
-    private let homeTableView = {
+    deinit {
+        print("UserProfileViewController Deinit!!")
+    }
+    
+    private lazy var backBarbutton = {
+        let view = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
+    lazy var moreBarbutton = {
+        let view = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
+    private let userTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.register(HomeTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeTableViewHeaderView.identifier)
+        view.register(UserProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: UserProfileTableHeaderView.identifier)
         view.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
@@ -23,33 +39,21 @@ final class HomeViewController: BaseViewController {
         return view
     }()
     
-    private lazy var backBarbutton = {
-        let view = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
-        view.tintColor = .black
-        return view
-    }()
+    var userID: String?
     
-    private let withdrawButton = {
-        let view = UIButton()
-        view.setTitle("회원탈퇴", for: .normal)
-        view.backgroundColor = .lightGray
-        view.tintColor = .yellow
-        return view
-    }()
+    let repository = NetworkRepository()
     
-    var sendData: Void = Void() {
-        didSet(newValue) {
-            observeData.accept(newValue)
-        }
-    }
-    
-    lazy var observeData = BehaviorRelay(value: ())
-    
-    private let repository = NetworkRepository()
-    
-    private lazy var viewModel = HomeViewModel(repository: repository)
+    private lazy var viewModel = UserProfileViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
+    
+//    var followButtonStatus: Void = () {
+//        didSet(newValue) {
+//            observeData.accept(newValue)
+//        }
+//    }
+    
+    var observeData = BehaviorRelay(value: ())
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
@@ -59,65 +63,36 @@ final class HomeViewController: BaseViewController {
         
         bind()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(recallAllPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setNavigationBar()
-        setTabBar()
+    }
+    
+    func bind() {
+        guard let userID else { return }
         
-    }
-    
-    @objc func recallAllPostAPI(notification: NSNotification) {
-        if let data = notification.userInfo?["recallPostAPI"] as? Void {
-            self.sendData = data
-            // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
-            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
-                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            }
-        }
-    }
-    
-    private func setNavigationBar() {
-        self.navigationItem.backBarButtonItem = backBarbutton
-        self.navigationController?.navigationBar.isHidden = true
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-    }
-    
-    private func setTabBar() {
-        tabBarController?.tabBar.backgroundImage = UIImage()
-        tabBarController?.tabBar.shadowImage = UIImage()
-        tabBarController?.tabBar.isTranslucent = false
-        tabBarController?.tabBar.backgroundColor = .white
-//        tabBarController?.tabBar.barTintColor = .white
-        
-    }
-    
-    private func bind() {
-        let input = HomeViewModel.Input(refreshing: homeTableView.refreshControl?.rx.controlEvent(.valueChanged),
-                                        sendData: observeData,
-                                        userID: BehaviorRelay(value: UserDefaultsManager.id),
-                                        withdraw: withdrawButton.rx.tap)
+        let input = UserProfileViewModel.Input(refreshing: userTableView.refreshControl?.rx.controlEvent(.valueChanged),
+                                               sendData: observeData,
+                                               userID: BehaviorRelay(value: userID))
         
         let output = viewModel.transform(input: input)
         
-        output.items
+        output.userPosts
             .map { $0.data }
-            .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+            .bind(to: userTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
+                
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
-                    self.homeTableView.beginUpdates()
+                    self.userTableView.beginUpdates()
                     
                     // 먼저 서버에서 받은 데이터에서 내가 좋아요 한 게시물이라면?
                     if element.likes.contains(UserDefaultsManager.id) {
                         // 좋아요 한 게시물이 이미 로컬 배열에 있다면?
                         if self.heartPostList[element.id] == nil {
+                            // 아무것도 안함
                             self.heartPostList.updateValue(true, forKey: element.id)
                             cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
                         }
@@ -162,18 +137,14 @@ final class HomeViewController: BaseViewController {
                     print("좋아요 확인: \(self.heartPostList)")
                     
                     cell.layoutIfNeeded()
-                    self.homeTableView.endUpdates()
+                    self.userTableView.endUpdates()
                     UIView.setAnimationsEnabled(true)
                 }
                 
                 cell.moreButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
-                        if element.creator.id == UserDefaultsManager.id {
-                            owner.presentPostBottomSheet(value: true, id: element.id)
-                        } else {
-                            owner.presentPostBottomSheet(value: false, id: element.id)
-                        }
+                        owner.presentPostBottomSheet(value: true, id: element.id)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -207,11 +178,11 @@ final class HomeViewController: BaseViewController {
                                 if owner.heartPostList.keys.contains(element.id) {
                                     // 값을 지우는 것이 아닌 false처리
                                     owner.heartPostList.updateValue(false, forKey: element.id)
+                                    print("좋아요 확인: \(owner.heartPostList)")
                                     
                                     owner.heartCount.updateValue(count - 1, forKey: element.id)
                                     cell.statusLabel.text = "\(element.comments.count) 답글, \(owner.heartCount[element.id]!) 좋아요"
                                     
-                                    print("좋아요 확인: \(owner.heartPostList)")
                                     cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                                 }
                                 // 로컬 배열에 id가 없다면?
@@ -220,8 +191,6 @@ final class HomeViewController: BaseViewController {
                                 }
                             }
                             
-                            cell.layoutIfNeeded()
-                            
                         case .failure(let error):
                             guard let likeError = LikeError(rawValue: error.rawValue) else {
                                 print("좋아요 실패.. \(error.message)")
@@ -229,21 +198,9 @@ final class HomeViewController: BaseViewController {
                             }
                             print("커스텀 좋아요 에러 \(likeError.message)")
                         }
-                        
                     })
                     .disposed(by: cell.disposeBag)
-                
-                cell.profileImageButton.rx.tap
-                    .withUnretained(self)
-                    .bind { owner, _ in
-                        if element.creator.id == UserDefaultsManager.id {
-                            return
-                        } else {
-                            owner.presentUserProfileViewController(id: element.creator.id)
-                        }
-                    }
-                    .disposed(by: cell.disposeBag)
-                
+    
             }
             .disposed(by: disposeBag)
         
@@ -251,33 +208,58 @@ final class HomeViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
-                    owner.homeTableView.refreshControl?.endRefreshing()
+                    owner.userTableView.refreshControl?.endRefreshing()
                     owner.heartPostList = [:]
                 }
             }
             .disposed(by: disposeBag)
         
-        homeTableView.rx.modelSelected(PostResponse.self)
+        userTableView.rx.modelSelected(PostResponse.self)
             .withUnretained(self)
             .bind { owner, value in
                 owner.nextDetailViewController(item: value)
             }
             .disposed(by: disposeBag)
         
-        homeTableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
-        output.check
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.changeRootViewController()
-            }
+    
+        userTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
     }
     
-    private func presentPostBottomSheet(value: Bool, id: String) {
+    private func setNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.backBarButtonItem = backBarbutton
+        self.navigationItem.rightBarButtonItem = moreBarbutton
+    }
+    
+    override func configureView() {
+        super.configureView()
         
+        [userTableView].forEach {
+            view.addSubview($0)
+        }
+        
+    }
+    
+    override func setConstraints() {
+        super.setConstraints()
+        
+        userTableView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+    }
+    
+    private func nextDetailViewController(item: PostResponse) {
+        let vc = HomeDetailViewController()
+        vc.item = item
+
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+    }
+    
+    private func presentPostBottomSheet(value: Bool, id: String) {
         let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
@@ -285,7 +267,6 @@ final class HomeViewController: BaseViewController {
         vc.deletePostID = id
         
         if let sheet = vc.sheetPresentationController {
-            
             sheet.detents = [
                 .custom { _ in
                     return 300
@@ -299,55 +280,63 @@ final class HomeViewController: BaseViewController {
         self.present(vc, animated: true)
     }
     
-    private func presentUserProfileViewController(id: String) {
-        let vc = UserProfileViewController()
-        vc.userID = id
-        
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func nextDetailViewController(item: PostResponse) {
-        let vc = HomeDetailViewController()
-        vc.item = item
-
-        self.navigationController?.pushViewController(vc, animated: true)
-        
-    }
-    
-    private func changeRootViewController() {
-        let vc = SignInViewController()
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
-        
-    }
-    
-    override func configureView() {
-        super.configureView()
-        
-        [homeTableView].forEach {
-            view.addSubview($0)
-        }
-        
-    }
-    
-    override func setConstraints() {
-        super.setConstraints()
-        
-//        homeTableView.tableHeaderView?.snp.makeConstraints {
-//            $0.height.equalTo(40)
-//        }
-        
-        homeTableView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(59)
-            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-    }
-    
 }
 
-extension HomeViewController: UITableViewDelegate {
+extension UserProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: UserProfileTableHeaderView.identifier) as? UserProfileTableHeaderView, let userID else { return UIView() }
+        
+        header.test(viewModel)
+        
+        let followButton = header.followButton
+        
+        followButton.rx.tap
+            .filter { followButton.configuration?.baseBackgroundColor == .black }
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestFollow(id: userID)
+            }
+            .withUnretained(self)
+            .subscribe(onNext: { owner, result in
+                switch result {
+                case .success(_):
+                    print("팔로우 성공!")
+//                    owner.followButtonStatus = ()
+                    owner.observeData.accept(())
+                    
+                case .failure(let error):
+                    guard let followError = FollowError(rawValue: error.rawValue) else {
+                        print("팔로우 공통 에러입니다. \(error.message)")
+                        return
+                    }
+                    print("팔로우 커스템 에러입니다. \(followError.message)")
+                }
+            })
+            .disposed(by: header.disposeBag)
+        
+        followButton.rx.tap
+            .filter { followButton.configuration?.baseBackgroundColor == .white }
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestUnFollow(id: userID)
+            }
+            .withUnretained(self)
+            .subscribe(onNext: { owner, result in
+                switch result {
+                case .success(_):
+                    print("언팔로우 성공!")
+//                    owner.followButtonStatus = ()
+                    owner.observeData.accept(())
+                    
+                case .failure(let error):
+                    guard let unfollowError = UnFollowError(rawValue: error.rawValue) else {
+                        print("언팔로우 공통 에러입니다. \(error.message)")
+                        return
+                    }
+                    print("언팔로우 커스템 에러입니다. \(unfollowError.message)")
+                }
+            })
+            .disposed(by: header.disposeBag)
         
         return header
     }
@@ -362,6 +351,6 @@ extension HomeViewController: UITableViewDelegate {
     
 }
 
-extension HomeViewController: UISheetPresentationControllerDelegate {
+extension UserProfileViewController: UISheetPresentationControllerDelegate {
     
 }

@@ -1,20 +1,19 @@
 //
-//  HomeViewController.swift
+//  UserViewController.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/19/23.
+//  Created by 백래훈 on 11/26/23.
 //
 
 import UIKit
 import RxSwift
 import RxCocoa
-import RxDataSources
 
-final class HomeViewController: BaseViewController {
+final class MyProfileViewController: BaseViewController, SendData {
     
-    private let homeTableView = {
+    private let myTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.register(HomeTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: HomeTableViewHeaderView.identifier)
+        view.register(MyProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: MyProfileTableHeaderView.identifier)
         view.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         view.backgroundColor = .clear
         view.rowHeight = UITableView.automaticDimension
@@ -29,27 +28,25 @@ final class HomeViewController: BaseViewController {
         return view
     }()
     
-    private let withdrawButton = {
-        let view = UIButton()
-        view.setTitle("회원탈퇴", for: .normal)
-        view.backgroundColor = .lightGray
-        view.tintColor = .yellow
-        return view
-    }()
+    let repository = NetworkRepository()
     
-    var sendData: Void = Void() {
+    lazy var viewModel = MyProfileViewModel(repository: repository)
+    
+    private let disposeBag = DisposeBag()
+    
+    var sendData: Void = () {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: ())
-    
-    private let repository = NetworkRepository()
-    
-    private lazy var viewModel = HomeViewModel(repository: repository)
-    
-    private let disposeBag = DisposeBag()
+    // 231213 (수) 01:24
+    // observeData를 PublishRelay로 선언해두면
+    // bind() 이후에 sendData로 값을 한 번 넘겨야하는데
+    // bind는 비동기로 처리가 되고 sendData는 동기로 처리가 되면서
+    // 아주 가끔? senData가 값이 먼저 전달되면 프로필을 못 가져오는 것 같은 느낌??
+    // 졸리다...
+    var observeData = BehaviorRelay(value: ())
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
@@ -59,7 +56,7 @@ final class HomeViewController: BaseViewController {
         
         bind()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(recallAllPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
     }
     
@@ -67,57 +64,55 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         setNavigationBar()
-        setTabBar()
         
-    }
-    
-    @objc func recallAllPostAPI(notification: NSNotification) {
-        if let data = notification.userInfo?["recallPostAPI"] as? Void {
-            self.sendData = data
-            // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
-            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
-                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            }
-        }
     }
     
     private func setNavigationBar() {
         self.navigationItem.backBarButtonItem = backBarbutton
         self.navigationController?.navigationBar.isHidden = true
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
     }
     
-    private func setTabBar() {
-        tabBarController?.tabBar.backgroundImage = UIImage()
-        tabBarController?.tabBar.shadowImage = UIImage()
-        tabBarController?.tabBar.isTranslucent = false
-        tabBarController?.tabBar.backgroundColor = .white
-//        tabBarController?.tabBar.barTintColor = .white
+    @objc func recallMyPostAPI(notification: NSNotification) {
+        if let data = notification.userInfo?["recallPostAPI"] as? Void {
+            self.sendData = data
+            // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
+            if myTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+                myTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            }
+        }
         
     }
     
     private func bind() {
-        let input = HomeViewModel.Input(refreshing: homeTableView.refreshControl?.rx.controlEvent(.valueChanged),
-                                        sendData: observeData,
-                                        userID: BehaviorRelay(value: UserDefaultsManager.id),
-                                        withdraw: withdrawButton.rx.tap)
-        
+        let input = MyProfileViewModel.Input(refreshing: myTableView.refreshControl?.rx.controlEvent(.valueChanged),
+                                             sendData: observeData)
         let output = viewModel.transform(input: input)
         
-        output.items
+        output.userPosts
+            .debug("userPosts")
             .map { $0.data }
-            .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+            .bind(to: myTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
+                
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
-                    self.homeTableView.beginUpdates()
+                    self.myTableView.beginUpdates()
+                    
+                    // 일반 배열에서 딕셔너리로 수정하였고
+                    // 딕셔너리는 중복이 안되므로 고유한 id의 정보를 저장하기에 적합하며
+                    // 서버에서 받아온 데이터 중에서 좋아요가 되어있는 게시물이라면
+                    // 처음에는 무조건 딕셔너리에 추가된다.
+                    // 이후 좋아요를 취소하면 좋아요 취소 api를 호출하는데 여기서 전체 데이터를 갱신하는게 아닌
+                    // 딕셔너리의 해당하는 id의 value 값을 변경하는 것이다.
+                    // 이로써 데이터가 갱신되기 전에는 로컬 딕셔너리를 참조하면서
+                    // 좋아요 처리를 수행할 수 있다.
+                    // 유저프로필 화면과 홈화면에 코드 옮길 것!!!!
                     
                     // 먼저 서버에서 받은 데이터에서 내가 좋아요 한 게시물이라면?
                     if element.likes.contains(UserDefaultsManager.id) {
                         // 좋아요 한 게시물이 이미 로컬 배열에 있다면?
                         if self.heartPostList[element.id] == nil {
+                            // 아무것도 안함
                             self.heartPostList.updateValue(true, forKey: element.id)
                             cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
                         }
@@ -162,18 +157,14 @@ final class HomeViewController: BaseViewController {
                     print("좋아요 확인: \(self.heartPostList)")
                     
                     cell.layoutIfNeeded()
-                    self.homeTableView.endUpdates()
+                    self.myTableView.endUpdates()
                     UIView.setAnimationsEnabled(true)
                 }
                 
                 cell.moreButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
-                        if element.creator.id == UserDefaultsManager.id {
-                            owner.presentPostBottomSheet(value: true, id: element.id)
-                        } else {
-                            owner.presentPostBottomSheet(value: false, id: element.id)
-                        }
+                        owner.presentPostBottomSheet(value: true, id: element.id)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -220,8 +211,6 @@ final class HomeViewController: BaseViewController {
                                 }
                             }
                             
-                            cell.layoutIfNeeded()
-                            
                         case .failure(let error):
                             guard let likeError = LikeError(rawValue: error.rawValue) else {
                                 print("좋아요 실패.. \(error.message)")
@@ -229,19 +218,7 @@ final class HomeViewController: BaseViewController {
                             }
                             print("커스텀 좋아요 에러 \(likeError.message)")
                         }
-                        
                     })
-                    .disposed(by: cell.disposeBag)
-                
-                cell.profileImageButton.rx.tap
-                    .withUnretained(self)
-                    .bind { owner, _ in
-                        if element.creator.id == UserDefaultsManager.id {
-                            return
-                        } else {
-                            owner.presentUserProfileViewController(id: element.creator.id)
-                        }
-                    }
                     .disposed(by: cell.disposeBag)
                 
             }
@@ -251,33 +228,25 @@ final class HomeViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
-                    owner.homeTableView.refreshControl?.endRefreshing()
+                    owner.myTableView.refreshControl?.endRefreshing()
                     owner.heartPostList = [:]
                 }
             }
             .disposed(by: disposeBag)
         
-        homeTableView.rx.modelSelected(PostResponse.self)
+        myTableView.rx.modelSelected(PostResponse.self)
             .withUnretained(self)
             .bind { owner, value in
                 owner.nextDetailViewController(item: value)
             }
             .disposed(by: disposeBag)
         
-        homeTableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
-        output.check
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.changeRootViewController()
-            }
+        myTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
     }
     
     private func presentPostBottomSheet(value: Bool, id: String) {
-        
         let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
@@ -285,7 +254,6 @@ final class HomeViewController: BaseViewController {
         vc.deletePostID = id
         
         if let sheet = vc.sheetPresentationController {
-            
             sheet.detents = [
                 .custom { _ in
                     return 300
@@ -299,13 +267,6 @@ final class HomeViewController: BaseViewController {
         self.present(vc, animated: true)
     }
     
-    private func presentUserProfileViewController(id: String) {
-        let vc = UserProfileViewController()
-        vc.userID = id
-        
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     private func nextDetailViewController(item: PostResponse) {
         let vc = HomeDetailViewController()
         vc.item = item
@@ -314,16 +275,15 @@ final class HomeViewController: BaseViewController {
         
     }
     
-    private func changeRootViewController() {
-        let vc = SignInViewController()
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
+    func sendData(data: Void) {
+        sendData = data
         
     }
     
     override func configureView() {
         super.configureView()
         
-        [homeTableView].forEach {
+        [myTableView].forEach {
             view.addSubview($0)
         }
         
@@ -332,22 +292,35 @@ final class HomeViewController: BaseViewController {
     override func setConstraints() {
         super.setConstraints()
         
-//        homeTableView.tableHeaderView?.snp.makeConstraints {
-//            $0.height.equalTo(40)
-//        }
-        
-        homeTableView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(59)
-            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
+        myTableView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
         
     }
     
+    private func presentProfileEdit() {
+        let vc = ProfileEditViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        
+        self.present(nav, animated: true)
+    }
+
 }
 
-extension HomeViewController: UITableViewDelegate {
+extension MyProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MyProfileTableHeaderView.identifier) as? MyProfileTableHeaderView else { return UIView() }
+                
+        // 헤더 쪽에서 viewModel에 바로 접근할 수 없다보니
+        // 인스턴스를 넣어준다.
+        header.test(viewModel)
+        
+        header.profileEditButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.presentProfileEdit()
+            }
+            .disposed(by: header.disposeBag)
         
         return header
     }
@@ -362,6 +335,6 @@ extension HomeViewController: UITableViewDelegate {
     
 }
 
-extension HomeViewController: UISheetPresentationControllerDelegate {
+extension MyProfileViewController: UISheetPresentationControllerDelegate {
     
 }

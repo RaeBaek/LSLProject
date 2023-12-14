@@ -46,7 +46,6 @@ class PostTableViewCell: BaseTableViewCell {
     
     var statusLabel = {
         let view = UILabel()
-        view.text = "35 답글 250 좋아요"
         view.textColor = .lightGray
         view.font = .systemFont(ofSize: 13, weight: .regular)
         return view
@@ -65,6 +64,8 @@ class PostTableViewCell: BaseTableViewCell {
     var element: PostResponse?
     
     lazy var status = Observable.of(element)
+    
+    var likes: Int = 0
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -127,11 +128,6 @@ class PostTableViewCell: BaseTableViewCell {
         
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-    }
-    
     func setCell(element: PostResponse, completion: @escaping () -> ()) {
         
         if let profileURL = element.creator.profile {
@@ -143,7 +139,7 @@ class PostTableViewCell: BaseTableViewCell {
             heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
         }
         
-        statusLabel.text = element.productID
+        self.likes = element.likes.count
         userNickname.text = element.creator.nick
         
         selectionStyle = .none

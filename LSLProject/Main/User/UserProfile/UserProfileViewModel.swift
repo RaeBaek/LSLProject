@@ -27,18 +27,36 @@ final class UserProfileViewModel: ViewModelType {
     }
     
     struct Input {
-        let sendData: PublishRelay<Data>
+        let refreshing: ControlEvent<Void>?
+        let sendData: BehaviorRelay<Void>
         let userID: BehaviorRelay<String>
     }
     
     struct Output {
         let userPosts: PublishRelay<PostResponses>
+        let refreshLoading: PublishRelay<Bool>
     }
     
     func transform(input: Input) -> Output {
-        
         let userPosts = PublishRelay<PostResponses>()
         let userID = input.userID
+        let refreshLoading = PublishRelay<Bool>()
+        
+        let sendData = input.sendData
+        
+        guard let refreshing = input.refreshing else {
+            return Output(userPosts: userPosts,
+                          refreshLoading: refreshLoading)
+        }
+        
+        refreshing
+            .bind { value in
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    refreshLoading.accept(true)
+                    sendData.accept(())
+                }
+            }
+            .disposed(by: disposeBag)
         
         input.sendData
             .withUnretained(self)
@@ -126,7 +144,8 @@ final class UserProfileViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        return Output(userPosts: userPosts)
+        return Output(userPosts: userPosts,
+                      refreshLoading: refreshLoading)
     }
     
 }

@@ -12,15 +12,16 @@ import RxCocoa
 final class HomeViewModel: ViewModelType {
     
     struct Input {
+        let refreshing: ControlEvent<Void>?
         let sendData: BehaviorRelay<Void>
         let userID: BehaviorRelay<String>
-        let allPost: BehaviorRelay<AllPost>
         let withdraw: ControlEvent<Void>
     }
     
     struct Output {
         let items: PublishRelay<PostResponses>
         let check: PublishRelay<Bool>
+        let refreshLoading: PublishRelay<Bool>
     }
     
     private let repository: NetworkRepository
@@ -35,14 +36,29 @@ final class HomeViewModel: ViewModelType {
         let statusCode = BehaviorRelay<Int?>(value: nil)//PublishRelay<Int?>()
         let check = PublishRelay<Bool>()
         let items = PublishRelay<PostResponses>()
+        let refreshLoading = PublishRelay<Bool>()
         
-        input.sendData
-            .withLatestFrom(input.allPost, resultSelector: { _, value in
-                return value
-            })
+        let sendData = input.sendData
+        
+        guard let refreshing = input.refreshing else {
+            return Output(items: items,
+                          check: check,
+                          refreshLoading: refreshLoading)
+        }
+        
+        refreshing
+            .bind { value in
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    refreshLoading.accept(true)
+                    sendData.accept(())
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        sendData
             .withUnretained(self)
             .flatMap { owner, value in
-                owner.repository.requestAllPost(next: value.next, limit: value.limit, productID: value.productID)
+                owner.repository.requestAllPost(next: "0", limit: "10", productID: "hihi")
             }
             .subscribe(onNext: { value in
                 switch value {
@@ -110,7 +126,9 @@ final class HomeViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        return Output(items: items, check: check)
+        return Output(items: items,
+                      check: check,
+                      refreshLoading: refreshLoading)
     }
     
 }

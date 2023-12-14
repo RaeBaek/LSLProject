@@ -21,18 +21,37 @@ final class MyProfileViewModel: ViewModelType {
     }
     
     struct Input {
+        let refreshing: ControlEvent<Void>?
         let sendData: BehaviorRelay<Void>
     }
     
     struct Output {
         let userPosts: PublishRelay<PostResponses>
+        let refreshLoading: PublishRelay<Bool>
     }
     
     func transform(input: Input) -> Output {
         let userPosts = PublishRelay<PostResponses>()
         let id = BehaviorRelay(value: UserDefaultsManager.id)
+        let refreshLoading = PublishRelay<Bool>()
         
-        input.sendData
+        let sendData = input.sendData
+        
+        guard let refreshing = input.refreshing else {
+            return Output(userPosts: userPosts,
+                          refreshLoading: refreshLoading)
+        }
+        
+        refreshing
+            .bind { value in
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    refreshLoading.accept(true)
+                    sendData.accept(())
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        sendData
             .withLatestFrom(id)
             .withUnretained(self)
             .flatMapLatest { owner, id in
@@ -42,16 +61,20 @@ final class MyProfileViewModel: ViewModelType {
             .debug("'myProfile'")
             .bind { owner, response in
                 switch response {
-                case .success(let success):
-                    owner.myProfile.accept(success)
+                case .success(let data):
+                    owner.myProfile.accept(data)
                     
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    guard let myProfileError = MyProfileError(rawValue: error.rawValue) else {
+                        print("내 프로필 조회 공통 에러.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 내 프로필 조회 에러 \(myProfileError.message)")
                 }
             }
             .disposed(by: disposeBag)
         
-        input.sendData
+        sendData
             .withLatestFrom(id)
             .withUnretained(self)
             .flatMapLatest { owner, id in
@@ -66,7 +89,7 @@ final class MyProfileViewModel: ViewModelType {
                     
                 case .failure(let error):
                     guard let userPostsError = UserPostsError(rawValue: error.rawValue) else {
-                        print("내가 작성한 포스트 조회 실패.. \(error.message)")
+                        print("내가 작성한 포스트 공통 에러.. \(error.message)")
                         return
                     }
                     print("커스텀 유저별 작성한 포스트 조회 에러 \(userPostsError.message)")
@@ -74,7 +97,8 @@ final class MyProfileViewModel: ViewModelType {
             }
             .disposed(by: disposeBag)
         
-        return Output(userPosts: userPosts)
+        return Output(userPosts: userPosts,
+                      refreshLoading: refreshLoading)
         
         // MARK: - 원본
 //        input.sendData

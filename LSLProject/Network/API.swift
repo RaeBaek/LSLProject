@@ -28,6 +28,7 @@ enum SeSACAPI {
     case follow(model: UserID)
     case unfollow(model: UserID)
     case like(model: UserID)
+    case likes
     
 }
 
@@ -89,12 +90,15 @@ extension SeSACAPI: TargetType {
         case .like(let model):
             return "post/like/\(model.id)"
             
+        case .likes:
+            return "post/like/me"
+            
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile, .aPost:
+        case .accessToken, .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .userProfile, .aPost, .likes:
             return .get
             
         case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow, .like:
@@ -126,7 +130,7 @@ extension SeSACAPI: TargetType {
         case .commentDel(let model):
             return .requestJSONEncodable(model)
             
-        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .unfollow, .aPost, .like:
+        case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .likes, .unfollow, .aPost, .like:
             return .requestPlain
             
         case .allPost(let model):
@@ -178,7 +182,7 @@ extension SeSACAPI: TargetType {
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
-        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost, .like:
+        case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost, .like, .likes:
             return ["Authorization": token, "SesacKey": key]
         case .postAdd, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
