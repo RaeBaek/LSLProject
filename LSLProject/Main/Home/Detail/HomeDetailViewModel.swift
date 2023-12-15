@@ -11,6 +11,8 @@ import RxCocoa
 
 final class HomeDetailViewModel: ViewModelType {
     
+    let item = PublishRelay<PostResponse>()
+    
     struct Input {
         let sendData: BehaviorRelay<Void>
         let contentID: BehaviorRelay<String>
@@ -53,6 +55,8 @@ final class HomeDetailViewModel: ViewModelType {
                 case .success(let data):
                     print("해당 게시물 조회 성공!")
                     postResponse.accept(data)
+                    owner.item.accept(data)
+                    
                 case .failure(let error):
                     guard let allPostError = AllPostError(rawValue: error.rawValue) else {
                         print("해당 게시물 조회 실패.. \(error.message)")

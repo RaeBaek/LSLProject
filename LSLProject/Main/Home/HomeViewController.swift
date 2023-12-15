@@ -10,7 +10,13 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-final class HomeViewController: BaseViewController {
+protocol ScrollToBottom {
+    func reloadHeart(row: Int, id: String, status: Bool)
+    func reloadAddComment(row: Int, id: String)
+    func reloadSubComment(row: Int, id: String)
+}
+
+final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
     private let homeTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -53,6 +59,7 @@ final class HomeViewController: BaseViewController {
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
+    var commentCount: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,8 +73,14 @@ final class HomeViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("좋아요 리스트 \(heartPostList)")
         setNavigationBar()
         setTabBar()
+        
+        // 화면을 다시 그려줘야 cell이 깨지지 않음!
+        self.view.layoutIfNeeded()
+//        self.homeTableView.layoutIfNeeded()
+//        self.homeTableView.
         
     }
     
@@ -75,9 +88,9 @@ final class HomeViewController: BaseViewController {
         if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
             // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
-            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
-                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            }
+//            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+//                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+//            }
         }
     }
     
@@ -152,12 +165,18 @@ final class HomeViewController: BaseViewController {
                         }
                     }
                     
-                    if self.heartCount[element.id] == nil {
+                    if self.heartCount[element.id] == nil && self.commentCount[element.id] == nil {
                         self.heartCount.updateValue(cell.likes, forKey: element.id)
-                        cell.statusLabel.text = "\(element.comments.count) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        self.commentCount.updateValue(cell.comments, forKey: element.id)
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        
                     } else {
-                        cell.statusLabel.text = "\(element.comments.count) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     }
+                    
+//                    if self.commnetCount[element.id] == nil {
+//                        
+//                    }
                     
                     print("좋아요 확인: \(self.heartPostList)")
                     
@@ -196,7 +215,7 @@ final class HomeViewController: BaseViewController {
                                 owner.heartPostList.updateValue(true, forKey: element.id)
                                 
                                 owner.heartCount.updateValue(count + 1, forKey: element.id)
-                                cell.statusLabel.text = "\(element.comments.count) 답글, \(owner.heartCount[element.id]!) 좋아요"
+                                cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
                                 
                                 print("좋아요 확인: \(owner.heartPostList)")
                                 cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
@@ -209,7 +228,7 @@ final class HomeViewController: BaseViewController {
                                     owner.heartPostList.updateValue(false, forKey: element.id)
                                     
                                     owner.heartCount.updateValue(count - 1, forKey: element.id)
-                                    cell.statusLabel.text = "\(element.comments.count) 답글, \(owner.heartCount[element.id]!) 좋아요"
+                                    cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
                                     
                                     print("좋아요 확인: \(owner.heartPostList)")
                                     cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
@@ -244,6 +263,13 @@ final class HomeViewController: BaseViewController {
                     }
                     .disposed(by: cell.disposeBag)
                 
+                cell.commentButton.rx.tap
+                    .withUnretained(self)
+                    .bind { owner, _ in
+                        owner.commentViewController(item: element)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
             }
             .disposed(by: disposeBag)
         
@@ -251,16 +277,24 @@ final class HomeViewController: BaseViewController {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
+                    UIView.setAnimationsEnabled(false)
+                    owner.homeTableView.beginUpdates()
                     owner.homeTableView.refreshControl?.endRefreshing()
+                    owner.homeTableView.layoutIfNeeded()
+                    owner.homeTableView.endUpdates()
+                    UIView.setAnimationsEnabled(true)
+                    
                     owner.heartPostList = [:]
+                    owner.heartCount = [:]
+                    owner.commentCount = [:]
                 }
             }
             .disposed(by: disposeBag)
         
-        homeTableView.rx.modelSelected(PostResponse.self)
+        Observable.zip(homeTableView.rx.modelSelected(PostResponse.self), homeTableView.rx.itemSelected)
             .withUnretained(self)
             .bind { owner, value in
-                owner.nextDetailViewController(item: value)
+                owner.nextDetailViewController(item: value.0, row: value.1.row, id: value.0.id)
             }
             .disposed(by: disposeBag)
         
@@ -276,8 +310,58 @@ final class HomeViewController: BaseViewController {
         
     }
     
-    private func presentPostBottomSheet(value: Bool, id: String) {
+    func sendData(data: Void) {
+        self.sendData = ()
+//        self.view.layoutIfNeeded()
+        self.homeTableView.layoutIfNeeded()
         
+//        UIView.setAnimationsEnabled(false)
+//        self.homeTableView.beginUpdates()
+//        self.homeTableView.layoutIfNeeded()
+//        self.homeTableView.endUpdates()
+//        UIView.setAnimationsEnabled(true)
+    }
+    
+    func reloadHeart(row: Int, id: String, status: Bool) {
+        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        
+        // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
+        // id 값을 이용하여 딕셔너리에 의존
+        if status {
+            self.heartPostList[id] = true
+            let count = self.heartCount[id]
+            self.heartCount[id] = count! + 1
+        } else {
+            self.heartPostList[id] = false
+            let count = self.heartCount[id]
+            self.heartCount[id] = count! - 1
+        }
+        // reloadRows를 까먹고 있었다..
+        // 역시 ChatG선생.... good
+        self.homeTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        
+    }
+    
+    func reloadAddComment(row: Int, id: String) {
+        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        
+        let count = self.commentCount[id]
+        self.commentCount[id] = count! + 1
+        
+        self.homeTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        
+    }
+    
+    func reloadSubComment(row: Int, id: String) {
+        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        
+        let count = self.commentCount[id]
+        self.commentCount[id] = count! - 1
+        
+        self.homeTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+    }
+    
+    private func presentPostBottomSheet(value: Bool, id: String) {
         let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
@@ -285,7 +369,6 @@ final class HomeViewController: BaseViewController {
         vc.deletePostID = id
         
         if let sheet = vc.sheetPresentationController {
-            
             sheet.detents = [
                 .custom { _ in
                     return 300
@@ -306,12 +389,27 @@ final class HomeViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    private func nextDetailViewController(item: PostResponse) {
+    private func nextDetailViewController(item: PostResponse, row: Int, id: String) {
         let vc = HomeDetailViewController()
         vc.item = item
-
+        vc.row = row
+        vc.postID = id
+        vc.sendDelegate = self
+        vc.scrollDelegate = self
+        
         self.navigationController?.pushViewController(vc, animated: true)
         
+    }
+    
+    private func commentViewController(item: PostResponse) {
+        let vc = CommentViewController()
+        
+        let nav = UINavigationController(rootViewController: vc)
+        
+        vc.post = item
+        vc.sendDelegate = self
+        
+        self.present(nav, animated: true)
     }
     
     private func changeRootViewController() {

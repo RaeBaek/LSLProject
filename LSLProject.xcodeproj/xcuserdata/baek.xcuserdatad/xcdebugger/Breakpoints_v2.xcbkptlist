@@ -3,4 +3,54 @@
    uuid = "E7106B33-B0D3-4BD1-BEEE-BCAC81A592C3"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "52A0530C-94B0-41A2-BF34-F794B750283A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSLProject/Main/Home/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
+            landmarkName = "sendData(data:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "52A0530C-94B0-41A2-BF34-F794B750283A - ae041da3b1bbf1d1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.sendData(data: ()) -&gt; ()"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "315"
+                  endingLineNumber = "315"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "52A0530C-94B0-41A2-BF34-F794B750283A - ae041da3b1bbf1b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LSLProject.HomeViewController.sendData(data: ()) -&gt; ()"
+                  moduleName = "LSLProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/T7%20Touch/Sesac/Sesac%20%E1%84%80%E1%85%AA%E1%84%8C%E1%85%A6/18%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20(231113%20~%20231117)/LSLProject/LSLProject/Main/Home/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "314"
+                  endingLineNumber = "314"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

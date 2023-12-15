@@ -66,6 +66,7 @@ class PostTableViewCell: BaseTableViewCell {
     lazy var status = Observable.of(element)
     
     var likes: Int = 0
+    var comments: Int = 0
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -140,6 +141,8 @@ class PostTableViewCell: BaseTableViewCell {
         }
         
         self.likes = element.likes.count
+        self.comments = element.comments.count
+        
         userNickname.text = element.creator.nick
         
         selectionStyle = .none

@@ -60,9 +60,15 @@ final class HomeDetailViewController: BaseViewController, SendData {
         return view
     }()
     
-    private lazy var viewModel = HomeDetailViewModel(repository: NetworkRepository())
+    private let repository = NetworkRepository()
+    
+    private lazy var viewModel = HomeDetailViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
+    
+    var sendDelegate: SendData?
+    
+    var scrollDelegate: ScrollToBottom?
     
     var sendData: Void = () {
         didSet(newValue) {
@@ -73,18 +79,28 @@ final class HomeDetailViewController: BaseViewController, SendData {
     lazy var observeData = BehaviorRelay(value: ())
     
     var item: PostResponse?
+    var row: Int?
+    var postID: String?
+    
+    var heartPostList: [String: Bool] = [:]
+    var heartCount: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBar()
-        setTabBar()
         setCommentWriteView()
-        
         bind()
         
         NotificationCenter.default.addObserver(self, selector: #selector(recallAllCommentAPI(notification:)), name: Notification.Name("recallCommentAPI"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteDtailViewController(notification:)), name: Notification.Name("deleteDtailViewController"), object: nil)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNavigationBar()
+        setTabBar()
         
     }
     
@@ -93,9 +109,15 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
+    // 댓글 삭제했을 때 (NotificationCenter)
     @objc func recallAllCommentAPI(notification: NSNotification) {
+        guard let row, let postID else { return }
+        
         if let data = notification.userInfo?["recallCommentAPI"] as? Void {
+            // 상세화면은 당연히 갱신해주어야하며
             self.sendData = data
+            // 홈화면으로 뒤로가기했을 때 또한 변화를 알려줘야하므로 전달!
+            self.scrollDelegate?.reloadSubComment(row: row, id: postID)
             // 스크롤!
             if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
                 detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
@@ -104,18 +126,16 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
+    // 댓글 추가했을 때 (Delegate Pattern)
     func sendData(data: Void) {
+        guard let row, let postID else { return }
+        
         self.sendData = data
+        self.scrollDelegate?.reloadAddComment(row: row, id: postID)
         // 스크롤!
         if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
             self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
-        
         
     }
     
@@ -183,7 +203,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
     }
     
     private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?) {
-        
         let vc = CommentBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
@@ -233,7 +252,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
     }
     
     private func presentPostBottomSheet(value: Bool, id: String) {
-        
         let vc = PostBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
@@ -241,7 +259,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
         vc.deletePostID = id
         
         if let sheet = vc.sheetPresentationController {
-            
             sheet.detents = [
                 .custom { _ in
                     return 300
@@ -309,20 +326,21 @@ final class HomeDetailViewController: BaseViewController, SendData {
 
 extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item, let row else { return UIView() }
         
-        header.setHeaderView(item: item) { [weak self] in
+        header.test(viewModel)
+        header.postID = item.id
+        
+        header.setHeaderView { [weak self] in
             guard let self else { return }
             UIView.setAnimationsEnabled(false)
             self.detailTableView.beginUpdates()
+            
             header.layoutIfNeeded()
+            
             self.detailTableView.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
-        
-        // homeVC에서 cell 내의 버튼을 bind 구문에서 setCell과 같이 다루었듯이
-        // homeDetailVC의 header 내의 버튼은 여기서 다루어보자!
-        // homeViewModel에 있는 input, output과 transform 메서드는 삭제하도록!
         
         header.moreButton.rx.tap
             .withUnretained(self)
@@ -332,6 +350,70 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
                 } else {
                     owner.presentPostBottomSheet(value: false, id: item.id)
                 }
+            }
+            .disposed(by: header.disposeBag)
+        
+        header.heartButton.rx.tap
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestLike(id: item.id)
+            }
+            .withUnretained(self)
+            .subscribe(onNext: { owner, result in
+                switch result {
+                case .success(let data):
+                    print("좋아요 상태 \(data.likeStatus)")
+                    
+                    if data.likeStatus {
+                        header.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
+                    } else {
+                        header.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+                    }
+                    
+                    // 버튼 변경 후 이벤트 보내기!
+                    owner.sendData = ()
+                    // delegate 패턴을 이용하여 reload 준비
+                    owner.scrollDelegate?.reloadHeart(row: row, id: item.id, status: data.likeStatus)
+                    
+                case .failure(let error):
+                    guard let likeError = LikeError(rawValue: error.rawValue) else {
+                        print("좋아요 실패.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 좋아요 에러 \(likeError.message)")
+                }
+            })
+            .disposed(by: header.disposeBag)
+        
+        // sendData에서 이벤트를 쏠때마다 실행
+        observeData
+            .withUnretained(self)
+            .flatMap { owner, _ in
+                owner.repository.requestAPost(id: item.id)
+            }
+            .withUnretained(self)
+            .subscribe(onNext: { owner, result in
+                switch result {
+                case .success(_):
+                    print("포스트 불러오기 성공!")
+//                    header.statusLabel.text = "\(data.comments.count) 답글, \(data.likes.count) 좋아요"
+//                    header.layoutIfNeeded()
+                    
+                case .failure(let error):
+                    guard let aPostError = AllPostError(rawValue: error.rawValue) else {
+                        print("포스트 불러오기 에러.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 포스트 불러오기 에러 \(aPostError.message)")
+                }
+            })
+            // header의 disposeBag이 아닌 vc의 disposeBag 사용
+            .disposed(by: disposeBag)
+        
+        header.commentButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.commentViewController(item: item)
             }
             .disposed(by: header.disposeBag)
         

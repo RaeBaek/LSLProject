@@ -67,7 +67,9 @@ final class UserProfileViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         setNavigationBar()
+        
     }
     
     func bind() {
