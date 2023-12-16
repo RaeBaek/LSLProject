@@ -21,8 +21,6 @@ final class CommentBottomSheet: BaseViewController {
         return view
     }()
     
-    var value: Bool?
-    
     var myComment = [
         Header(header: nil,
                items: [
@@ -56,6 +54,8 @@ final class CommentBottomSheet: BaseViewController {
     
     let disposeBag = DisposeBag()
     
+    var value: Bool?
+    var row: Int?
     var postID: String?
     var deleteCommentID: String?
     
@@ -68,7 +68,7 @@ final class CommentBottomSheet: BaseViewController {
     
     private func bind() {
         
-        guard let value else { return }
+        guard let value, let row else { return }
         
         let dataSource = RxTableViewSectionedReloadDataSource<Header>(
             configureCell: { dataSource, tableView, indexPath, item in
@@ -100,7 +100,7 @@ final class CommentBottomSheet: BaseViewController {
             .withUnretained(self)
             .bind { owner, _ in
                 print("모델 셀렉티드")
-                owner.dismissViewController(postID: owner.postID, commentID: owner.deleteCommentID)
+                owner.dismissViewController(postID: owner.postID, commentID: owner.deleteCommentID, row: row)
             }
             .disposed(by: disposeBag)
         
@@ -109,13 +109,15 @@ final class CommentBottomSheet: BaseViewController {
         
     }
     
-    func dismissViewController(postID: String?, commentID: String?) {
+    func dismissViewController(postID: String?, commentID: String?, row: Int) {
         
         let vc = PostDeleteViewController()
         
         guard let presentingViewController = self.presentingViewController else { return }
         
         vc.modalPresentationStyle = .overFullScreen
+        vc.row = row
+        vc.reloadPostID = postID
         vc.deletePostID = postID
         vc.deleteCommentID = commentID
 

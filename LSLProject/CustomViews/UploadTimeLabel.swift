@@ -12,9 +12,8 @@ final class UploadTimeLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.text = "2시간"
         self.textColor = .lightGray
-        self.font = .systemFont(ofSize: 13, weight: .regular)
+        self.font = .systemFont(ofSize: 12, weight: .regular)
         
     }
     

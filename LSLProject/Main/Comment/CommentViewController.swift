@@ -50,6 +50,10 @@ final class CommentViewController: BaseViewController {
     
     private let myLineBar = CustomLineBar(frame: .zero)
     
+    var scrollDelegate: ScrollToBottom?
+    var row: Int?
+    var postID: String?
+    
     let toolView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
@@ -179,7 +183,13 @@ final class CommentViewController: BaseViewController {
         output.postAddStatus
             .withUnretained(self)
             .bind { owner, bool in
+                guard let row = owner.row, let postID = owner.postID else { return }
+                
                 if bool {
+                    // 댓글을 추가했을 때!
+//                    owner.scrollDelegate?.reloadAddComment(row: row, id: postID)
+                    NotificationCenter.default.post(name: Notification.Name("reloadComment"), object: nil, userInfo: ["row": row, "postID": postID])
+                    
                     owner.sendDelegate?.sendData(data: ())
                     owner.dismissViewController()
                 }

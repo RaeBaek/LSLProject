@@ -140,6 +140,8 @@ class PostTableViewCell: BaseTableViewCell {
             heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
         }
         
+        self.uploadTime.text = self.timeAgoSinceDate(element.time)
+        
         self.likes = element.likes.count
         self.comments = element.comments.count
         

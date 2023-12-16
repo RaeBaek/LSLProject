@@ -79,11 +79,12 @@ final class HomeDetailViewController: BaseViewController, SendData {
     lazy var observeData = BehaviorRelay(value: ())
     
     var item: PostResponse?
-    var row: Int?
+    var homeRow: Int?
     var postID: String?
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
+    var commentCount: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,13 +112,13 @@ final class HomeDetailViewController: BaseViewController, SendData {
     
     // 댓글 삭제했을 때 (NotificationCenter)
     @objc func recallAllCommentAPI(notification: NSNotification) {
-        guard let row, let postID else { return }
+        guard let homeRow, let postID else { return }
         
         if let data = notification.userInfo?["recallCommentAPI"] as? Void {
             // 상세화면은 당연히 갱신해주어야하며
             self.sendData = data
             // 홈화면으로 뒤로가기했을 때 또한 변화를 알려줘야하므로 전달!
-            self.scrollDelegate?.reloadSubComment(row: row, id: postID)
+//            self.scrollDelegate?.reloadSubComment(row: homeRow, id: postID)
             // 스크롤!
             if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
                 detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
@@ -128,16 +129,55 @@ final class HomeDetailViewController: BaseViewController, SendData {
     
     // 댓글 추가했을 때 (Delegate Pattern)
     func sendData(data: Void) {
-        guard let row, let postID else { return }
+//        guard let row, let postID else { return }
         
         self.sendData = data
-        self.scrollDelegate?.reloadAddComment(row: row, id: postID)
+//        self.scrollDelegate?.reloadAddComment(row: row, id: postID)
         // 스크롤!
         if detailTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
             self.detailTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         
     }
+    
+//    func reloadHeart(row: Int, id: String, status: Bool) {
+//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+//        
+//        // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
+//        // id 값을 이용하여 딕셔너리에 의존
+//        if status {
+//            self.heartPostList[id] = true
+//            let count = self.heartCount[id]
+//            self.heartCount[id] = count! + 1
+//        } else {
+//            self.heartPostList[id] = false
+//            let count = self.heartCount[id]
+//            self.heartCount[id] = count! - 1
+//        }
+//        // reloadRows를 까먹고 있었다..
+//        // 역시 ChatG선생.... good
+//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+//        
+//    }
+//    
+//    func reloadAddComment(row: Int, id: String) {
+//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+//        
+//        let count = self.commentCount[id]
+//        self.commentCount[id] = count! + 1
+//        
+//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+//        
+//    }
+//    
+//    func reloadSubComment(row: Int, id: String) {
+//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+//        
+//        let count = self.commentCount[id]
+//        self.commentCount[id] = count! - 1
+//        
+//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+//    }
     
     private func setCommentWriteView() {
         guard let item else { return }
@@ -155,7 +195,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
     }
     
     private func bind() {
-        guard let item else { return }
+        guard let item , let homeRow, let postID else { return }
         
         let input = HomeDetailViewModel.Input(sendData: observeData,
                                               contentID: BehaviorRelay(value: item.id),
@@ -165,7 +205,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
         output.commentButtonTap
             .withUnretained(self)
             .bind { owner, _ in
-                owner.commentViewController(item: item)
+                owner.commentViewController(item: item, row: homeRow, id: postID)
             }
             .disposed(by: disposeBag)
         
@@ -187,9 +227,9 @@ final class HomeDetailViewController: BaseViewController, SendData {
                     .withUnretained(self)
                     .bind { owner, value in
                         if value == UserDefaultsManager.id {
-                            owner.presentCommentBottomSheet(value: true, postID: item.id, commentID: element.id)
+                            owner.presentCommentBottomSheet(value: true, postID: item.id, commentID: element.id, row: homeRow)
                         } else {
-                            owner.presentCommentBottomSheet(value: false, postID: item.id, commentID: nil)
+                            owner.presentCommentBottomSheet(value: false, postID: item.id, commentID: nil, row: homeRow)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -202,11 +242,12 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-    private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?) {
+    private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?, row: Int) {
         let vc = CommentBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
         vc.value = value
+        vc.row = row
         vc.postID = postID
         vc.deleteCommentID = commentID
         
@@ -240,13 +281,16 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-    private func commentViewController(item: PostResponse) {
+    private func commentViewController(item: PostResponse, row: Int, id: String) {
         let vc = CommentViewController()
         
         let nav = UINavigationController(rootViewController: vc)
         
         vc.post = item
+        vc.row = row
+        vc.postID = id
         vc.sendDelegate = self
+//        vc.scrollDelegate = self
         
         self.present(nav, animated: true)
     }
@@ -326,7 +370,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
 
 extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item, let row else { return UIView() }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeDetailPostHeaderView.identifier) as? HomeDetailPostHeaderView, let item, let homeRow else { return UIView() }
         
         header.test(viewModel)
         header.postID = item.id
@@ -373,7 +417,7 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
                     // 버튼 변경 후 이벤트 보내기!
                     owner.sendData = ()
                     // delegate 패턴을 이용하여 reload 준비
-                    owner.scrollDelegate?.reloadHeart(row: row, id: item.id, status: data.likeStatus)
+                    owner.scrollDelegate?.reloadHeart(row: homeRow, id: item.id, status: data.likeStatus)
                     
                 case .failure(let error):
                     guard let likeError = LikeError(rawValue: error.rawValue) else {
@@ -394,9 +438,9 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
             .withUnretained(self)
             .subscribe(onNext: { owner, result in
                 switch result {
-                case .success(_):
+                case .success(let data):
                     print("포스트 불러오기 성공!")
-//                    header.statusLabel.text = "\(data.comments.count) 답글, \(data.likes.count) 좋아요"
+                    header.statusLabel.text = "\(data.comments.count) 답글, \(data.likes.count) 좋아요"
 //                    header.layoutIfNeeded()
                     
                 case .failure(let error):
@@ -413,7 +457,7 @@ extension HomeDetailViewController: UITableViewDelegate, UIScrollViewDelegate {
         header.commentButton.rx.tap
             .withUnretained(self)
             .bind { owner, _ in
-                owner.commentViewController(item: item)
+                owner.commentViewController(item: item, row: homeRow, id: item.id)
             }
             .disposed(by: header.disposeBag)
         

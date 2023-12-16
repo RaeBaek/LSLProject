@@ -49,7 +49,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         }
     }
     
-    lazy var observeData = BehaviorRelay(value: ())
+    var observeData = BehaviorRelay(value: ())
     
     private let repository = NetworkRepository()
     
@@ -68,6 +68,12 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         
         NotificationCenter.default.addObserver(self, selector: #selector(recallAllPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
+        // 홈 화면 -> 게시글 상세화면 -> 댓글 작성 modal 순서일 경우 delegate 패턴이 아닌 noti 활용
+        // 홈 화면 -> 댓글 작성 modal 순서일 경우 delegate 패턴이 아닌 noti 활용
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAddComment(notification:)), name: Notification.Name("reloadComment"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadSubComment(notification:)), name: Notification.Name("reloadSubComment"), object: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,18 +85,29 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         
         // 화면을 다시 그려줘야 cell이 깨지지 않음!
         self.view.layoutIfNeeded()
-//        self.homeTableView.layoutIfNeeded()
-//        self.homeTableView.
         
     }
     
     @objc func recallAllPostAPI(notification: NSNotification) {
         if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
-            // 데이터를 넘긴 후 스크롤을 해주어야 정상적으로 작동된다!!!
-//            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
-//                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-//            }
+            
+        }
+    }
+    
+    @objc func reloadAddComment(notification: NSNotification) {
+        if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
+            
+            self.reloadAddComment(row: row, id: postID)
+            
+        }
+    }
+    
+    @objc func reloadSubComment(notification: NSNotification) {
+        if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
+            
+            self.reloadSubComment(row: row, id: postID)
+            
         }
     }
     
@@ -151,7 +168,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                         if self.heartPostList[element.id] == nil {
                             // 서버도 전역변수도 모두 좋아요하지 않았으니 활성화 X
                             // 기본 좋아요 버튼 처리는 cell의 초기화와 재사용에서 처리 중
-//                            cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                         } else {
                             // 서버에서는 좋아요하지 않았지만 로컬에서 좋아요 클릭 후 전역 배열에 넣었다면?
                             // 좋아요 상태라면?
@@ -173,10 +189,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                     } else {
                         cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     }
-                    
-//                    if self.commnetCount[element.id] == nil {
-//                        
-//                    }
                     
                     print("좋아요 확인: \(self.heartPostList)")
                     
@@ -266,7 +278,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                 cell.commentButton.rx.tap
                     .withUnretained(self)
                     .bind { owner, _ in
-                        owner.commentViewController(item: element)
+                        owner.commentViewController(item: element, row: row, id: element.id)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -312,14 +324,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
     func sendData(data: Void) {
         self.sendData = ()
-//        self.view.layoutIfNeeded()
         self.homeTableView.layoutIfNeeded()
-        
-//        UIView.setAnimationsEnabled(false)
-//        self.homeTableView.beginUpdates()
-//        self.homeTableView.layoutIfNeeded()
-//        self.homeTableView.endUpdates()
-//        UIView.setAnimationsEnabled(true)
     }
     
     func reloadHeart(row: Int, id: String, status: Bool) {
@@ -392,8 +397,9 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     private func nextDetailViewController(item: PostResponse, row: Int, id: String) {
         let vc = HomeDetailViewController()
         vc.item = item
-        vc.row = row
+        vc.homeRow = row
         vc.postID = id
+        
         vc.sendDelegate = self
         vc.scrollDelegate = self
         
@@ -401,13 +407,16 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         
     }
     
-    private func commentViewController(item: PostResponse) {
+    private func commentViewController(item: PostResponse, row: Int, id: String) {
         let vc = CommentViewController()
         
         let nav = UINavigationController(rootViewController: vc)
         
         vc.post = item
+        vc.row = row
+        vc.postID = id
         vc.sendDelegate = self
+        vc.scrollDelegate = self
         
         self.present(nav, animated: true)
     }
@@ -429,10 +438,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
     override func setConstraints() {
         super.setConstraints()
-        
-//        homeTableView.tableHeaderView?.snp.makeConstraints {
-//            $0.height.equalTo(40)
-//        }
         
         homeTableView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(59)

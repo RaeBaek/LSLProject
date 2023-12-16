@@ -70,69 +70,6 @@ final class HomeDetailPostHeaderView: BaseTableViewHeaderFotterView {
             })
             .disposed(by: disposeBag)
         
-//        profileImage.snp.remakeConstraints {
-//            $0.top.equalToSuperview().offset(16)
-//            $0.leading.equalToSuperview().offset(12)
-//            $0.size.equalTo(38)
-//        }
-//        
-//        userNickname.snp.remakeConstraints {
-//            $0.centerY.equalTo(profileImage.snp.centerY)
-//            $0.leading.equalTo(profileImage.snp.trailing).offset(12)
-//        }
-//        
-//        moreButton.snp.remakeConstraints {
-//            $0.centerY.equalTo(userNickname.snp.centerY)
-//            $0.trailing.equalToSuperview().offset(-12)
-//            $0.size.equalTo(15)
-//        }
-//        
-//        uploadTime.snp.remakeConstraints {
-//            $0.centerY.equalTo(userNickname.snp.centerY)
-//            $0.trailing.equalTo(moreButton.snp.leading).offset(-12)
-//        }
-//        
-//        mainText.snp.remakeConstraints {
-////            $0.top.equalTo(profileImage.snp.bottom).offset(12)
-//            $0.horizontalEdges.equalToSuperview().inset(12)
-//        }
-//        
-//        mainImage.snp.remakeConstraints {
-////            $0.top.equalTo(mainText.snp.bottom).offset(12)
-//            $0.horizontalEdges.equalToSuperview().inset(12)
-////            $0.height.equalTo(500)
-//        }
-//        
-//        heartButton.snp.remakeConstraints {
-//            $0.top.equalTo(profileImage.snp.bottom).offset(12)
-//            $0.leading.equalTo(profileImage)
-//            $0.size.equalTo(22)
-//        }
-//        
-//        commentButton.snp.remakeConstraints {
-//            $0.top.equalTo(heartButton)
-//            $0.leading.equalTo(heartButton.snp.trailing).offset(12)
-//            $0.size.equalTo(22)
-//        }
-//        
-//        repostButton.snp.remakeConstraints {
-//            $0.top.equalTo(heartButton)
-//            $0.leading.equalTo(commentButton.snp.trailing).offset(12)
-//            $0.size.equalTo(22)
-//        }
-//        
-//        dmButton.snp.remakeConstraints {
-//            $0.top.equalTo(heartButton)
-//            $0.leading.equalTo(repostButton.snp.trailing).offset(12)
-//            $0.size.equalTo(22)
-//        }
-//        
-//        statusLabel.snp.remakeConstraints {
-//            $0.top.equalTo(heartButton.snp.bottom).offset(12)
-//            $0.leading.equalTo(heartButton)
-//            $0.bottom.equalToSuperview().offset(-12)
-//        }
-        
     }
     
     func test(_ viewModel: HomeDetailViewModel) {
@@ -158,6 +95,7 @@ final class HomeDetailPostHeaderView: BaseTableViewHeaderFotterView {
                 }
                 
                 owner.statusLabel.text = "\(item.comments.count) 답글, \(item.likes.count) 좋아요"
+                owner.uploadTime.text = self.timeAgoSinceDate(item.time)
                 
                 if let profileURL = item.creator.profile {
                     let url = URL(string: APIKey.sesacURL + profileURL)

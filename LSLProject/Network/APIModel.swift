@@ -139,9 +139,9 @@ struct PostResponse: Decodable {
     let image: [String]
     let hashTags: [String?]
     let comments: [Comment]
-    let id: String
+    let id, time: String
     let creator: Creator
-    let time, title: String?
+    let title: String?
     let content, content1, content2, content3, content4, content5: String?
     let productID: String
 
@@ -154,7 +154,7 @@ struct PostResponse: Decodable {
 }
 
 struct Comment: Decodable {
-    let id, content, time: String?
+    let id, content, time: String
     let creator: Creator
     
     enum CodingKeys: String, CodingKey {

@@ -12,14 +12,6 @@ import RxCocoa
 
 final class HomeDetailCommentCell: BaseTableViewCell {
     
-//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: HomeDetailCommentCell.identifier)
-//    }
-//    
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     override func prepareForReuse() {
         profileImage.image = UIImage(named: "basicUser")
         disposeBag = DisposeBag()
@@ -81,14 +73,6 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         return view
     }()
     
-    var statusLabel = {
-        let view = UILabel()
-        view.text = "35 답글 250 좋아요"
-        view.textColor = .lightGray
-        view.font = .systemFont(ofSize: 13, weight: .regular)
-        return view
-    }()
-    
     private let repository = NetworkRepository()
     
     var disposeBag = DisposeBag()
@@ -103,8 +87,10 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         
         userNickname.text = element.creator.nick
         mainText.text = element.content
+        uploadTime.text = self.timeAgoSinceDate(element.time)
         
         completion()
+        
     }
     
     func loadImage(path: String, completion: @escaping (Data) -> Void) {
@@ -133,7 +119,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
     override func configureCell() {
         super.configureCell()
         
-        [topLine, profileImage, userNickname, mainText, uploadTime, moreButton, heartButton, commentButton, repostButton, dmButton, statusLabel].forEach {
+        [topLine, profileImage, userNickname, mainText, uploadTime, moreButton, heartButton, commentButton, repostButton, dmButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -170,7 +156,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
         }
         
         mainText.snp.makeConstraints {
-            $0.top.equalTo(userNickname.snp.bottom).offset(12)
+            $0.top.equalTo(userNickname.snp.bottom).offset(6)
             $0.leading.equalTo(userNickname.snp.leading)
             $0.trailing.equalToSuperview().offset(-12)
         }
@@ -179,6 +165,7 @@ final class HomeDetailCommentCell: BaseTableViewCell {
             $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(mainText.snp.leading)
             $0.size.equalTo(22)
+            $0.bottom.equalToSuperview().offset(-16)
         }
         
         commentButton.snp.makeConstraints {
@@ -197,12 +184,6 @@ final class HomeDetailCommentCell: BaseTableViewCell {
             $0.top.equalTo(mainText.snp.bottom).offset(12)
             $0.leading.equalTo(repostButton.snp.trailing).offset(12)
             $0.size.equalTo(22)
-        }
-        
-        statusLabel.snp.makeConstraints {
-            $0.top.equalTo(heartButton.snp.bottom).offset(12)
-            $0.leading.equalTo(heartButton.snp.leading)
-            $0.bottom.equalToSuperview().offset(-16)
         }
         
     }

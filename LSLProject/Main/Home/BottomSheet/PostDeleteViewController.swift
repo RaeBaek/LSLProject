@@ -50,6 +50,8 @@ final class PostDeleteViewController: BaseViewController {
     let deleteButton = CustomButton(frame: .zero)
     let cancelButton = CustomButton(frame: .zero)
     
+    var row: Int?
+    var reloadPostID: String?
     var deletePostID: String?
     var deleteCommentID: String?
     
@@ -67,6 +69,8 @@ final class PostDeleteViewController: BaseViewController {
     }
     
     private func bind() {
+        guard let row, let reloadPostID else { return }
+        
         // 게시물 삭제, 댓글 삭제 모두 게시글의 id는 필요하다.
         if let deleteCommentID {
             // 댓글은 댓글 id도 필요!
@@ -83,6 +87,7 @@ final class PostDeleteViewController: BaseViewController {
                     .bind { owner, value in
                         if value {
                             NotificationCenter.default.post(name: Notification.Name("recallCommentAPI"), object: nil, userInfo: ["recallCommentAPI": ()])
+                            NotificationCenter.default.post(name: Notification.Name("reloadSubComment"), object: nil, userInfo: ["row": row, "postID": reloadPostID])
                             owner.dismiss(animated: false)
                         }
                     }

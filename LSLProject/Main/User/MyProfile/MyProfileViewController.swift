@@ -9,7 +9,17 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class MyProfileViewController: BaseViewController, SendData {
+final class MyProfileViewController: BaseViewController, SendData, ScrollToBottom {
+    
+    deinit {
+        print("MyProfileViewController Deinit!!")
+    }
+    
+    private lazy var backBarbutton = {
+        let view = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
     
     private let myTableView = {
         let view = UITableView(frame: .zero, style: .grouped)
@@ -22,34 +32,23 @@ final class MyProfileViewController: BaseViewController, SendData {
         return view
     }()
     
-    private lazy var backBarbutton = {
-        let view = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
-        view.tintColor = .black
-        return view
-    }()
-    
-    let repository = NetworkRepository()
-    
-    lazy var viewModel = MyProfileViewModel(repository: repository)
-    
-    private let disposeBag = DisposeBag()
-    
     var sendData: Void = () {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    // 231213 (수) 01:24
-    // observeData를 PublishRelay로 선언해두면
-    // bind() 이후에 sendData로 값을 한 번 넘겨야하는데
-    // bind는 비동기로 처리가 되고 sendData는 동기로 처리가 되면서
-    // 아주 가끔? senData가 값이 먼저 전달되면 프로필을 못 가져오는 것 같은 느낌??
-    // 졸리다...
     var observeData = BehaviorRelay(value: ())
+    
+    private let repository = NetworkRepository()
+    
+    private lazy var viewModel = MyProfileViewModel(repository: repository)
+    
+    private let disposeBag = DisposeBag()
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
+    var commentCount: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +57,9 @@ final class MyProfileViewController: BaseViewController, SendData {
         
         NotificationCenter.default.addObserver(self, selector: #selector(recallMyPostAPI(notification:)), name: Notification.Name("recallPostAPI"), object: nil)
         
+        // 내 프로필 화면 -> 댓글 작성 modal 순서일 경우 delegate 패턴이 아닌 noti 활용
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAddComment(notification:)), name: Notification.Name("reloadComment"), object: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +67,14 @@ final class MyProfileViewController: BaseViewController, SendData {
         
         setNavigationBar()
         
+    }
+    
+    @objc func reloadAddComment(notification: NSNotification) {
+        if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
+            
+            self.reloadAddComment(row: row, id: postID)
+            
+        }
     }
     
     private func setNavigationBar() {
@@ -133,7 +143,6 @@ final class MyProfileViewController: BaseViewController, SendData {
                         if self.heartPostList[element.id] == nil {
                             // 서버도 전역변수도 모두 좋아요하지 않았으니 활성화 X
                             // 기본 좋아요 버튼 처리는 cell의 초기화와 재사용에서 처리 중
-//                            cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                         } else {
                             // 서버에서는 좋아요하지 않았지만 로컬에서 좋아요 클릭 후 전역 배열에 넣었다면?
                             // 좋아요 상태라면?
@@ -147,11 +156,12 @@ final class MyProfileViewController: BaseViewController, SendData {
                         }
                     }
                     
-                    if self.heartCount[element.id] == nil {
+                    if self.heartCount[element.id] == nil && self.commentCount[element.id] == nil {
                         self.heartCount.updateValue(cell.likes, forKey: element.id)
-                        cell.statusLabel.text = "\(element.comments.count) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        self.commentCount.updateValue(cell.comments, forKey: element.id)
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     } else {
-                        cell.statusLabel.text = "\(element.comments.count) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     }
                     
                     print("좋아요 확인: \(self.heartPostList)")
@@ -187,7 +197,7 @@ final class MyProfileViewController: BaseViewController, SendData {
                                 owner.heartPostList.updateValue(true, forKey: element.id)
                                 
                                 owner.heartCount.updateValue(count + 1, forKey: element.id)
-                                cell.statusLabel.text = "\(element.comments.count) 답글, \(owner.heartCount[element.id]!) 좋아요"
+                                cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
                                 
                                 print("좋아요 확인: \(owner.heartPostList)")
                                 cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
@@ -200,7 +210,7 @@ final class MyProfileViewController: BaseViewController, SendData {
                                     owner.heartPostList.updateValue(false, forKey: element.id)
                                     
                                     owner.heartCount.updateValue(count - 1, forKey: element.id)
-                                    cell.statusLabel.text = "\(element.comments.count) 답글, \(owner.heartCount[element.id]!) 좋아요"
+                                    cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
                                     
                                     print("좋아요 확인: \(owner.heartPostList)")
                                     cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
@@ -221,6 +231,13 @@ final class MyProfileViewController: BaseViewController, SendData {
                     })
                     .disposed(by: cell.disposeBag)
                 
+                cell.commentButton.rx.tap
+                    .withUnretained(self)
+                    .bind { owner, _ in
+                        owner.commentViewController(item: element, row: row, id: element.id)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
             }
             .disposed(by: disposeBag)
         
@@ -228,22 +245,44 @@ final class MyProfileViewController: BaseViewController, SendData {
             .withUnretained(self)
             .bind { owner, value in
                 if value {
+                    UIView.setAnimationsEnabled(false)
+                    owner.myTableView.beginUpdates()
                     owner.myTableView.refreshControl?.endRefreshing()
+                    owner.myTableView.layoutIfNeeded()
+                    owner.myTableView.endUpdates()
+                    UIView.setAnimationsEnabled(true)
+                    
                     owner.heartPostList = [:]
+                    owner.heartCount = [:]
+                    owner.commentCount = [:]
                 }
             }
             .disposed(by: disposeBag)
         
-        myTableView.rx.modelSelected(PostResponse.self)
+        Observable.zip(myTableView.rx.modelSelected(PostResponse.self), myTableView.rx.itemSelected)
             .withUnretained(self)
             .bind { owner, value in
-                owner.nextDetailViewController(item: value)
+                owner.nextDetailViewController(item: value.0, row: value.1.row, id: value.0.id)
             }
             .disposed(by: disposeBag)
         
         myTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
+    }
+    
+    private func commentViewController(item: PostResponse, row: Int, id: String) {
+        let vc = CommentViewController()
+        
+        let nav = UINavigationController(rootViewController: vc)
+        
+        vc.post = item
+        vc.row = row
+        vc.postID = id
+        vc.sendDelegate = self
+        vc.scrollDelegate = self
+        
+        self.present(nav, animated: true)
     }
     
     private func presentPostBottomSheet(value: Bool, id: String) {
@@ -267,17 +306,61 @@ final class MyProfileViewController: BaseViewController, SendData {
         self.present(vc, animated: true)
     }
     
-    private func nextDetailViewController(item: PostResponse) {
+    private func nextDetailViewController(item: PostResponse, row: Int, id: String) {
         let vc = HomeDetailViewController()
+        
         vc.item = item
-
+        vc.homeRow = row
+        vc.postID = id
+        
+        vc.scrollDelegate = self
+        
         self.navigationController?.pushViewController(vc, animated: true)
         
     }
     
     func sendData(data: Void) {
         sendData = data
+        self.myTableView.layoutIfNeeded()
+    }
+    
+    func reloadHeart(row: Int, id: String, status: Bool) {
+        self.myTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
+        // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
+        // id 값을 이용하여 딕셔너리에 의존
+        if status {
+            self.heartPostList[id] = true
+            let count = self.heartCount[id]
+            self.heartCount[id] = count! + 1
+        } else {
+            self.heartPostList[id] = false
+            let count = self.heartCount[id]
+            self.heartCount[id] = count! - 1
+        }
+        // reloadRows를 까먹고 있었다..
+        // 역시 ChatG선생.... good
+        self.myTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        
+    }
+    
+    func reloadAddComment(row: Int, id: String) {
+        self.myTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        
+        let count = self.commentCount[id]
+        self.commentCount[id] = count! + 1
+        
+        self.myTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        
+    }
+    
+    func reloadSubComment(row: Int, id: String) {
+        self.myTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        
+        let count = self.commentCount[id]
+        self.commentCount[id] = count! - 1
+        
+        self.myTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
     }
     
     override func configureView() {
