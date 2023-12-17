@@ -36,6 +36,8 @@ final class HeartViewController: BaseViewController {
     var observeData = BehaviorRelay(value: ())
     
     var heartPostList: [String: Bool] = [:]
+    var heartCount: [String: Int] = [:]
+    var commentCount: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +106,15 @@ final class HeartViewController: BaseViewController {
                         }
                     }
                     
+                    if self.heartCount[element.id] == nil && self.commentCount[element.id] == nil {
+                        self.heartCount.updateValue(cell.likes, forKey: element.id)
+                        self.commentCount.updateValue(cell.comments, forKey: element.id)
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
+                        
+                    } else {
+                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
+                    }
+                    
                     print("좋아요 확인: \(self.heartPostList)")
                     
                     cell.layoutIfNeeded()
@@ -127,7 +138,7 @@ final class HeartViewController: BaseViewController {
         heartTableView.rx.modelSelected(PostResponse.self)
             .withUnretained(self)
             .bind { owner, value in
-                owner.nextDetailViewController(item: value)
+//                owner.nextDetailViewController(item: value)
             }
             .disposed(by: disposeBag)
         
@@ -147,13 +158,18 @@ final class HeartViewController: BaseViewController {
         self.navigationItem.largeTitleDisplayMode = .inline
     }
     
-    private func nextDetailViewController(item: PostResponse) {
-        let vc = HomeDetailViewController()
-        vc.item = item
-
-        self.navigationController?.pushViewController(vc, animated: true)
-        
-    }
+//    private func nextDetailViewController(item: PostResponse, row: Int, id: String) {
+//        let vc = HomeDetailViewController()
+//        vc.item = item
+//        vc.homeRow = row
+//        vc.postID = id
+//        
+//        vc.sendDelegate = self
+//        vc.scrollDelegate = self
+//
+//        self.navigationController?.pushViewController(vc, animated: true)
+//        
+//    }
     
     override func configureView() {
         super.configureView()

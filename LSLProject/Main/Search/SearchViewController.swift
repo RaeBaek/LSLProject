@@ -45,14 +45,14 @@ final class SearchViewController: BaseViewController {
     
     func bind() {
         let contents = [
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명"),
-            SearchList(profileImage: "우동", userID: "100_r_h", userName: "백래훈", follower: "팔로워 100명")
+            SearchList(profileImage: "basicUser", userID: "300_r_h", userName: "홍길동", follower: "팔로워 120명"),
+            SearchList(profileImage: "basicUser", userID: "looksy_rh", userName: "홍길동", follower: "팔로워 530명"),
+            SearchList(profileImage: "basicUser", userID: "jhyeong___", userName: "홍길동", follower: "팔로워 1,206명"),
+            SearchList(profileImage: "basicUser", userID: "km._.kang", userName: "홍길동", follower: "팔로워 301명"),
+            SearchList(profileImage: "basicUser", userID: "190_po", userName: "홍길동", follower: "팔로워 786명"),
+            SearchList(profileImage: "basicUser", userID: "strong_0_7", userName: "홍길동", follower: "팔로워 1.2만명"),
+            SearchList(profileImage: "basicUser", userID: "today_12", userName: "홍길동", follower: "팔로워 2,673명"),
+            SearchList(profileImage: "basicUser", userID: "ho_o_n", userName: "홍길동", follower: "팔로워 3만명")
         ]
         
         Observable.just(contents)
@@ -62,6 +62,7 @@ final class SearchViewController: BaseViewController {
                 cell.userIDLabel.text = element.userID
                 cell.userNameLabel.text = element.userName
                 cell.followerLabel.text = element.follower
+                cell.selectionStyle = .none
                 
             }
             .disposed(by: disposeBag)
