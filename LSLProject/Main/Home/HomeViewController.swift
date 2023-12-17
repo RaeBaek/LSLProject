@@ -93,7 +93,9 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     @objc func recallAllPostAPI(notification: NSNotification) {
         if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
-            self.homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+                homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            }
         }
     }
     
@@ -315,9 +317,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         homeTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
-        homeTableView.rx.setPrefetchDataSource(self)
-            .disposed(by: disposeBag)
-        
         output.refreshLoading
             .withUnretained(self)
             .bind { owner, value in
@@ -344,7 +343,9 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     }
     
     func reloadHeart(row: Int, id: String, status: Bool) {
-        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         
         // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
         // id 값을 이용하여 딕셔너리에 의존
@@ -364,7 +365,9 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     }
     
     func reloadAddComment(row: Int, id: String) {
-        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         // 같은 노티를 내 프로필과 홈화면에서 채택 중인데
         // 이런 경우 내 프로필의 게시글에 댓글을 추가, 삭제할 경우
         // 홈 화면에도 노티를 발송하게 된다.
@@ -377,7 +380,9 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     }
     
     func reloadSubComment(row: Int, id: String) {
-        self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if homeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         
         guard let count = self.commentCount[id] else { return }
         self.commentCount[id] = count - 1
@@ -461,7 +466,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
 }
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSourcePrefetching {
+extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
@@ -475,34 +480,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSourcePrefetch
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-//        for indexPath in indexPaths {
-//            print("---------------------\(indexPath)")
-//            if indexPath.row == prefetchData.count - 1 {
-//                Observable.just(())
-//                    .withUnretained(self)
-//                    .flatMap { owner, _ in
-//                        owner.repository.requestAllPost(next: owner.nextCursor, limit: "10", productID: "hihi")
-//                    }
-//                    .withUnretained(self)
-//                    .subscribe(onNext: { owner, result in
-//                        switch result {
-//                            
-//                        case .success(let data):
-//                            data.data
-//                                .bind(to: owner.homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
-//                                    
-//                                }
-//                        case .failure(_):
-//                            <#code#>
-//                        }
-//                    })
-//                    .disposed(by: disposeBag)
-//                    
-//            }
-//        }
     }
     
 }

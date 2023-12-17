@@ -274,7 +274,9 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
     }
     
     func reloadHeart(row: Int, id: String, status: Bool) {
-        self.userTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if userTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            userTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         
         // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
         // id 값을 이용하여 딕셔너리에 의존
@@ -294,7 +296,9 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
     }
     
     func reloadAddComment(row: Int, id: String) {
-        self.userTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if userTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            userTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         
         guard let count = self.commentCount[id] else { return }
         self.commentCount[id] = count + 1
@@ -304,7 +308,9 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
     }
     
     func reloadSubComment(row: Int, id: String) {
-        self.userTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
+        if userTableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil {
+            userTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
         
         guard let count = self.commentCount[id] else { return }
         self.commentCount[id] = count - 1

@@ -115,7 +115,7 @@ final class PostViewModel: ViewModelType {
                 return (text, file)
             }
             .flatMap { value in
-                let productID = "hihi"
+                let productID = "myThreads"
                 if value.0 == "" {
                     return self.repository.requestPostAdd(title: nil, file: value.1 ,productID: productID)
                 } else {

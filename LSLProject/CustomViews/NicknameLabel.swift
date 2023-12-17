@@ -12,7 +12,6 @@ final class NicknameLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.text = "테스트 유저"
         self.textColor = .black
         self.font = .systemFont(ofSize: 14, weight: .semibold)
         

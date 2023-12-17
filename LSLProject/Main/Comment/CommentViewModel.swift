@@ -63,8 +63,6 @@ final class CommentViewModel: ViewModelType {
                 } else {
                     return true
                 }
-                // 게시물 테스트 중이었고
-                // ho_o_on 계정 프로필 사진이랑 게시물 수정할 것
             }
             .bind(to: postButtonStatus)
             .disposed(by: disposeBag)

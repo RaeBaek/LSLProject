@@ -63,7 +63,7 @@ final class HomeViewModel: ViewModelType {
         sendData
             .withUnretained(self)
             .flatMap { owner, value in
-                owner.repository.requestAllPost(next: "", limit: "10", productID: "hihi")
+                owner.repository.requestAllPost(next: "", limit: "10", productID: "myThreads")
             }
             .subscribe(onNext: { value in
                 switch value {
@@ -88,7 +88,7 @@ final class HomeViewModel: ViewModelType {
             }
             .withUnretained(self)
             .flatMap { owner, value in
-                owner.repository.requestAllPost(next: next, limit: "10", productID: "hihi")
+                owner.repository.requestAllPost(next: next, limit: "10", productID: "myThreads")
             }
             .subscribe(onNext: { value in
                 switch value {
