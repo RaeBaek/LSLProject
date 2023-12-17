@@ -60,6 +60,8 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
         // 내 프로필 화면 -> 댓글 작성 modal 순서일 경우 delegate 패턴이 아닌 noti 활용
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAddComment(notification:)), name: Notification.Name("reloadComment"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadSubComment(notification:)), name: Notification.Name("reloadSubComment"), object: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +75,14 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
         if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
             
             self.reloadAddComment(row: row, id: postID)
+            
+        }
+    }
+    
+    @objc func reloadSubComment(notification: NSNotification) {
+        if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
+            
+            self.reloadSubComment(row: row, id: postID)
             
         }
     }
@@ -164,6 +174,7 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
                         cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     }
                     
+                    print("댓글 확인: \(self.commentCount)")
                     print("좋아요 확인: \(self.heartPostList)")
                     
                     cell.layoutIfNeeded()
@@ -306,6 +317,25 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
         self.present(vc, animated: true)
     }
     
+    private func presentSettingSheet() {
+        let vc = ExitBottomSheet()
+        
+        vc.modalPresentationStyle = .pageSheet
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [
+                .custom { _ in
+                    return 150
+                }
+            ]
+            
+            sheet.delegate = self
+            sheet.prefersGrabberVisible = true
+        }
+        
+        self.present(vc, animated: true)
+    }
+    
     private func nextDetailViewController(item: PostResponse, row: Int, id: String) {
         let vc = HomeDetailViewController()
         
@@ -347,8 +377,8 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
     func reloadAddComment(row: Int, id: String) {
         self.myTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! + 1
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count + 1
         
         self.myTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
         
@@ -357,8 +387,8 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
     func reloadSubComment(row: Int, id: String) {
         self.myTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! - 1
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count - 1
         
         self.myTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
     }
@@ -397,6 +427,13 @@ extension MyProfileViewController: UITableViewDelegate {
         // 헤더 쪽에서 viewModel에 바로 접근할 수 없다보니
         // 인스턴스를 넣어준다.
         header.test(viewModel)
+        
+        header.settingBarbutton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.presentSettingSheet()
+            }
+            .disposed(by: header.disposeBag)
         
         header.profileEditButton.rx.tap
             .withUnretained(self)

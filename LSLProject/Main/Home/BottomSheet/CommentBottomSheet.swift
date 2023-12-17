@@ -99,7 +99,6 @@ final class CommentBottomSheet: BaseViewController {
             .filter { $0.title == "삭제" }
             .withUnretained(self)
             .bind { owner, _ in
-                print("모델 셀렉티드")
                 owner.dismissViewController(postID: owner.postID, commentID: owner.deleteCommentID, row: row)
             }
             .disposed(by: disposeBag)

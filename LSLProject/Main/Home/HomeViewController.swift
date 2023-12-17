@@ -35,27 +35,29 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         return view
     }()
     
-    private let withdrawButton = {
-        let view = UIButton()
-        view.setTitle("회원탈퇴", for: .normal)
-        view.backgroundColor = .lightGray
-        view.tintColor = .yellow
-        return view
-    }()
-    
     var sendData: Void = Void() {
         didSet(newValue) {
             observeData.accept(newValue)
         }
     }
     
-    var observeData = BehaviorRelay(value: ())
+    var observeData = PublishRelay<Void>()
     
     private let repository = NetworkRepository()
     
     private lazy var viewModel = HomeViewModel(repository: repository)
     
     private let disposeBag = DisposeBag()
+    
+//    var nextCursor: String = "" {
+//        didSet(newValue) {
+//            nextCursorData.accept(newValue)
+//        }
+//    }
+    
+    var nextCursorData = BehaviorRelay(value: ())
+    
+    var prefetchData: [PostResponse] = []
     
     var heartPostList: [String: Bool] = [:]
     var heartCount: [String: Int] = [:]
@@ -91,7 +93,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     @objc func recallAllPostAPI(notification: NSNotification) {
         if let data = notification.userInfo?["recallPostAPI"] as? Void {
             self.sendData = data
-            
+            self.homeTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         }
     }
     
@@ -129,17 +131,24 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     }
     
     private func bind() {
-        let input = HomeViewModel.Input(refreshing: homeTableView.refreshControl?.rx.controlEvent(.valueChanged),
+        let input = HomeViewModel.Input(nextCursor: nextCursorData,
+                                        refreshing: homeTableView.refreshControl?.rx.controlEvent(.valueChanged),
                                         sendData: observeData,
-                                        userID: BehaviorRelay(value: UserDefaultsManager.id),
-                                        withdraw: withdrawButton.rx.tap)
+                                        userID: BehaviorRelay(value: UserDefaultsManager.id))
         
         let output = viewModel.transform(input: input)
         
         output.items
-            .map { $0.data }
+            .withUnretained(self)
+            .bind { owner, data in
+                owner.prefetchData = data
+            }
+            .disposed(by: disposeBag)
+        
+        output.items
             .bind(to: homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
                 guard let self else { return }
+                
                 cell.setCell(element: element) {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
@@ -285,6 +294,30 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
             }
             .disposed(by: disposeBag)
         
+        homeTableView.rx.prefetchRows
+            .compactMap(\.last?.row)
+            .withUnretained(self)
+            .bind { owner, row in
+                guard row == owner.prefetchData.count - 1 else { return }
+                print("현재로우 \(row)")
+                owner.nextCursorData.accept(())
+                
+            }
+            .disposed(by: disposeBag)
+        
+        Observable.zip(homeTableView.rx.modelSelected(PostResponse.self), homeTableView.rx.itemSelected)
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.nextDetailViewController(item: value.0, row: value.1.row, id: value.0.id)
+            }
+            .disposed(by: disposeBag)
+        
+        homeTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+        homeTableView.rx.setPrefetchDataSource(self)
+            .disposed(by: disposeBag)
+        
         output.refreshLoading
             .withUnretained(self)
             .bind { owner, value in
@@ -300,23 +333,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                     owner.heartCount = [:]
                     owner.commentCount = [:]
                 }
-            }
-            .disposed(by: disposeBag)
-        
-        Observable.zip(homeTableView.rx.modelSelected(PostResponse.self), homeTableView.rx.itemSelected)
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.nextDetailViewController(item: value.0, row: value.1.row, id: value.0.id)
-            }
-            .disposed(by: disposeBag)
-        
-        homeTableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
-        output.check
-            .withUnretained(self)
-            .bind { owner, value in
-                owner.changeRootViewController()
             }
             .disposed(by: disposeBag)
         
@@ -349,9 +365,12 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
     func reloadAddComment(row: Int, id: String) {
         self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
-        
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! + 1
+        // 같은 노티를 내 프로필과 홈화면에서 채택 중인데
+        // 이런 경우 내 프로필의 게시글에 댓글을 추가, 삭제할 경우
+        // 홈 화면에도 노티를 발송하게 된다.
+        // guard 처리를 통해 해당하는 id가 없다면 early exit 처리를 해주자.
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count + 1
         
         self.homeTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
         
@@ -360,8 +379,8 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     func reloadSubComment(row: Int, id: String) {
         self.homeTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! - 1
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count - 1
         
         self.homeTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
     }
@@ -421,12 +440,6 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         self.present(nav, animated: true)
     }
     
-    private func changeRootViewController() {
-        let vc = SignInViewController()
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc)
-        
-    }
-    
     override func configureView() {
         super.configureView()
         
@@ -448,7 +461,8 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
     
 }
 
-extension HomeViewController: UITableViewDelegate {
+extension HomeViewController: UITableViewDelegate, UITableViewDataSourcePrefetching {
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HomeTableViewHeaderView.identifier) as? HomeTableViewHeaderView else { return UIView() }
         
@@ -461,6 +475,34 @@ extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//        for indexPath in indexPaths {
+//            print("---------------------\(indexPath)")
+//            if indexPath.row == prefetchData.count - 1 {
+//                Observable.just(())
+//                    .withUnretained(self)
+//                    .flatMap { owner, _ in
+//                        owner.repository.requestAllPost(next: owner.nextCursor, limit: "10", productID: "hihi")
+//                    }
+//                    .withUnretained(self)
+//                    .subscribe(onNext: { owner, result in
+//                        switch result {
+//                            
+//                        case .success(let data):
+//                            data.data
+//                                .bind(to: owner.homeTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+//                                    
+//                                }
+//                        case .failure(_):
+//                            <#code#>
+//                        }
+//                    })
+//                    .disposed(by: disposeBag)
+//                    
+//            }
+//        }
     }
     
 }

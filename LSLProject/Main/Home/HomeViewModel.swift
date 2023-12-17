@@ -12,15 +12,14 @@ import RxCocoa
 final class HomeViewModel: ViewModelType {
     
     struct Input {
+        let nextCursor: BehaviorRelay<Void>
         let refreshing: ControlEvent<Void>?
-        let sendData: BehaviorRelay<Void>
+        let sendData: PublishRelay<Void>
         let userID: BehaviorRelay<String>
-        let withdraw: ControlEvent<Void>
     }
     
     struct Output {
-        let items: PublishRelay<PostResponses>
-        let check: PublishRelay<Bool>
+        let items: PublishRelay<[PostResponse]>
         let refreshLoading: PublishRelay<Bool>
     }
     
@@ -33,16 +32,22 @@ final class HomeViewModel: ViewModelType {
     }
     
     func transform(input: Input) -> Output {
-        let statusCode = BehaviorRelay<Int?>(value: nil)//PublishRelay<Int?>()
-        let check = PublishRelay<Bool>()
-        let items = PublishRelay<PostResponses>()
         let refreshLoading = PublishRelay<Bool>()
+        
+        var next = ""
+        var items = [PostResponse]() {
+            willSet(newValue) {
+                print("확인필요", newValue)
+                observerItems.accept(newValue)
+            }
+        }
+        
+        let observerItems = PublishRelay<[PostResponse]>()
         
         let sendData = input.sendData
         
         guard let refreshing = input.refreshing else {
-            return Output(items: items,
-                          check: check,
+            return Output(items: observerItems,
                           refreshLoading: refreshLoading)
         }
         
@@ -58,13 +63,15 @@ final class HomeViewModel: ViewModelType {
         sendData
             .withUnretained(self)
             .flatMap { owner, value in
-                owner.repository.requestAllPost(next: "0", limit: "10", productID: "hihi")
+                owner.repository.requestAllPost(next: "", limit: "10", productID: "hihi")
             }
             .subscribe(onNext: { value in
                 switch value {
                 case .success(let data):
                     print("포스트 조회 성공!!")
-                    items.accept(data)
+                    items = data.data
+                    next = data.nextCursor
+                    
                 case .failure(let error):
                     guard let allPostError = AllPostError(rawValue: error.rawValue) else {
                         print("포스트 조회 실패.. \(error.message)")
@@ -75,59 +82,32 @@ final class HomeViewModel: ViewModelType {
             })
             .disposed(by: disposeBag)
         
-        
-        // 회원탈퇴에 관한 코드
-        // 추후 리팩토링 예정
-        statusCode
-            .skip(1)
-            .compactMap { $0 }
-            .debug("withdraw")
-            .bind { value in
-                let error = [401, 403, 420, 429, 444, 500]
-                
-                if value == 200 {
-                    print("회원 탈퇴가 정상적으로 수행되었습니다.")
-                    check.accept(true)
-                } else if value == 419 {
-                    print("Access Token이 만료 되었습니다.(419)")
-                    print("/refresh 라우터를 통해 토큰 갱신 필요")
-//                    check.accept(true)
-                } else if error.contains(value) {
-//                    check.accept(true)
-                    print("심각한 공통에러입니다. 확인해주세요! 401, 403, 420, 429, 444, 500")
-                }
-                
+        input.nextCursor
+            .filter { _ in
+                next != "0"
             }
-            .disposed(by: disposeBag)
-        
-        let withdraw = input.withdraw
-    
-        withdraw
-            .flatMap {
-                self.repository.requestWithdraw()
-                    .catch { error in
-                        print("=========!!!!!= \(error)")
-                        return Single.never()
-                    }
+            .withUnretained(self)
+            .flatMap { owner, value in
+                owner.repository.requestAllPost(next: next, limit: "10", productID: "hihi")
             }
             .subscribe(onNext: { value in
                 switch value {
-                case .success(_):
-                    print("회원 탈퇴 완료!!!!!!!!!")
-                    statusCode.accept(200)
-                    UserDefaultsManager.token = "토큰 없음"
-                    UserDefaultsManager.refreshToken = "리프레시 토큰 없음"
+                case .success(let data):
+                    print("포스트 조회 성공!!")
+                    items.append(contentsOf: data.data)
+                    next = data.nextCursor
                     
                 case .failure(let error):
-                    print("회원 탈퇴 실패... \(error.message)")
-                    statusCode.accept(error.rawValue)
-                    
+                    guard let allPostError = AllPostError(rawValue: error.rawValue) else {
+                        print("포스트 조회 실패.. \(error.message)")
+                        return
+                    }
+                    print("커스텀 포스트 에러 \(allPostError.message)")
                 }
             })
             .disposed(by: disposeBag)
         
-        return Output(items: items,
-                      check: check,
+        return Output(items: observerItems,
                       refreshLoading: refreshLoading)
     }
     

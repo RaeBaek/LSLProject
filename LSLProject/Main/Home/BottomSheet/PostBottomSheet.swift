@@ -13,7 +13,7 @@ import RxDataSources
 
 final class PostBottomSheet: BaseViewController {
     
-    let tableView = {
+    private let tableView = {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         view.rowHeight = 50
@@ -23,7 +23,7 @@ final class PostBottomSheet: BaseViewController {
     
     var value: Bool?
     
-    var myPost = [
+    private var myPost = [
         Header(header: nil,
                items: [
                 Bottom(title: "프로필에 고정", color: .black),
@@ -36,7 +36,7 @@ final class PostBottomSheet: BaseViewController {
         ])
     ]
     
-    var userPost = [
+    private var userPost = [
         Header(header: nil,
                items: [
                 Bottom(title: "업데이트 안보기", color: .black),
@@ -49,12 +49,12 @@ final class PostBottomSheet: BaseViewController {
         ])
     ]
     
-    lazy var myPosts = BehaviorRelay<[Header]>(value: myPost)
-    lazy var userPosts = BehaviorRelay<[Header]>(value: userPost)
+    private lazy var myPosts = BehaviorRelay<[Header]>(value: myPost)
+    private lazy var userPosts = BehaviorRelay<[Header]>(value: userPost)
     
-    let repository = NetworkRepository()
+    private let repository = NetworkRepository()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     var deletePostID: String?
     
@@ -69,19 +69,18 @@ final class PostBottomSheet: BaseViewController {
         
         guard let value else { return }
         
-        let dataSource = RxTableViewSectionedReloadDataSource<Header>(
-            configureCell: { dataSource, tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-                
-                cell.textLabel?.text = item.title
-                cell.textLabel?.textColor = item.color
-                cell.textLabel?.font = .systemFont(ofSize: 12.5, weight: .medium)
-                cell.selectionStyle = .none
-                cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                
-                return cell
-            })
+        let dataSource = RxTableViewSectionedReloadDataSource<Header> { dataSource, tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+            
+            cell.textLabel?.text = item.title
+            cell.textLabel?.textColor = item.color
+            cell.textLabel?.font = .systemFont(ofSize: 12.5, weight: .medium)
+            cell.selectionStyle = .none
+            cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0)
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+            return cell
+        }
         
         if value {
             myPosts
@@ -98,7 +97,6 @@ final class PostBottomSheet: BaseViewController {
             .filter { $0.title == "삭제" }
             .withUnretained(self)
             .bind { owner, _ in
-                print("모델 셀렉티드")
                 owner.dismissViewController(id: owner.deletePostID!)
             }
             .disposed(by: disposeBag)

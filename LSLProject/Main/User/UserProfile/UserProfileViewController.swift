@@ -67,6 +67,8 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
         // 유저 화면 -> 게시글 상세화면 -> 댓글 작성 modal 순서일 경우 delegate 패턴이 아닌 noti 활용
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAddComment(notification:)), name: Notification.Name("reloadComment"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadSubComment(notification:)), name: Notification.Name("reloadSubComment"), object: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,6 +82,14 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
         if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
             
             self.reloadAddComment(row: row, id: postID)
+            
+        }
+    }
+    
+    @objc func reloadSubComment(notification: NSNotification) {
+        if let row = notification.userInfo?["row"] as? Int, let postID = notification.userInfo?["postID"] as? String {
+            
+            self.reloadSubComment(row: row, id: postID)
             
         }
     }
@@ -286,8 +296,8 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
     func reloadAddComment(row: Int, id: String) {
         self.userTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! + 1
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count + 1
         
         self.userTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
         
@@ -296,8 +306,8 @@ final class UserProfileViewController: BaseViewController, SendData, ScrollToBot
     func reloadSubComment(row: Int, id: String) {
         self.userTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
         
-        let count = self.commentCount[id]
-        self.commentCount[id] = count! - 1
+        guard let count = self.commentCount[id] else { return }
+        self.commentCount[id] = count - 1
         
         self.userTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
     }

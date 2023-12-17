@@ -61,6 +61,11 @@
 		146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */; };
 		146B9F612B051DC800FCB268 /* PhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */; };
 		146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */; };
+		1478A1542B2EE85200685E5F /* ExitBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478A1532B2EE85200685E5F /* ExitBottomSheet.swift */; };
+		1478A1562B2EEA5500685E5F /* LogoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478A1552B2EEA5500685E5F /* LogoutViewController.swift */; };
+		1478A1582B2EEA5E00685E5F /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478A1572B2EEA5E00685E5F /* WithdrawViewController.swift */; };
+		1478A15C2B2EEBBA00685E5F /* LogoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478A15B2B2EEBBA00685E5F /* LogoutViewModel.swift */; };
+		1478A15F2B2EEBD100685E5F /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478A15E2B2EEBD100685E5F /* WithdrawViewModel.swift */; };
 		1479BFF52B221A8F00C6A383 /* CustomActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */; };
 		147CC55D2B03C99B00D7DA7C /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 147CC55C2B03C99B00D7DA7C /* Moya */; };
 		147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147CC55E2B03CF4800D7DA7C /* APIModel.swift */; };
@@ -160,6 +165,11 @@
 		146B9F5C2B051D8000FCB268 /* NicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewModel.swift; sourceTree = "<group>"; };
 		146B9F602B051DC800FCB268 /* PhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewModel.swift; sourceTree = "<group>"; };
+		1478A1532B2EE85200685E5F /* ExitBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitBottomSheet.swift; sourceTree = "<group>"; };
+		1478A1552B2EEA5500685E5F /* LogoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutViewController.swift; sourceTree = "<group>"; };
+		1478A1572B2EEA5E00685E5F /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
+		1478A15B2B2EEBBA00685E5F /* LogoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutViewModel.swift; sourceTree = "<group>"; };
+		1478A15E2B2EEBD100685E5F /* WithdrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewModel.swift; sourceTree = "<group>"; };
 		1479BFF42B221A8F00C6A383 /* CustomActiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActiveButton.swift; sourceTree = "<group>"; };
 		147CC55E2B03CF4800D7DA7C /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
 		147CC5602B03D0B800D7DA7C /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
@@ -313,10 +323,12 @@
 		14102F4C2B23762B002D4A8B /* BottomSheet */ = {
 			isa = PBXGroup;
 			children = (
+				1478A15D2B2EEBBF00685E5F /* Withdraw */,
+				1478A15A2B2EEBA600685E5F /* Logout */,
+				1478A1592B2EEB9A00685E5F /* Delete */,
 				14102F4D2B237676002D4A8B /* PostBottomSheet.swift */,
 				145659F72B24BB010040A987 /* CommentBottomSheet.swift */,
-				145659F12B2450380040A987 /* PostDeleteViewController.swift */,
-				145659F52B2495F10040A987 /* PostDeleteViewModel.swift */,
+				1478A1532B2EE85200685E5F /* ExitBottomSheet.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -433,6 +445,33 @@
 				146B9F622B051DFB00FCB268 /* BirthdayViewModel.swift */,
 			);
 			path = Birthday;
+			sourceTree = "<group>";
+		};
+		1478A1592B2EEB9A00685E5F /* Delete */ = {
+			isa = PBXGroup;
+			children = (
+				145659F12B2450380040A987 /* PostDeleteViewController.swift */,
+				145659F52B2495F10040A987 /* PostDeleteViewModel.swift */,
+			);
+			path = Delete;
+			sourceTree = "<group>";
+		};
+		1478A15A2B2EEBA600685E5F /* Logout */ = {
+			isa = PBXGroup;
+			children = (
+				1478A1552B2EEA5500685E5F /* LogoutViewController.swift */,
+				1478A15B2B2EEBBA00685E5F /* LogoutViewModel.swift */,
+			);
+			path = Logout;
+			sourceTree = "<group>";
+		};
+		1478A15D2B2EEBBF00685E5F /* Withdraw */ = {
+			isa = PBXGroup;
+			children = (
+				1478A1572B2EEA5E00685E5F /* WithdrawViewController.swift */,
+				1478A15E2B2EEBD100685E5F /* WithdrawViewModel.swift */,
+			);
+			path = Withdraw;
 			sourceTree = "<group>";
 		};
 		149561EF2B0216ED006CED34 = {
@@ -668,6 +707,7 @@
 				14056ED72B130EA100C8EDA2 /* MyProfileViewController.swift in Sources */,
 				145659F82B24BB010040A987 /* CommentBottomSheet.swift in Sources */,
 				14F8AB192B0B479000493AE1 /* SeSACError.swift in Sources */,
+				1478A15F2B2EEBD100685E5F /* WithdrawViewModel.swift in Sources */,
 				141AD7492B173FB900D98D08 /* PostViewController.swift in Sources */,
 				146B16CF2B0350C500073B91 /* MakeViewController.swift in Sources */,
 				14056ED12B130E3E00C8EDA2 /* SearchViewController.swift in Sources */,
@@ -704,8 +744,10 @@
 				1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */,
 				145659F62B2495F10040A987 /* PostDeleteViewModel.swift in Sources */,
 				149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */,
+				1478A1582B2EEA5E00685E5F /* WithdrawViewController.swift in Sources */,
 				14B41FB92B0DEA5E00E7DA4F /* SignInViewModel.swift in Sources */,
 				1416D21C2B21FB6A009FDC56 /* CustomLineBar.swift in Sources */,
+				1478A1542B2EE85200685E5F /* ExitBottomSheet.swift in Sources */,
 				147CC55F2B03CF4800D7DA7C /* APIModel.swift in Sources */,
 				14056EDB2B13220B00C8EDA2 /* ViewModelType.swift in Sources */,
 				1440275D2B1209C40008CBC3 /* BaseTableViewCell.swift in Sources */,
@@ -726,11 +768,13 @@
 				146B16D92B03672500073B91 /* NicknameViewController.swift in Sources */,
 				146B9F5D2B051D8000FCB268 /* NicknameViewModel.swift in Sources */,
 				14B02EBD2B0C965F0052DE07 /* NetworkRepositoryType.swift in Sources */,
+				1478A15C2B2EEBBA00685E5F /* LogoutViewModel.swift in Sources */,
 				14FCF9162B0F28D1002AE655 /* TokenCheckViewController.swift in Sources */,
 				149561FC2B0216ED006CED34 /* AppDelegate.swift in Sources */,
 				14102F4E2B237676002D4A8B /* PostBottomSheet.swift in Sources */,
 				14056EDD2B13239100C8EDA2 /* SearchViewModel.swift in Sources */,
 				14056EE32B1323C300C8EDA2 /* MyProfileViewModel.swift in Sources */,
+				1478A1562B2EEA5500685E5F /* LogoutViewController.swift in Sources */,
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
 				14DA427B2B26040800F6E272 /* UserProfileViewController.swift in Sources */,
 				145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */,
@@ -902,6 +946,7 @@
 				DEVELOPMENT_TEAM = DD66GTY4AT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LSLProject/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Threads;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -930,6 +975,7 @@
 				DEVELOPMENT_TEAM = DD66GTY4AT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LSLProject/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Threads;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

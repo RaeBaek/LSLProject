@@ -28,7 +28,6 @@ final class TokenCheckViewController: BaseViewController {
         output.check
             .withUnretained(self)
             .bind { owner, value in
-                print("현재 값 \(value)")
                 if let value {
                     owner.changeRootViewController(check: value)
                 }

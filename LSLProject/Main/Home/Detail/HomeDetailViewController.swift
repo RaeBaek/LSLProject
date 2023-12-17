@@ -140,45 +140,6 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-//    func reloadHeart(row: Int, id: String, status: Bool) {
-//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
-//        
-//        // 홈 vc로 돌아왔을 때 데이터를 갱신하지 말고
-//        // id 값을 이용하여 딕셔너리에 의존
-//        if status {
-//            self.heartPostList[id] = true
-//            let count = self.heartCount[id]
-//            self.heartCount[id] = count! + 1
-//        } else {
-//            self.heartPostList[id] = false
-//            let count = self.heartCount[id]
-//            self.heartCount[id] = count! - 1
-//        }
-//        // reloadRows를 까먹고 있었다..
-//        // 역시 ChatG선생.... good
-//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
-//        
-//    }
-//    
-//    func reloadAddComment(row: Int, id: String) {
-//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
-//        
-//        let count = self.commentCount[id]
-//        self.commentCount[id] = count! + 1
-//        
-//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
-//        
-//    }
-//    
-//    func reloadSubComment(row: Int, id: String) {
-//        self.detailTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: false)
-//        
-//        let count = self.commentCount[id]
-//        self.commentCount[id] = count! - 1
-//        
-//        self.detailTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
-//    }
-    
     private func setCommentWriteView() {
         guard let item else { return }
         commentTitle.text = "\(item.creator.nick)님에게 답글 남기기..."
