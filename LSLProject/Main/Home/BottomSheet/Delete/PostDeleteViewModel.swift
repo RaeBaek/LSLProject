@@ -48,8 +48,7 @@ final class PostDeleteViewModel {
         deletePostButtonTap
             .withUnretained(self)
             .flatMap { owner, _ in
-                print("!!!!!!!!!!!!!!!!!", deletePostID.value)
-                return owner.repository.requestPostDelete(id: deletePostID.value)
+                owner.repository.requestPostDelete(id: deletePostID.value)
             }
             .subscribe(onNext: { result in
                 switch result {

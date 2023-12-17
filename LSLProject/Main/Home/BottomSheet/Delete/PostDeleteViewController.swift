@@ -69,10 +69,10 @@ final class PostDeleteViewController: BaseViewController {
     }
     
     private func bind() {
-        guard let row, let reloadPostID else { return }
         
         // 게시물 삭제, 댓글 삭제 모두 게시글의 id는 필요하다.
-        if let deleteCommentID {
+        // 댓글 삭제 시 해당하는 게시물의 row와 id 필요
+        if let deleteCommentID, let row, let reloadPostID {
             // 댓글은 댓글 id도 필요!
             if let deletePostID {
                 let input = PostDeleteViewModel.CommentInput(deleteCommentButtonTap: deleteButton.rx.tap,
