@@ -155,49 +155,41 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                     UIView.setAnimationsEnabled(false)
                     self.homeTableView.beginUpdates()
                     
-                    // 먼저 서버에서 받은 데이터에서 내가 좋아요 한 게시물이라면?
+                    // 먼저 서버에서 받은 전체 포스트 중 내가 좋아요 한 포스트라면?
                     if element.likes.contains(UserDefaultsManager.id) {
-                        // 좋아요 한 게시물이 이미 로컬 배열에 있다면?
-                        if self.heartPostList[element.id] == nil {
+                        // 좋아요 한 포스트가 전역변수 딕셔너리에 있다면?
+                        if let post = self.heartPostList[element.id] {
+                            if post {
+                                cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
+                            } else {
+                                cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
+                            }
+                        } else {
                             self.heartPostList.updateValue(true, forKey: element.id)
                             cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
                         }
-                        // 없으니 로컬 배열에 추가 후 버튼까지 활성화
-                        else {
-                            if self.heartPostList[element.id] == true {
-                                cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
-                            }
-                            // 좋아요 상태가 아니라면?
-                            else {
-                                cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
-                            }
-                        }
                     }
-                    // 서버에서 받은 데이터에서 내가 좋아요를 하지 않은 게시물이라면?
+                    
+                    // 서버에서 받은 전체 포스트 중 내가 좋아요하지 않은 포스트라면?
                     else {
-                        // 전역 배열 변수에 해당 게시물이 없다면?
-                        if self.heartPostList[element.id] == nil {
-                            // 서버도 전역변수도 모두 좋아요하지 않았으니 활성화 X
-                            // 기본 좋아요 버튼 처리는 cell의 초기화와 재사용에서 처리 중
-                        } else {
-                            // 서버에서는 좋아요하지 않았지만 로컬에서 좋아요 클릭 후 전역 배열에 넣었다면?
-                            // 좋아요 상태라면?
-                            if self.heartPostList[element.id] == true {
+                        // 좋아요 한 포스트가 전역변수 배열에 있다면?
+                        if let post = self.heartPostList[element.id] {
+                            if post {
                                 cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
-                            }
-                            // 좋아요 상태가 아니라면?
-                            else {
+                            } else {
                                 cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                             }
+                        } else {
+                            cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                         }
                     }
                     
-                    if self.heartCount[element.id] == nil && self.commentCount[element.id] == nil {
+                    // 좋아요, 답글 딕셔너리에 이미 담겨있는 경우
+                    if let hCount = self.heartCount[element.id], let cCount = self.commentCount[element.id] {
+                        cell.statusLabel.text = "\(cCount) 답글, \(hCount) 좋아요"
+                    } else {
                         self.heartCount.updateValue(cell.likes, forKey: element.id)
                         self.commentCount.updateValue(cell.comments, forKey: element.id)
-                        cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
-                        
-                    } else {
                         cell.statusLabel.text = "\(self.commentCount[element.id]!) 답글, \(self.heartCount[element.id]!) 좋아요"
                     }
                     
@@ -228,41 +220,22 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
                     .subscribe(onNext: { owner, result in
                         switch result {
                         case .success(let data):
-                            print("좋아요 상태 \(data.likeStatus)")
-                            
                             guard let count = owner.heartCount[element.id] else { return }
                             
                             // 좋아요 API 호출 후 true면?
                             if data.likeStatus {
-                                // 로컬 배열에 추가 후 버튼 활성화
-                                owner.heartPostList.updateValue(true, forKey: element.id)
-                                
+                                // 전역 변수에 업데이트 후 버튼 활성화
                                 owner.heartCount.updateValue(count + 1, forKey: element.id)
-                                cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
-                                
-                                print("좋아요 확인: \(owner.heartPostList)")
                                 cell.heartButton.setSymbolImage(image: "heart.fill", size: 22, color: .systemRed)
                             }
-                            // 좋아요 API 호출 후 false?
+                            // 좋아요 API 호출 후 false면?
                             else {
-                                // 로컬 배열에서 삭제해야하기 때문에 id 있는지 확인
-                                if owner.heartPostList.keys.contains(element.id) {
-                                    // 값을 지우는 것이 아닌 false처리
-                                    owner.heartPostList.updateValue(false, forKey: element.id)
-                                    
-                                    owner.heartCount.updateValue(count - 1, forKey: element.id)
-                                    cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
-                                    
-                                    print("좋아요 확인: \(owner.heartPostList)")
-                                    cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
-                                }
-                                // 로컬 배열에 id가 없다면?
-                                else {
-                                    print("좋아요 전역변수에 해당 게시글의 id가 없습니다. 확인해주세요.")
-                                }
+                                owner.heartCount.updateValue(count - 1, forKey: element.id)
+                                cell.heartButton.setSymbolImage(image: "heart", size: 22, color: .black)
                             }
-                            
-                            cell.layoutIfNeeded()
+                            // 전역 변수에서 해당하는 id의 value를 변경.
+                            owner.heartPostList.updateValue(data.likeStatus, forKey: element.id)
+                            cell.statusLabel.text = "\(owner.commentCount[element.id]!) 답글, \(owner.heartCount[element.id]!) 좋아요"
                             
                         case .failure(let error):
                             guard let likeError = LikeError(rawValue: error.rawValue) else {

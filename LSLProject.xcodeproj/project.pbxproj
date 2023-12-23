@@ -38,6 +38,7 @@
 		144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1440275F2B124B590008CBC3 /* ReusableProtocol.swift */; };
 		144027632B124B8D0008CBC3 /* Extension + UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */; };
 		144B80AB2B09173600993347 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B80AA2B09173600993347 /* HomeViewController.swift */; };
+		144DF6552B36D0080055B97B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 144DF6542B36D0080055B97B /* README.md */; };
 		145597FE2B17875D00CB39E1 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */; };
 		145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145597FF2B178B6C00CB39E1 /* SearchModel.swift */; };
 		145659F02B241F620040A987 /* PostTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145659EF2B241F620040A987 /* PostTableViewCellModel.swift */; };
@@ -142,6 +143,7 @@
 		1440275F2B124B590008CBC3 /* ReusableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProtocol.swift; sourceTree = "<group>"; };
 		144027622B124B8D0008CBC3 /* Extension + UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewCell.swift"; sourceTree = "<group>"; };
 		144B80AA2B09173600993347 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		144DF6542B36D0080055B97B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		145597FD2B17875C00CB39E1 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchTableViewCell.swift; path = LSLProject/Main/Heart/SearchTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		145597FF2B178B6C00CB39E1 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		145659EF2B241F620040A987 /* PostTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCellModel.swift; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 		149561EF2B0216ED006CED34 = {
 			isa = PBXGroup;
 			children = (
+				144DF6542B36D0080055B97B /* README.md */,
 				149562262B0250CF006CED34 /* .gitignore */,
 				149561FA2B0216ED006CED34 /* LSLProject */,
 				149561F92B0216ED006CED34 /* Products */,
@@ -689,6 +692,7 @@
 			files = (
 				149562272B0250CF006CED34 /* .gitignore in Resources */,
 				149562082B0216EF006CED34 /* LaunchScreen.storyboard in Resources */,
+				144DF6552B36D0080055B97B /* README.md in Resources */,
 				149562052B0216EF006CED34 /* Assets.xcassets in Resources */,
 				149562032B0216ED006CED34 /* Main.storyboard in Resources */,
 			);
@@ -946,12 +950,12 @@
 				DEVELOPMENT_TEAM = DD66GTY4AT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LSLProject/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Threads;
+				INFOPLIST_KEY_CFBundleDisplayName = "Main Threads";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -975,12 +979,12 @@
 				DEVELOPMENT_TEAM = DD66GTY4AT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LSLProject/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Threads;
+				INFOPLIST_KEY_CFBundleDisplayName = "Main Threads";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -50,6 +50,7 @@ final class APIManager: NetworkService {
                         return
                     }
                     single(.success(.success(data)))
+                    
                 case .failure(let error):
                     guard let statusCode = error.response?.statusCode,
                           let networkError = NetworkError(rawValue: statusCode) else {
