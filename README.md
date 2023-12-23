@@ -1,8 +1,9 @@
 # Threads - 텍스트 기반 대화 앱
-<img width="1056" alt="스크린샷 2023-12-22 12 50 24" src="https://github.com/RaeBaek/Mosquito/assets/88128192/206d786d-47fc-4fdc-9a7c-37e1dcc977bc">
+<img width="1018" alt="스크린샷 2023-12-23 17 30 58" src="https://github.com/RaeBaek/LSLProject/assets/88128192/6855a5cd-2fce-423e-9191-e0c4828592ba">
+</br>
 
 ## 📸 Screen Shot
-<img width="2121" alt="스크린샷 2023-12-22 12 38 12" src="https://github.com/RaeBaek/Mosquito/assets/88128192/e86cbbf5-309c-48f5-8cd2-0d9d2736a1d0">
+</br>
 
 ## 📄 한 줄 소개
 어떠한 주제든 생각을 공유할 수 있는 텍스트 기반 대화 앱 Threads입니다.
@@ -10,28 +11,48 @@
 </br>
 
 ## 📃 서비스 특징
+- 앱을 사용하기 위해서 회원가입이 필요한 서비스
+- 현재 내 생각에 대한 게시글 작성 및 삭제 가능 
+- 홈 화면에서 다른 사용자가 작성한 게시글 확인 가능
+- 게시글에 대한 답글과 좋아요 가능
+- 다른 유저 프로필 방문을 통해 작성한 게시글 확인 및 팔로우 가능
+- 내가 좋아요한 게시글들을 따로 좋아요 탭에서 확인 가능
+- 내 프로필 화면을 통해 조회 및 프로필 편집이 가능하며 설정 버튼을 통해 로그아웃, 회원탈퇴 가능
 </br>
 
 ## 📝 개발기간
-- 2023.09.25 ~ 2023.10.27 (37일간, 약 5주)
+- 2023.11.13 ~ 2023.12.17 (35일간, 약 5주)
 </br>
 
 ## 🌏 개발환경
+* Swift 5.9 (5.9.2)
 * Xcode 15.0.1 (15.1)
 * Deployment Target iOS 17.0
 </br>
 
 ## 🛠️ 기술스택 및 라이브러리
-- RxSwiftm UIKit, Snapkit, Singleton, Repository
-- GCD, Extension, Protocol, Closure, UserDefaults, DarkMode
+- RxSwift, RxCocoa, RxDataSources, UIKit, Snapkit, Kingfisher
+- UserDefaults, Repository
+- Protocol, Closure
 - MVVM
 - Moya
 - Codable
-- Kingfisher
 </br>
 
 ## 📻 API
-
+- 회원인증
+    - 회원가입, 이메일 중복 확인, 로그인, Access Token 갱신, 회원탈퇴
+- 포스트(게시글)
+    - 포스트 작성, 조회, 삭제, 유저별 작성한 포스트 조회
+- 댓글(코멘트)
+    - 댓글 작성, 삭제
+- 좋아요
+    - 포스트 좋아요 / 좋아요 취소
+    - 좋아요한 포스트 조회
+- 팔로우
+    - 팔로우 / 언팔로우
+- 프로필
+    - 내 프로필 조회, 수정, 다른 유저 프로필 조회
 </br>
 
 ## ⚽️ 트러블 슈팅
@@ -50,11 +71,9 @@
 ## 📌 회고
 - 기획, 디자인, 개발을 한데 모아~
 
-- 위치서비스 활성화 체크
 ```ruby
 ```
 
-- DispatchGroup
 ```ruby
 ```
 
