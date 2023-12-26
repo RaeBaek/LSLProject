@@ -1,18 +1,19 @@
 //
-//  PostViewModel.swift
+//  PostEditViewModel.swift
 //  LSLProject
 //
-//  Created by 백래훈 on 11/26/23.
+//  Created by 백래훈 on 12/26/23.
 //
 
 import Foundation
 import RxSwift
 import RxCocoa
 
-final class PostViewModel: ViewModelType {
+final class PostEditViewModel: ViewModelType {
     
     struct Input {
-        let postButtonTap: ControlEvent<Void>
+        let editPostID: BehaviorRelay<String?>
+        let editButtonTap: ControlEvent<Void>
         let imageButtonTap: ControlEvent<Void>
         let textViewText: ControlProperty<String>
         let textViewBeginEditing: ControlEvent<Void>
@@ -22,11 +23,12 @@ final class PostViewModel: ViewModelType {
     }
     
     struct Output {
-        let postResult: PublishRelay<Bool>
+        let currentData: PublishRelay<PostResponse>
+        let postEditResult: PublishRelay<Bool>
         let phpicker: PublishRelay<Bool>
         let textViewBeginEditing: PublishRelay<Void>
         let textViewEndEditing: PublishRelay<Bool>
-        let postButtonStatus: BehaviorRelay<Bool>
+        let editButtonStatus: BehaviorRelay<Bool>
     }
     
     var repository: NetworkRepository
@@ -39,11 +41,32 @@ final class PostViewModel: ViewModelType {
     
     func transform(input: Input) -> Output {
         
-        let postResult = PublishRelay<Bool>()
+        let currentData = PublishRelay<PostResponse>()
+        let postEditResult = PublishRelay<Bool>()
         let phpicker = PublishRelay<Bool>()
         let textViewBeginEditing = PublishRelay<Void>()
         let textViewEndEditing = PublishRelay<Bool>()
-        let postButtonStatus = BehaviorRelay<Bool>(value: false)
+        let editButtonStatus = BehaviorRelay<Bool>(value: false)
+        
+        input.editPostID
+            .withUnretained(self)
+            .flatMap { owner, id in
+                owner.repository.requestAPost(id: id!)
+            }
+            .withUnretained(self)
+            .bind { owner, result in
+                switch result {
+                case .success(let data):
+                    currentData.accept(data)
+                case .failure(let error):
+                    guard let aPostError = AllPostError(rawValue: error.rawValue) else {
+                        print("게시글 공통 에러: \(error.message)")
+                        return
+                    }
+                    print("게시글 수정 커스텀 에러: \(aPostError.message)")
+                }
+            }
+            .disposed(by: disposeBag)
         
         input.textViewBeginEditing
             .bind(to: textViewBeginEditing)
@@ -65,7 +88,7 @@ final class PostViewModel: ViewModelType {
                     return true
                 }
             }
-            .bind(to: postButtonStatus)
+            .bind(to: editButtonStatus)
             .disposed(by: disposeBag)
         
         input.imageData
@@ -77,10 +100,10 @@ final class PostViewModel: ViewModelType {
                     return true
                 }
             })
-            .bind(to: postButtonStatus)
+            .bind(to: editButtonStatus)
             .disposed(by: disposeBag)
-
-        input.postButtonTap
+        
+        input.editButtonTap
             .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive))
             .withLatestFrom(input.textViewText) { _, text in
                 if text == "" || text == StartMessage.post.placeholder {
@@ -92,28 +115,30 @@ final class PostViewModel: ViewModelType {
             .withLatestFrom(input.imageData) { text, file in
                 return (text, file)
             }
+            .withLatestFrom(input.editPostID) { data, postID in
+                return (data.0, data.1, postID)
+            }
             .flatMap { value in
                 let productID = "myThreads"
                 if value.0 == "" {
-                    return self.repository.requestPostAdd(title: nil, file: value.1 ,productID: productID)
+                    return self.repository.requestPostEdit(id: value.2!, title: nil, file: value.1 ,productID: productID)
                 } else {
-                    return self.repository.requestPostAdd(title: value.0, file: value.1 ,productID: productID)
+                    return self.repository.requestPostEdit(id: value.2!, title: value.0, file: value.1 ,productID: productID)
                 }
             }
             .subscribe(onNext: { value in
                 switch value {
                 case .success(_):
-                    print("게시글 작성 성공!")
-                    postResult.accept(true)
+                    print("게시글 수정 성공!")
+                    postEditResult.accept(true)
                 case .failure(let error):
-                    guard let postAddError = PostAddError(rawValue: error.rawValue) else {
-                        print("기본 에러: \(error.message)")
-                        postResult.accept(false)
+                    guard let postEditError = PostEditError(rawValue: error.rawValue) else {
+                        print("게시글 공통 에러: \(error.message)")
+                        postEditResult.accept(false)
                         return
                     }
-                    print("게시글 작성 커스텀 에러: \(postAddError.message)")
-                    postResult.accept(false)
-                    
+                    print("게시글 수정 커스텀 에러: \(postEditError.message)")
+                    postEditResult.accept(false)
                 }
             })
             .disposed(by: disposeBag)
@@ -133,19 +158,19 @@ final class PostViewModel: ViewModelType {
             })
             .bind { value in
                 if (value.0 == "" || value.0 == StartMessage.post.placeholder) && value.1 == nil {
-                    postButtonStatus.accept(false)
+                    editButtonStatus.accept(false)
                 } else {
-                    postButtonStatus.accept(true)
+                    editButtonStatus.accept(true)
                 }
             }
             .disposed(by: disposeBag)
         
-        return Output(postResult: postResult,
+        return Output(currentData: currentData,
+                      postEditResult: postEditResult,
                       phpicker: phpicker,
                       textViewBeginEditing: textViewBeginEditing,
                       textViewEndEditing: textViewEndEditing,
-                      postButtonStatus: postButtonStatus)
-        
+                      editButtonStatus: editButtonStatus)
     }
     
 }

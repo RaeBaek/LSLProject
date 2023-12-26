@@ -16,7 +16,8 @@ enum SeSACAPI {
     case withdraw
     case aPost(model: PostID)
     case allPost(model: AllPost)
-    case postAdd(model: PostAdd)
+    case postAdd(model: Post)
+    case postEdit(model: Post, id: String)
     case postDel(model: PostID)
     case downloadImage(model: DownloadImage)
     case userPosts(model: UserID)
@@ -59,6 +60,9 @@ extension SeSACAPI: TargetType {
             
         case .allPost, .postAdd:
             return "post"
+            
+        case .postEdit(_, let id):
+            return "post/\(id)"
             
         case .postDel(let model):
             return "post/\(model.id)"
@@ -104,7 +108,7 @@ extension SeSACAPI: TargetType {
         case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow, .like:
             return .post
             
-        case .profileEdit:
+        case .postEdit, .profileEdit:
             return .put
         
         case .postDel, .commentDel, .unfollow:
@@ -136,7 +140,7 @@ extension SeSACAPI: TargetType {
         case .allPost(let model):
             return .requestParameters(parameters: ["next": model.next, "limit": model.limit, "product_id": model.productID], encoding: URLEncoding.queryString)
             
-        case .postAdd(let model):
+        case .postAdd(let model), .postEdit(let model, _):
             if let file = model.file {
                 let imageData = MultipartFormData(provider: .data(file), name: "file", fileName: "image.jpg", mimeType: "image/jpg")
                 let title = MultipartFormData(provider: .data((model.title?.data(using: .utf8)!) ?? Data()), name: "title")
@@ -170,7 +174,6 @@ extension SeSACAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        
         let key = APIKey.sesacKey
         let token = UserDefaultsManager.token
         let refreshToken = UserDefaultsManager.refreshToken
@@ -184,8 +187,9 @@ extension SeSACAPI: TargetType {
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
         case .withdraw, .allPost, .downloadImage, .myProfile, .userPosts, .postDel, .commentDel, .userProfile, .follow, .unfollow, .aPost, .like, .likes:
             return ["Authorization": token, "SesacKey": key]
-        case .postAdd, .profileEdit:
+        case .postAdd, .postEdit, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
+            
         }
         
     }

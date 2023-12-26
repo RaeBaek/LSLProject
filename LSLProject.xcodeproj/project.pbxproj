@@ -86,6 +86,8 @@
 		149562252B0250B8006CED34 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562242B0250B8006CED34 /* APIKey.swift */; };
 		149562272B0250CF006CED34 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 149562262B0250CF006CED34 /* .gitignore */; };
 		149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* EmailAddressViewController.swift */; };
+		149902B22B3AA6B500F1D269 /* PostEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B12B3AA6B500F1D269 /* PostEditViewController.swift */; };
+		149902B42B3AA6BD00F1D269 /* PostEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */; };
 		1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */; };
 		1499057E2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */; };
 		14A3B3912B26EE8700B2F270 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */; };
@@ -187,6 +189,8 @@
 		149562242B0250B8006CED34 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		149562262B0250CF006CED34 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		149562282B0253B9006CED34 /* EmailAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewController.swift; sourceTree = "<group>"; };
+		149902B12B3AA6B500F1D269 /* PostEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditViewController.swift; sourceTree = "<group>"; };
+		149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditViewModel.swift; sourceTree = "<group>"; };
 		1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeaderView.swift; sourceTree = "<group>"; };
 		1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewHeaderFooterView.swift"; sourceTree = "<group>"; };
 		14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 			children = (
 				1478A15D2B2EEBBF00685E5F /* Withdraw */,
 				1478A15A2B2EEBA600685E5F /* Logout */,
+				149902B02B3AA6A800F1D269 /* Edit */,
 				1478A1592B2EEB9A00685E5F /* Delete */,
 				14102F4D2B237676002D4A8B /* PostBottomSheet.swift */,
 				145659F72B24BB010040A987 /* CommentBottomSheet.swift */,
@@ -542,6 +547,15 @@
 				14DA42772B25AB7A00F6E272 /* BaseTableViewHeaderFotterView.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		149902B02B3AA6A800F1D269 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				149902B12B3AA6B500F1D269 /* PostEditViewController.swift */,
+				149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */,
+			);
+			path = Edit;
 			sourceTree = "<group>";
 		};
 		14B41FB52B0DDC4000E7DA4F /* UserDefaultsManager */ = {
@@ -782,11 +796,13 @@
 				146B16DB2B03689000073B91 /* PhoneNumberViewController.swift in Sources */,
 				14DA427B2B26040800F6E272 /* UserProfileViewController.swift in Sources */,
 				145598002B178B6C00CB39E1 /* SearchModel.swift in Sources */,
+				149902B42B3AA6BD00F1D269 /* PostEditViewModel.swift in Sources */,
 				14A3B3952B26FD8100B2F270 /* FollowButton.swift in Sources */,
 				144027602B124B590008CBC3 /* ReusableProtocol.swift in Sources */,
 				14D9F1842B04CEE800E4025F /* PasswordViewModel.swift in Sources */,
 				14B41FB72B0DDC6F00E7DA4F /* UserDefaultsManager.swift in Sources */,
 				146B9F632B051DFB00FCB268 /* BirthdayViewModel.swift in Sources */,
+				149902B22B3AA6B500F1D269 /* PostEditViewController.swift in Sources */,
 				14B709532B1E0582005DDE2D /* MyProfileTableHeaderView.swift in Sources */,
 				149561FE2B0216ED006CED34 /* SceneDelegate.swift in Sources */,
 				14FCF9192B0F28F4002AE655 /* TokenCheckViewModel.swift in Sources */,

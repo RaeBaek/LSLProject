@@ -169,6 +169,33 @@ enum PostAddError: Int, LoggableError {
     }
 }
 
+enum PostEditError: Int, LoggableError {
+    case inValidRequest = 400
+    case inValidAccessToken = 401
+    case noAuthority = 403
+    case noEditPost = 410
+    case expireAccessToken = 419
+    case noEditAuthority = 445
+    
+    var message: String {
+        switch self {
+        case .inValidRequest:
+            "파일의 제한 사항과 맞지 않습니다."
+        case .inValidAccessToken:
+            "유효하지 않은 Access Token으로 요청하였습니다."
+        case .noAuthority:
+            "Forbidden"
+        case .noEditPost:
+            "수정할 게시글을 찾을 수 없습니다."
+        case .expireAccessToken:
+            "Access Token이 만료되었습니다."
+        case .noEditAuthority:
+            "게시글 수정 권한이 없습니다."
+        }
+        
+    }
+}
+
 enum MyProfileError: Int, LoggableError {
     case inValidAccessToken = 401
     case noAuthority = 403

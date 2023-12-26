@@ -301,12 +301,12 @@ final class MyProfileViewController: BaseViewController, SendData, ScrollToBotto
         
         vc.modalPresentationStyle = .pageSheet
         vc.value = value
-        vc.deletePostID = id
+        vc.postID = id
         
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [
                 .custom { _ in
-                    return 300
+                    return 320
                 }
             ]
             

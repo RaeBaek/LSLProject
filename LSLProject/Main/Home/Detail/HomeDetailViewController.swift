@@ -261,7 +261,7 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
         vc.modalPresentationStyle = .pageSheet
         vc.value = value
-        vc.deletePostID = id
+        vc.postID = id
         
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [

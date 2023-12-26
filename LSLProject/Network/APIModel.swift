@@ -37,20 +37,13 @@ struct AllPost: Encodable {
     }
 }
 
-struct PostAdd: Encodable {
+struct Post: Encodable {
     let title: String?
     let file: Data? //UploadFile? // 확장자 제한: jpg, png, jpeg, gif, pdf - 용량제한 10MB/파일 당 - 최대 파일 개수: 5개
     let productID: String? // Threads
-//    let content: String?
-//    let content1: String? // 게시글의 comment
-//    let content2: String?
-//    let content3: String?
-//    let content4: String?
-//    let content5: String?
     
     enum CodingKeys: String, CodingKey {
         case title, file
-//        content, content1, content2, content3, content4, content5
         case productID = "product_id"
     }
 }

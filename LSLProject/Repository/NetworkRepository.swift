@@ -52,7 +52,14 @@ class NetworkRepository: NetworkRepositoryType {
     func requestPostAdd(title: String?,
                         file: Data?,
                         productID: String?) -> Single<NetworkResult<PostResponse>> {
-        APIManager.shared.request(target: .postAdd(model: PostAdd(title: title, file: file, productID: productID)))
+        APIManager.shared.request(target: .postAdd(model: Post(title: title, file: file, productID: productID)))
+    }
+    
+    func requestPostEdit(id: String,
+                         title: String?,
+                         file: Data?,
+                         productID: String?) -> Single<NetworkResult<PostResponse>> {
+        APIManager.shared.request(target: .postEdit(model: Post(title: title, file: file, productID: productID), id: id))
     }
     
     func requestPostDelete(id: String) -> Single<NetworkResult<PostDelete>> {

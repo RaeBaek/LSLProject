@@ -32,6 +32,7 @@ final class PostBottomSheet: BaseViewController {
         ]),
         Header(header: nil,
                items: [
+                Bottom(title: "수정", color: .systemRed),
                 Bottom(title: "삭제", color: .systemRed)
         ])
     ]
@@ -56,7 +57,7 @@ final class PostBottomSheet: BaseViewController {
     
     private let disposeBag = DisposeBag()
     
-    var deletePostID: String?
+    var postID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,10 +95,18 @@ final class PostBottomSheet: BaseViewController {
         }
         
         tableView.rx.modelSelected(Bottom.self)
+            .filter { $0.title == "수정" }
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.dismissPostEdit(id: owner.postID!)
+            }
+            .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(Bottom.self)
             .filter { $0.title == "삭제" }
             .withUnretained(self)
             .bind { owner, _ in
-                owner.dismissViewController(id: owner.deletePostID!)
+                owner.dismissPostDelete(id: owner.postID!)
             }
             .disposed(by: disposeBag)
         
@@ -106,8 +115,20 @@ final class PostBottomSheet: BaseViewController {
         
     }
     
-    func dismissViewController(id: String) {
+    func dismissPostEdit(id: String) {
+        let vc = PostEditViewController()
         
+        guard let presentingViewController = self.presentingViewController else { return }
+        
+        vc.editPostID = id
+
+        self.dismiss(animated: true) {
+            let nav = UINavigationController(rootViewController: vc)
+            presentingViewController.present(nav, animated: true)
+        }
+    }
+    
+    func dismissPostDelete(id: String) {
         let vc = PostDeleteViewController()
         
         guard let presentingViewController = self.presentingViewController else { return }

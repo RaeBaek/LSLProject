@@ -34,6 +34,11 @@ protocol NetworkRepositoryType: AnyObject {
                         file: Data?,
                         productID: String?) -> Single<NetworkResult<PostResponse>>
     
+    func requestPostEdit(id: String,
+                         title: String?,
+                         file: Data?,
+                         productID: String?) -> Single<NetworkResult<PostResponse>>
+    
     func requestPostDelete(id: String) -> Single<NetworkResult<PostDelete>>
     
     func requestImage(path: String) -> Single<NetworkResult<Data>>
