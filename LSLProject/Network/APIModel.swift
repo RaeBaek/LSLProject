@@ -64,6 +64,11 @@ struct CommentMessage: Encodable {
     let content: String
 }
 
+struct CommentEdit: Encodable {
+    let id: String
+    let commentID: String
+}
+
 struct CommentDelete: Encodable {
     let id: String
     let commentID: String

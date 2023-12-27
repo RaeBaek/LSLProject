@@ -30,6 +30,7 @@ final class CommentBottomSheet: BaseViewController {
         ]),
         Header(header: nil,
                items: [
+                Bottom(title: "수정", color: .systemRed),
                 Bottom(title: "삭제", color: .systemRed)
         ])
     ]
@@ -55,6 +56,7 @@ final class CommentBottomSheet: BaseViewController {
     let disposeBag = DisposeBag()
     
     var value: Bool?
+    var commentRow: Int?
     var row: Int?
     var postID: String?
     var deleteCommentID: String?
@@ -67,7 +69,6 @@ final class CommentBottomSheet: BaseViewController {
     }
     
     private func bind() {
-        
         guard let value, let row else { return }
         
         let dataSource = RxTableViewSectionedReloadDataSource<Header>(
@@ -96,10 +97,18 @@ final class CommentBottomSheet: BaseViewController {
         }
         
         tableView.rx.modelSelected(Bottom.self)
+            .filter { $0.title == "수정" }
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.dismissPostEdit(postID: owner.postID, commentID: owner.deleteCommentID, commentRow: owner.commentRow!, row: row)
+            }
+            .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(Bottom.self)
             .filter { $0.title == "삭제" }
             .withUnretained(self)
             .bind { owner, _ in
-                owner.dismissViewController(postID: owner.postID, commentID: owner.deleteCommentID, row: row)
+                owner.dismissPostDelete(postID: owner.postID, commentID: owner.deleteCommentID, row: row)
             }
             .disposed(by: disposeBag)
         
@@ -108,7 +117,24 @@ final class CommentBottomSheet: BaseViewController {
         
     }
     
-    func dismissViewController(postID: String?, commentID: String?, row: Int) {
+    func dismissPostEdit(postID: String?, commentID: String?, commentRow: Int, row: Int) {
+        
+        let vc = CommentEditViewController()
+        
+        guard let presentingViewController = self.presentingViewController else { return }
+        
+        vc.commentRow = commentRow
+        vc.row = row
+        vc.postID = postID
+        vc.commentID = commentID
+
+        self.dismiss(animated: true) {
+            let nav = UINavigationController(rootViewController: vc)
+            presentingViewController.present(nav, animated: true)
+        }
+    }
+    
+    func dismissPostDelete(postID: String?, commentID: String?, row: Int) {
         
         let vc = PostDeleteViewController()
         

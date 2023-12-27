@@ -19,6 +19,12 @@ final class CommentViewController: BaseViewController {
         return view
     }()
     
+    lazy var moreBarbutton = {
+        let view = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: nil)
+        view.tintColor = .black
+        return view
+    }()
+    
     private let scrollView = {
         let view = UIScrollView()
         view.backgroundColor = .systemBackground
@@ -97,8 +103,6 @@ final class CommentViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBar()
-        
         bind()
         
         setView { [weak self] in
@@ -113,6 +117,13 @@ final class CommentViewController: BaseViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNavigationBar()
+        
+    }
+    
     @objc func dismissViewController() {
         self.dismiss(animated: true)
         
@@ -122,6 +133,7 @@ final class CommentViewController: BaseViewController {
         title = "답글 달기"
         
         self.navigationItem.leftBarButtonItem = dismissBarbutton
+        self.navigationItem.rightBarButtonItem = moreBarbutton
     }
     
     private func bind() {

@@ -88,6 +88,8 @@
 		149562292B0253B9006CED34 /* EmailAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149562282B0253B9006CED34 /* EmailAddressViewController.swift */; };
 		149902B22B3AA6B500F1D269 /* PostEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B12B3AA6B500F1D269 /* PostEditViewController.swift */; };
 		149902B42B3AA6BD00F1D269 /* PostEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */; };
+		149902B82B3AFE5200F1D269 /* CommentEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B72B3AFE5200F1D269 /* CommentEditViewController.swift */; };
+		149902BA2B3AFE5800F1D269 /* CommentEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149902B92B3AFE5800F1D269 /* CommentEditViewModel.swift */; };
 		1499057C2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */; };
 		1499057E2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */; };
 		14A3B3912B26EE8700B2F270 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */; };
@@ -191,6 +193,8 @@
 		149562282B0253B9006CED34 /* EmailAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressViewController.swift; sourceTree = "<group>"; };
 		149902B12B3AA6B500F1D269 /* PostEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditViewController.swift; sourceTree = "<group>"; };
 		149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditViewModel.swift; sourceTree = "<group>"; };
+		149902B72B3AFE5200F1D269 /* CommentEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentEditViewController.swift; sourceTree = "<group>"; };
+		149902B92B3AFE5800F1D269 /* CommentEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentEditViewModel.swift; sourceTree = "<group>"; };
 		1499057B2B14AA9200A8A9AB /* HomeTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeaderView.swift; sourceTree = "<group>"; };
 		1499057D2B14AB7700A8A9AB /* Extension + UITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewHeaderFooterView.swift"; sourceTree = "<group>"; };
 		14A3B3902B26EE8700B2F270 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -554,6 +558,8 @@
 			children = (
 				149902B12B3AA6B500F1D269 /* PostEditViewController.swift */,
 				149902B32B3AA6BD00F1D269 /* PostEditViewModel.swift */,
+				149902B72B3AFE5200F1D269 /* CommentEditViewController.swift */,
+				149902B92B3AFE5800F1D269 /* CommentEditViewModel.swift */,
 			);
 			path = Edit;
 			sourceTree = "<group>";
@@ -745,7 +751,9 @@
 				145659F42B248B410040A987 /* CustomButton.swift in Sources */,
 				143EBF8B2B18E933007D1A16 /* Extension + UIImageView.swift in Sources */,
 				144027592B11B7FD0008CBC3 /* SeSACRequestInterceptor.swift in Sources */,
+				149902B82B3AFE5200F1D269 /* CommentEditViewController.swift in Sources */,
 				14056EC92B1306BA00C8EDA2 /* ProfileImageView.swift in Sources */,
+				149902BA2B3AFE5800F1D269 /* CommentEditViewModel.swift in Sources */,
 				1416D2142B21F4C5009FDC56 /* NicknameLabel.swift in Sources */,
 				1416D2182B21F839009FDC56 /* MainTitle.swift in Sources */,
 				14DA42722B25838C00F6E272 /* ProfileEditViewController.swift in Sources */,

@@ -98,7 +98,7 @@ final class PostEditViewController: BaseViewController {
         config.baseBackgroundColor = .black
         config.cornerStyle = .capsule
         
-        var titleAttr = AttributedString.init("수정")
+        var titleAttr = AttributedString.init("완료")
         titleAttr.font = .systemFont(ofSize: 13, weight: .regular)
         config.attributedTitle = titleAttr
         

@@ -27,9 +27,7 @@ final class CommentViewModel: ViewModelType {
     }
     
     private let post: PostResponse
-    
     private let repository: NetworkRepository
-    
     private let disposeBag = DisposeBag()
     
     init(post: PostResponse, repository: NetworkRepository) {
@@ -93,7 +91,8 @@ final class CommentViewModel: ViewModelType {
         
         return Output(textViewBeginEditing: textViewBeginEditing,
                       textViewEndEditing: textViewEndEditing,
-                      postButtonStatus: postButtonStatus, postAddStatus: postAddStatus)
+                      postButtonStatus: postButtonStatus,
+                      postAddStatus: postAddStatus)
     }
     
 }

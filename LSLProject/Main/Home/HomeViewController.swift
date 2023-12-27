@@ -373,7 +373,7 @@ final class HomeViewController: BaseViewController, SendData, ScrollToBottom {
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [
                 .custom { _ in
-                    return 300
+                    return 320
                 }
             ]
             

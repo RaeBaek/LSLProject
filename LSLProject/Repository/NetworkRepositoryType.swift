@@ -51,6 +51,8 @@ protocol NetworkRepositoryType: AnyObject {
     
     func requestCommentAdd(id: String, comment: String) -> Single<NetworkResult<Comment>>
     
+    func requestCommentEdit(id: String, commentID: String, content: String) -> Single<NetworkResult<Comment>>
+    
     func requestCommentDelete(id: String, commentID: String) -> Single<NetworkResult<CommentDeleteResponse>>
     
     func requestProfileEdit(profile: Data?,

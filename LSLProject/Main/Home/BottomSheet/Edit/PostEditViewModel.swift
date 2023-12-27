@@ -53,8 +53,7 @@ final class PostEditViewModel: ViewModelType {
             .flatMap { owner, id in
                 owner.repository.requestAPost(id: id!)
             }
-            .withUnretained(self)
-            .bind { owner, result in
+            .bind { result in
                 switch result {
                 case .success(let data):
                     currentData.accept(data)
@@ -63,7 +62,7 @@ final class PostEditViewModel: ViewModelType {
                         print("게시글 공통 에러: \(error.message)")
                         return
                     }
-                    print("게시글 수정 커스텀 에러: \(aPostError.message)")
+                    print("게시글 커스텀 에러: \(aPostError.message)")
                 }
             }
             .disposed(by: disposeBag)

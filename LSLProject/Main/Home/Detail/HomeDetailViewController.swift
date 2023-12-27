@@ -188,9 +188,9 @@ final class HomeDetailViewController: BaseViewController, SendData {
                     .withUnretained(self)
                     .bind { owner, value in
                         if value == UserDefaultsManager.id {
-                            owner.presentCommentBottomSheet(value: true, postID: item.id, commentID: element.id, row: homeRow)
+                            owner.presentCommentBottomSheet(value: true, postID: item.id, commentID: element.id, row: homeRow, commentRow: row)
                         } else {
-                            owner.presentCommentBottomSheet(value: false, postID: item.id, commentID: nil, row: homeRow)
+                            owner.presentCommentBottomSheet(value: false, postID: item.id, commentID: nil, row: homeRow, commentRow: row)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -203,11 +203,12 @@ final class HomeDetailViewController: BaseViewController, SendData {
         
     }
     
-    private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?, row: Int) {
+    private func presentCommentBottomSheet(value: Bool, postID: String?, commentID: String?, row: Int, commentRow: Int) {
         let vc = CommentBottomSheet()
         
         vc.modalPresentationStyle = .pageSheet
         vc.value = value
+        vc.commentRow = commentRow
         vc.row = row
         vc.postID = postID
         vc.deleteCommentID = commentID

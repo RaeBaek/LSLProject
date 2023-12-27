@@ -25,6 +25,7 @@ enum SeSACAPI {
     case userProfile(model: UserID)
     case profileEdit(model: ProfileEdit)
     case commentAdd(model: CommentMessage, id: String)
+    case commentEdit(model: CommentEdit, message: CommentMessage)
     case commentDel(model: CommentDelete)
     case follow(model: UserID)
     case unfollow(model: UserID)
@@ -82,6 +83,9 @@ extension SeSACAPI: TargetType {
         case .commentAdd(_, let id):
             return "post/\(id)/comment"
             
+        case .commentEdit(let model, _):
+            return "post/\(model.id)/comment/\(model.commentID)"
+            
         case .commentDel(let model):
             return "post/\(model.id)/comment/\(model.commentID)"
             
@@ -108,7 +112,7 @@ extension SeSACAPI: TargetType {
         case .signUp, .emailValidation, .login, .postAdd, .commentAdd, .follow, .like:
             return .post
             
-        case .postEdit, .profileEdit:
+        case .postEdit, .profileEdit, .commentEdit:
             return .put
         
         case .postDel, .commentDel, .unfollow:
@@ -130,6 +134,9 @@ extension SeSACAPI: TargetType {
             
         case .commentAdd(let model, _):
             return .requestJSONEncodable(model)
+            
+        case .commentEdit(_, let message):
+            return .requestJSONEncodable(message)
             
         case .commentDel(let model):
             return .requestJSONEncodable(model)
@@ -171,6 +178,7 @@ extension SeSACAPI: TargetType {
                 return .uploadMultipart([nick, phoneNum, birthDay])
             }
         }
+        
     }
     
     var headers: [String : String]? {
@@ -181,7 +189,7 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login:
             return ["Content-Type": "application/json", "SesacKey": key]
-        case .commentAdd:
+        case .commentAdd, .commentEdit:
             return ["Content-Type": "application/json", "SesacKey": key, "Authorization": token]
         case .accessToken:
             return ["Authorization": token, "SesacKey": key, "Refresh": refreshToken]
@@ -189,7 +197,6 @@ extension SeSACAPI: TargetType {
             return ["Authorization": token, "SesacKey": key]
         case .postAdd, .postEdit, .profileEdit:
             return ["Authorization": token, "SesacKey": key, "Content-Type": "multipart/form-data"]
-            
         }
         
     }
