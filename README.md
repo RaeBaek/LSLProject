@@ -147,13 +147,14 @@ task
 </br>
 
 ## 📌 회고
-- 이번 프로젝트에서는 Moya를 사용하였고 Moya의 'TargetType' 프로토콜을 사용함으로써 Network Layer를 템플릿 화하여 재사용성을 높이고 request, response에 집중할 수 있었다.
-- 멘토 분들께서 직접 서버를 구성하시고 API 명세서를 제공해 주셔서 백엔드와 클라이언트의 협업 느낌을 받을 수 있었다.
-- API 명세서를 제공받으며 Restful 한 API를 구현할 수 있었으며 HTTP Method(GET, POST, PUT, DELETE)를 모두 사용해 볼 수 있었다.
-- 개발을 진행하며 전체 포스트에 대한 API는 있었으나 포스트 개별 API는 없었는데 게시물에 대한 detail 화면을 보여줘야 했던 나의 프로젝트에서는 개별 포스트에 대한 API가 필요하여 멘토 분들에게 요청을 드렸고 실제 현업에서도 백엔드 개발자와 API 요청 건으로 많은 대화를 나눈다고 말씀해 주시고 개별 포스트 API 또한 추가해 주셨다.
-- 본인뿐만이 아닌 다른 수강생분들도 사용하는 공용 API이기에 구현하고자 하는 프로젝트에서 REST API의 Overfetcing과 Underfetching을 경험할 수 있었다.
-- 또한 MVVM 구조로 개발하며 RxSwift와 In-Out Pattern을 사용하여 비동기적 코드를 작성하였다.
-- 이전까지 RxSwift를 사용해 본 적이 없었으나 이번 프로젝트를 진행하면서 RxSwift, RxCocoa, MVVM 구조, In-OutPut Pattern들을 다양하게 프로젝트에 녹여보면서 이전 프로젝트와는 다른 경험을 할 수 있었던 것 같다.
+- 많은 경험을 할 수 있었던 프로젝트이지 않았을까?
+    - 이번 프로젝트에서는 Moya를 사용하였고 Moya의 'TargetType' 프로토콜을 사용함으로써 Network Layer를 템플릿 화하여 재사용성을 높이고 request, response에 집중할 수 있었다.
+    - 멘토 분들께서 직접 서버를 구성하시고 API 명세서를 제공해 주셔서 백엔드와 클라이언트의 협업 느낌을 받을 수 있었다.
+    - API 명세서를 제공받으며 Restful 한 API를 구현할 수 있었으며 HTTP Method(GET, POST, PUT, DELETE)를 모두 사용해 볼 수 있었다.
+    - 개발을 진행하며 전체 포스트에 대한 API는 있었으나 포스트 개별 API는 없었는데 게시물에 대한 detail 화면을 보여줘야 했던 나의 프로젝트에서는 개별 포스트에 대한 API가 필요하여 멘토 분들에게 요청을 드렸고 실제 현업에서도 백엔드 개발자와 API 요청 건으로 많은 대화를 나눈다고 말씀해 주시고 개별 포스트 API 또한 추가해 주셨다.
+    - 본인뿐만이 아닌 다른 수강생분들도 사용하는 공용 API이기에 구현하고자 하는 프로젝트에서 REST API의 Overfetcing과 Underfetching을 경험할 수 있었다.
+    - 또한 MVVM 구조로 개발하며 RxSwift와 In-Out Pattern을 사용하여 비동기적 코드를 작성하였다.
+    - 이전까지 RxSwift를 사용해 본 적이 없었으나 이번 프로젝트를 진행하면서 RxSwift, RxCocoa, MVVM 구조, In-OutPut Pattern들을 다양하게 프로젝트에 녹여보면서 이전 프로젝트와는 다른 경험을 할 수 있었던 것 같다.
 
 - Moya의 TargetType 활용
 ```ruby
@@ -250,7 +251,7 @@ extension SeSACAPI: TargetType {
 ```
 - In-Output Pattern 활용
 ```ruby
-final class ViewModel: ViewModelType {
+final class BirthdayViewModel: ViewModelType {
     
     struct Input {
         let inputText: ControlProperty<Date>
@@ -270,9 +271,9 @@ final class ViewModel: ViewModelType {
     }
 }
 
-final class ViewController: BaseViewController {
+final class BirthdayViewController: BaseViewController {
 
-    private let viewModel = ViewModel()
+    private let viewModel = BirthdayViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -282,7 +283,7 @@ final class ViewController: BaseViewController {
     }
     
     func bind() {
-        let input = ViewModel.Input(inputText: datePicker.rx.value,
+        let input = BirthdayViewModel.Input(inputText: datePicker.rx.value,
                                     nextButtonClicked: nextButton.rx.tap,
                                     skipButtonClicked: skipButton.rx.tap)
         
