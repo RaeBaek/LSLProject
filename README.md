@@ -3,12 +3,11 @@
 </br>
 
 ## 📸 Screen Shot
-<img width="933" alt="스크린샷 2023-12-29 20 04 31" src="https://github.com/RaeBaek/LSLProject/assets/88128192/f25d450e-3d2d-4025-9eb9-0e887fb6bb2d">
+<img width="933" alt="스크린샷 2023-12-29 20 30 07" src="https://github.com/RaeBaek/LSLProject/assets/88128192/51dc759e-53b6-406a-9453-981939e19659">
 </br>
 
 ## 📄 한 줄 소개
 어떠한 주제든 생각을 공유할 수 있는 텍스트 기반 대화 앱 Threads입니다.
-</br>
 </br>
 
 ## 📃 서비스 특징
@@ -20,6 +19,17 @@
 - 다른 유저 프로필 방문을 통해 작성한 게시글 확인 및 팔로우 가능
 - 내가 좋아요한 게시글들을 좋아요 탭에서 확인 가능
 - 내 프로필 화면을 통해 내 프로필 조회 및 편집이 가능하며 설정 버튼을 통해 로그아웃, 회원탈퇴 가능
+</br>
+
+## ⚙️ 핵심 기능
+- Moya의 **TargetType**을 채택하여 **Router Pattern** 구성
+- Alamofire의 **RequestInterceptor**을 사용하여 token 확인 및 갱신 후 **자동 로그인** 구현
+- RxCocoa의 **prefetchRows**를 활용하여 **페이지네이션** 구현
+- jpegData의 compressionQuality을 활용하여 이미지를 1MB까지 **압축**시켜 서버에 업로드
+- Kingfisher의 AnyModifier를 활용해 이미지 캐싱 및 다운샘플링 구현
+- **시간 복잡도**를 고려하여 **Dictionary**를 활용한 **실시간 좋아요 및 답글** 상태 확인 구현
+- NotificationCenter를 활용해 게시글, 답글 작성 시 데이터 갱신 구현
+- propertyWrapper를 사용하여 반복되는 UserDefaults 사용자 정보 코드를 간결하게 구성
 </br>
 
 ## 📝 개발환경 및 기간
@@ -68,52 +78,29 @@
 - .observe(on: MainScheduler.asyncInstance) 미 선언 시 moya의 sync error 발생
 - MainScheduler로 작성하고 넘어갔었지만 추후 네트워크 작업을 Main Thread에서 해주는 것이 과연 올바른 코드일까라는 의문을 제기
 ```ruby
-import Foundation
-import Alamofire
-import RxSwift
-
-final class SeSACRequestInterceptor: RequestInterceptor {
-    
-    static let shared = SeSACRequestInterceptor()
-    
-    private init() { }
-    
-    let repository = NetworkRepository()
-    
-    let disposeBag = DisposeBag()
-    
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
-        guard urlRequest.url?.absoluteString.hasPrefix(APIKey.sesacURL) == true else {
-            completion(.success(urlRequest))
-            return
-        }
-        completion(.success(urlRequest))
+func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 419 else {
+        completion(.doNotRetryWithError(error))
+        return
     }
-    
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 419 else {
-            completion(.doNotRetryWithError(error))
-            return
+        
+    let task = Observable.just(())
+        
+    task
+        .observe(on: MainScheduler.asyncInstance)
+        .flatMap { _ in
+            self.repository.requestAccessToken()
         }
-        
-        let task = Observable.just(())
-        
-        task
-            .observe(on: MainScheduler.asyncInstance)
-            .flatMap { _ in
-                self.repository.requestAccessToken()
+        .subscribe(onNext: { result in
+            switch result {
+            case .success(let data):
+                UserDefaultsManager.token = data.token
+                completion(.retry)
+            case .failure(let error):
+                completion(.doNotRetryWithError(error))
             }
-            .subscribe(onNext: { result in
-                switch result {
-                case .success(let data):
-                    print(UserDefaultsManager.token)
-                    UserDefaultsManager.token = data.token
-                    completion(.retry)
-                case .failure(let error):
-                    completion(.doNotRetryWithError(error))
-                }
-            })
-            .disposed(by: disposeBag)
+        })
+        .disposed(by: disposeBag)
     }
 }
 ```
@@ -125,25 +112,32 @@ final class SeSACRequestInterceptor: RequestInterceptor {
 - 또한 SerialDispatchQueueScheduler는 qos를 사용할 수 있는데
 - qos의 종류 중 userInitiated가 API 통신에 적합함을 확인하였다.
 ```ruby
-let task = Observable.just(())
-
-task
-    .observe(on: SerialDispatchQueueScheduler.init(qos: .userInitiated))
-    .withUnretained(self)
-    .flatMap { owner, _ in
-        owner.repository.requestAccessToken()
+func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 419 else {
+        completion(.doNotRetryWithError(error))
+        return
     }
-    .subscribe(onNext: { result in
-        switch result {
-        case .success(let data):
-            print(UserDefaultsManager.token)
-            UserDefaultsManager.token = data.token
-            completion(.retry)
-        case .failure(let error):
-            completion(.doNotRetryWithError(error))
+    let task = Observable.just(())
+
+    task
+        .observe(on: SerialDispatchQueueScheduler.init(qos: .userInitiated))
+        .withUnretained(self)
+        .flatMap { owner, _ in
+            owner.repository.requestAccessToken()
         }
-    })
-    .disposed(by: disposeBag)
+        .subscribe(onNext: { result in
+            switch result {
+            case .success(let data):
+                print(UserDefaultsManager.token)
+                UserDefaultsManager.token = data.token
+                completion(.retry)
+            case .failure(let error):
+                completion(.doNotRetryWithError(error))
+            }
+        })
+        .disposed(by: disposeBag)
+    }
+}
 ```
 </br>
 

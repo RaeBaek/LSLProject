@@ -34,7 +34,6 @@ struct RBDefaults<T> {
 }
 
 enum UserDefaultsManager {
-    
     enum Key: String {
         case email
         case password
