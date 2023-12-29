@@ -49,23 +49,13 @@ final class SeSACRequestInterceptor: RequestInterceptor {
             return
         }
         
-        print("============", response.statusCode)
-        
         let task = Observable.just(())
         
         task
-//            .observe(on: ConcurrentDispatchQueueScheduler.init(qos: .background))
-//            .observe(on: CurrentThreadScheduler.instance)
             .observe(on: SerialDispatchQueueScheduler.init(qos: .userInitiated))
-            .do {
-                print("2hhh", Thread.isMainThread)
-            }
             .withUnretained(self)
             .flatMap { owner, _ in
-                owner.repository.requestAccessToken()//requestRetryAccessToken()
-            }
-            .do {
-                print("3hhh", Thread.isMainThread)
+                owner.repository.requestAccessToken()
             }
             .subscribe(onNext: { result in
                 switch result {

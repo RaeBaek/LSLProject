@@ -61,54 +61,6 @@ final class TokenCheckViewModel: ViewModelType {
                 
             }
             .disposed(by: disposeBag)
-        
-//        statusCode
-//            .skip(1)
-//            .map { $0 == 200 }
-//            .filter { $0 }
-//            .debug("4")
-//            .bind { value in
-//                print("토큰이 만료되어 갱신하였고 정상적으로 자동 로그인을 수행하였습니다.")
-//                outputCheck.accept(!value)
-//            }
-//            .disposed(by: disposeBag)
-        
-//        let containToken = statusCode
-//                                .map { $0 == 409 }
-//                                .share()
-        
-//        statusCode
-//            .skip(1)
-//            .map { $0 == 409 }
-//            .filter { $0 }
-//            .debug("5")
-//            .bind { value in
-//                outputCheck.accept(!value)
-//                print("액세스 토큰이 만료되지 않았습니다. 기존의 토큰을 유지합니다.")
-//            }
-//            .disposed(by: disposeBag)
-//        
-//        statusCode
-//            .skip(1)
-//            .map { $0 == 418 }
-//            .filter { $0 }
-//            .debug("6")
-//            .bind { value in
-//                outputCheck.accept(value)
-//                print("Refresh Token이 만료 되었습니다.(418)")
-//            }
-//            .disposed(by: disposeBag)
-//        
-//        statusCode
-//            .skip(1)
-//            .map { [401, 403, 420, 429, 444, 500].contains($0) }
-//            .filter { $0 }
-//            .debug("6")
-//            .bind { value in
-//                outputCheck.accept(value)
-//                print("심각한 공통에러입니다. 확인해주세요! 401, 403 420, 429, 444, 500")
-//            }
-//            .disposed(by: disposeBag)
             
         
         let hoon = input.token
@@ -125,7 +77,7 @@ final class TokenCheckViewModel: ViewModelType {
         hoon
             .filter { !$0 }
             .observe(on: MainScheduler.asyncInstance)
-            .debug("3")
+            .withUnretained(self)
             .flatMap { _ in
                 self.repository.requestAccessToken()
                     .catch { error in
