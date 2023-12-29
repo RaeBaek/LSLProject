@@ -1,8 +1,9 @@
 # Threads - 텍스트 기반 대화 앱
-<img width="1018" alt="스크린샷 2023-12-23 17 30 58" src="https://github.com/RaeBaek/LSLProject/assets/88128192/6855a5cd-2fce-423e-9191-e0c4828592ba">
+<img width="933" alt="스크린샷 2023-12-23 17 30 58" src="https://github.com/RaeBaek/LSLProject/assets/88128192/6855a5cd-2fce-423e-9191-e0c4828592ba">
 </br>
 
 ## 📸 Screen Shot
+<img width="933" alt="스크린샷 2023-12-29 20 04 31" src="https://github.com/RaeBaek/LSLProject/assets/88128192/f25d450e-3d2d-4025-9eb9-0e887fb6bb2d">
 </br>
 
 ## 📄 한 줄 소개
@@ -167,13 +168,11 @@ extension SeSACAPI: TargetType {
     var path: String {
         switch self {
         case .signUp:
-            return "join"
-             
+            return "join"  
         ...
         
         case .like(let model):
             return "post/like/\(model.id)"
-        
         ...
           
         }
@@ -200,7 +199,6 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp(let model):
             return .requestJSONEncodable(model)
-            
         ...
             
         case .accessToken, .withdraw, .downloadImage, .myProfile, .userPosts, .postDel, .userProfile, .follow, .likes, .unfollow, .aPost, .like:
@@ -234,7 +232,6 @@ extension SeSACAPI: TargetType {
         switch self {
         case .signUp, .emailValidation, .login:
             return ["Content-Type": "application/json", "SesacKey": key]
-            
             ...
             
         case .postAdd, .postEdit, .profileEdit:
@@ -277,7 +274,6 @@ final class BirthdayViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         bind()
         
     }
@@ -302,7 +298,6 @@ final class BirthdayViewController: BaseViewController {
                 owner.customTextField.layer.borderColor = value ? UIColor.systemGray4.cgColor : UIColor.systemRed.cgColor
             }
             .disposed(by: disposeBag)
-            
         ...
     
     }
