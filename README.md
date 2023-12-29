@@ -9,6 +9,7 @@
 ## 📄 한 줄 소개
 어떠한 주제든 생각을 공유할 수 있는 텍스트 기반 대화 앱 Threads입니다.
 </br>
+</br>
 
 ## 📃 서비스 특징
 - 로그인 기능을 제공하고 있으며 회원가입이 필요한 서비스
@@ -25,8 +26,8 @@
 - Moya의 **TargetType**을 채택하여 **Router Pattern** 구성
 - Alamofire의 **RequestInterceptor**을 사용하여 token 확인 및 갱신 후 **자동 로그인** 구현
 - RxCocoa의 **prefetchRows**를 활용하여 **페이지네이션** 구현
-- jpegData의 compressionQuality을 활용하여 이미지를 1MB까지 **압축**시켜 서버에 업로드
-- Kingfisher의 AnyModifier를 활용해 이미지 캐싱 및 다운샘플링 구현
+- jpegData의 **compressionQuality**를 활용하여 이미지를 1MB까지 **압축**시켜 서버에 업로드
+- Kingfisher의 AnyModifier를 활용해 이미지 캐싱 및 다운로드 구현
 - **시간 복잡도**를 고려하여 **Dictionary**를 활용한 **실시간 좋아요 및 답글** 상태 확인 구현
 - NotificationCenter를 활용해 게시글, 답글 작성 시 데이터 갱신 구현
 - propertyWrapper를 사용하여 반복되는 UserDefaults 사용자 정보 코드를 간결하게 구성
@@ -142,7 +143,7 @@ func retry(_ request: Request, for session: Session, dueTo error: Error, complet
 </br>
 
 ## 📌 회고
-- 많은 경험을 할 수 있었던 프로젝트이지 않았을까?
+- 많은 경험을 할 수 있었던 프로젝트
     - 이번 프로젝트에서는 Moya를 사용하였고 Moya의 'TargetType' 프로토콜을 사용함으로써 Network Layer를 템플릿 화하여 재사용성을 높이고 request, response에 집중할 수 있었다.
     - 멘토 분들께서 직접 서버를 구성하시고 API 명세서를 제공해 주셔서 백엔드와 클라이언트의 협업 느낌을 받을 수 있었다.
     - API 명세서를 제공받으며 Restful 한 API를 구현할 수 있었으며 HTTP Method(GET, POST, PUT, DELETE)를 모두 사용해 볼 수 있었다.
@@ -151,7 +152,9 @@ func retry(_ request: Request, for session: Session, dueTo error: Error, complet
     - 또한 MVVM 구조로 개발하며 RxSwift와 In-Out Pattern을 사용하여 비동기적 코드를 작성하였다.
     - 이전까지 RxSwift를 사용해 본 적이 없었으나 이번 프로젝트를 진행하면서 RxSwift, RxCocoa, MVVM 구조, In-OutPut Pattern들을 다양하게 프로젝트에 녹여보면서 이전 프로젝트와는 다른 경험을 할 수 있었던 것 같다.
 
-- Moya의 TargetType 활용
+<details>
+    <summary>Moya의 TargetType 활용</summary>
+
 ```ruby
 extension SeSACAPI: TargetType {
 
@@ -240,7 +243,11 @@ extension SeSACAPI: TargetType {
     
 }
 ```
+
+</details>
+
 - In-Output Pattern 활용
+
 ```ruby
 final class BirthdayViewModel: ViewModelType {
     
@@ -299,6 +306,7 @@ final class BirthdayViewController: BaseViewController {
 ```
 
 - RxSwift를 활용한 로그인 버튼 클릭 시 Stream 연결 및 API 호출
+
 ```ruby
 input.signInButtonClicked
     .withLatestFrom(input.emailText) { _, email in
