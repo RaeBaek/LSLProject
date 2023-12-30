@@ -71,9 +71,9 @@
 ## ⚽️ 트러블 슈팅
 ### Alamofire의 RequestInterceptor를 사용하면서 겪었던 Schedulers의 선택
 - 이번 프로젝트에서는 Moya를 사용해 보았는데 Moya는 Alamofire를 한 번 더 추상화한 라이브러리이다.
-- Alamofire를 추상화했기에 Moya에서도 Alamofire의 여러 기능을 사용할 수 있으며 RequestInterceptor를 사용했다.
+- Alamofire를 추상화했기에 Moya에서도 Alamofire의 여러 기능을 사용할 수 있으며 RequestInterceptor를 사용하였다.
 - RequestInterceptor을 사용한 이유는 로그인 시 token과 refreshToken 관리를 위해 사용하였다.
-- token은 만료되었지만 refreshToken은 아직 유효하다면 refreshToken을 이용하여 token을 갱신하는 방법을 사용할 수 있다.
+- token은 만료되었지만 refreshToken은 아직 유효하다면 refreshToken을 이용하여 token을 갱신하는 방법을 사용하였다.
 - 갱신을 위해 RequestInterceptor 프로토콜을 다루며 겪었던 Trouble Shooting은 아래의 코드로 확인 가능하다.
 
 ### 수정 전 코드
