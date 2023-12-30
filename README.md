@@ -25,17 +25,18 @@
 ## ⚙️ 핵심 기능
 - Moya의 **TargetType**을 채택하여 **Router Pattern** 구성
 - Alamofire의 **RequestInterceptor**을 사용하여 token 확인 및 갱신 후 **자동 로그인** 구현
+- **RxDataSources**를 활용해 **2개 이상**의 UITableView **Section**에 대해 대응
 - RxCocoa의 **prefetchRows**를 활용하여 **페이지네이션** 구현
 - jpegData의 **compressionQuality**를 활용하여 이미지를 1MB까지 **압축**시켜 서버에 업로드
-- Kingfisher의 AnyModifier를 활용해 이미지 캐싱 및 다운로드 구현
+- Kingfisher의 AnyModifier를 활용해 **이미지 캐싱 및 다운로드** 구현
 - **시간 복잡도**를 고려하여 **Dictionary**를 활용한 **실시간 좋아요 및 답글** 상태 확인 구현
-- NotificationCenter를 활용해 게시글, 답글 작성 시 데이터 갱신 구현
-- propertyWrapper를 사용하여 반복되는 UserDefaults 사용자 정보 코드를 간결하게 구성
+- NotificationCenter를 활용해 **게시글, 답글 작성 시 데이터 갱신** 구현
+- propertyWrapper를 사용하여 반복되는 **UserDefaults 사용자 정보** 코드를 간결하게 구성
 </br>
 
 ## 📝 개발환경 및 기간
 - 기획: SeSAC Memolease (API 제공)
-- 디자인: Threads 클론
+- 디자인: Threads Clone
 - 개발: 1인 개발
 - Swift 5.9
 - Xcode 15.0.1
@@ -45,7 +46,7 @@
 
 ## 🛠️ 기술스택 및 라이브러리
 - RxSwift, RxCocoa, RxDataSources, UIKit, Snapkit, Kingfisher
-- UserDefaults, Repository, Protocol
+- UserDefaults, Repository, Protocol, PropertyWrapper
 - MVVM, In-Out Pattern
 - Moya, Alamofire, RequestInterceptor, Codable
 </br>
