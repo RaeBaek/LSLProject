@@ -44,11 +44,12 @@
 - 2023.11.13 ~ 2023.12.17 (35일간, 약 5주)
 </br>
 
-## 🛠️ 기술스택 및 라이브러리
-- RxSwift, RxCocoa, RxDataSources, UIKit, Snapkit, Kingfisher
-- UserDefaults, Repository, Protocol, PropertyWrapper
+## 🛠️ 기술스택
+- RxSwift, RxCocoa, RxDataSources, UIKit
 - MVVM, In-Out Pattern
 - Moya, Alamofire, RequestInterceptor, Codable
+- Snapkit, Kingfisher
+- UserDefaults, Repository, Protocol, PropertyWrapper
 </br>
 
 ## 📻 API
