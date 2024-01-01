@@ -3,7 +3,7 @@
 </br>
 
 ## 📸 Screen Shot
-<img width="933" alt="스크린샷 2023-12-29 20 30 07" src="https://github.com/RaeBaek/LSLProject/assets/88128192/51dc759e-53b6-406a-9453-981939e19659">
+<img width="933" alt="스크린샷 2024-01-01 23 14 15" src="https://github.com/RaeBaek/LSLProject/assets/88128192/14f4be91-5110-4dfc-b423-e6a81ab5b511">
 </br>
 
 ## 📄 한 줄 소개
