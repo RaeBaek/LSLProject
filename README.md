@@ -153,7 +153,6 @@ func retry(_ request: Request, for session: Session, dueTo error: Error, complet
     - 개발을 진행하며 전체 포스트에 대한 API는 있었으나 포스트 개별 API는 없었는데 게시물에 대한 detail 화면을 보여줘야 했던 나의 프로젝트에서는 개별 포스트에 대한 API가 필요하여 멘토 분들에게 **요청**드렸고 실제 현업에서도 백엔드 개발자와 API 요청 건으로 많은 대화를 나눈다고 말씀해 주시고 개별 포스트 API를 추가해 주셨다.
     - 또한 **MVVM** 구조로 개발하며 RxSwift와 **In-Out Pattern**을 사용하여 비동기적 코드를 작성하였다.
     - 이전까지 RxSwift를 사용해 본 적이 없었으나 이번 프로젝트를 진행하면서 RxSwift, RxCocoa, MVVM 구조, In-OutPut Pattern들을 다양하게 프로젝트에 녹여보면서 이전과는 다른 경험을 할 수 있었던 것 같다.
-    - 본인뿐만이 아닌 다른 수강생분들도 사용하는 공용 API이기에 구현하고자 하는 프로젝트에서 **REST API**의 Overfetcing과 Underfetching을 경험할 수 있었다.
     
 - 아쉬웠던 점
 - Rest API 요청 시 Overfetcing과 Underfetching의 경험
