@@ -32,6 +32,7 @@
 - **시간 복잡도**를 고려하여 **Dictionary**를 활용한 **실시간 좋아요 및 답글** 상태 확인 구현
 - NotificationCenter를 활용해 **게시글, 답글 작성 시 데이터 갱신** 구현
 - propertyWrapper를 사용하여 반복되는 **UserDefaults 사용자 정보** 코드를 간결하게 구성
+- **UIKeyboardLayoutGuide**을 활용한 게시글 및 답글 게시, 완료 버튼 구성
 </br>
 
 ## 📝 개발환경 및 기간
