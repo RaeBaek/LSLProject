@@ -232,7 +232,7 @@ final class PostViewController: BaseViewController {
     }
     
     private func setNavigationBar() {
-        title = "새로운 스레드"
+        title = "새로운 게시글"
         
         self.navigationItem.leftBarButtonItem = dismissBarbutton
         self.navigationItem.rightBarButtonItem = moreBarbutton

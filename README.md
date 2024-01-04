@@ -1,5 +1,5 @@
-# Threads - 텍스트 기반 대화 앱
-<img width="933" alt="스크린샷 2023-12-23 17 30 58" src="https://github.com/RaeBaek/LSLProject/assets/88128192/6855a5cd-2fce-423e-9191-e0c4828592ba">
+# Link - 텍스트 기반 대화 앱
+<img width="933" alt="스크린샷 2024-01-04 16 35 54" src="https://github.com/RaeBaek/LSLProject/assets/88128192/6569504e-b674-4368-b2c0-4c319afeb9b4">
 </br>
 
 ## 📸 Screen Shot
@@ -7,7 +7,7 @@
 </br>
 
 ## 📄 한 줄 소개
-어떠한 주제든 생각을 공유할 수 있는 텍스트 기반 대화 앱 Threads입니다.
+어떠한 주제든 생각을 공유할 수 있는 텍스트 기반 대화 앱 Link입니다.
 </br>
 </br>
 
@@ -37,8 +37,7 @@
 
 ## 📝 개발환경 및 기간
 - 기획: SeSAC Memolease (API 제공)
-- 디자인: Threads Clone
-- 개발: 1인 개발
+- 디자인 및 개발: 1인 개발
 - Swift 5.9
 - Xcode 15.0.1
 - Mininum Deployment Target iOS 17.0
