@@ -3,7 +3,7 @@
 </br>
 
 ## 📸 Screen Shot
-<img width="933" alt="스크린샷 2024-01-01 23 14 15" src="https://github.com/RaeBaek/LSLProject/assets/88128192/14f4be91-5110-4dfc-b423-e6a81ab5b511">
+<img width="933" alt="스크린샷 2024-01-04 21 41 32" src="https://github.com/RaeBaek/LSLProject/assets/88128192/3556e7f0-492a-42d8-97a5-9c3ada9ebec6">
 </br>
 
 ## 📄 한 줄 소개
