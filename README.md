@@ -145,7 +145,7 @@ func retry(_ request: Request, for session: Session, dueTo error: Error, complet
 </br>
 
 ## 📌 회고
-- 프로젝트 후기
+### 프로젝트 후기
 - 많은 경험과 성장을 할 수 있었던 프로젝트
     - 이번 프로젝트에서는 Moya를 사용하였고 Moya의 **TargetType** 프로토콜을 사용함으로써 Network Layer를 템플릿 화하여 재사용성을 높이고 request, response에 집중할 수 있었다.
     - 멘토 분들께서 직접 서버를 구성하시고 API 명세서를 제공해 주셔서 백엔드와 클라이언트의 **협업**을 경험할 수 있었다.
@@ -154,7 +154,7 @@ func retry(_ request: Request, for session: Session, dueTo error: Error, complet
     - 또한 **MVVM** 구조로 개발하며 RxSwift와 **In-Out Pattern**을 사용하여 비동기적 코드를 작성하였다.
     - 이전까지 RxSwift를 사용해 본 적이 없었으나 이번 프로젝트를 진행하면서 RxSwift, RxCocoa, MVVM 구조, In-OutPut Pattern들을 다양하게 프로젝트에 녹여보면서 이전과는 다른 경험을 할 수 있었던 것 같다.
     
-- 아쉬웠던 점
+### 아쉬웠던 점
 - Rest API 요청 시 Overfetcing과 Underfetching의 경험
     - 공용 API였던 것 만큼 Overfetcing과 Underfetching을 경험할 수 있었다.
     - 내 프로필 화면에서 API를 2개 호출했어야했던 Underfetching
